@@ -1,0 +1,28 @@
+group 'org.atlanmod'
+version '1.0-SNAPSHOT'
+
+allprojects {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            url "https://dl.bintray.com/atlanmod/unveil"
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'scala'
+    apply plugin: 'java'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    dependencies {
+        implementation group: 'org.scala-lang', name: 'scala-library', version: '2.11.12'
+        implementation 'org.atlanmod.unveil:org.eclipse.emf.common:2.23.0'
+        implementation 'org.atlanmod.unveil:org.eclipse.emf.ecore:2.23.0'
+    }
+}
