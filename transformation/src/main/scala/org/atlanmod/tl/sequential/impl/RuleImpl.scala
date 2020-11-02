@@ -1,18 +1,17 @@
 package org.atlanmod.tl.sequential.impl
 
-import org.atlanmod.tl.sequential.{OutputPatternElement, Rule}
+import org.atlanmod.tl.sequential.{Model, OutputPatternElement, Rule}
 
-class RuleImpl[SMC, SM, SME, TL, TME, TML](name: String,
-                                           types: List[SMC],
-                                           from: (SM, List[SME]) => Option[Boolean],
-                                           itExpr: (SM, List[SME]) => Option[Int],
-                                           to: List[OutputPatternElement[TL, SM, SME, TME, TML]])
-  extends Rule[SMC, SM, SME, TL, TME, TML] {
+class RuleImpl[SME, SML, SMC, TME, TML](name: String,
+                                   types: List[SMC],
+                                   from: (Model[SME, SML], List[SME]) => Option[Boolean],
+                                   itExpr: (Model[SME, SML], List[SME]) => Option[Int],
+                                   to: List[OutputPatternElement[SME, SML, TME, TML]])
+  extends Rule[SME, SML, SMC, TME, TML]{
     /*
-     *  SMC : SourceModelClass
-     *  SM : SourceModel
      *  SME : SourceModelElement
-     *  TL : TraceLink
+     *  SML : SourceModelLink
+     *  SMC : SourceModelClass
      *  TME : TargetModelElement
      *  TML : TargetModelLink
      */
@@ -22,8 +21,8 @@ class RuleImpl[SMC, SM, SME, TL, TME, TML](name: String,
     def getGuardExpr: (SM, List[SME]) => Option[Boolean] = from
     def getInTypes: List[SMC] = types
     def getIteratorExpr: (SM, List[SME]) => Option[Int] = itExpr
-    def getOutputPatternElements: List[OutputPatternElement[TL, SM, SME, TME, TML]] = to
+    def getOutputPatternElements: List[OutputPatternElement[SME, SML, TME, TML]] = to
 
-    def findOutputPatternElemen(name: String): Option[OutputPatternElement[TL, SM, SME, TME, TML]] =
+    def findOutputPatternElemen(name: String): Option[OutputPatternElement[SME, SML, TME, TML]] =
         to.find(ope => ope.getName == name)
 }

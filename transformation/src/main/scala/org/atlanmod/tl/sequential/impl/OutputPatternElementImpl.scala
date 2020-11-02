@@ -1,14 +1,15 @@
 package org.atlanmod.tl.sequential.impl
 
-import org.atlanmod.tl.sequential.{OutputPatternElement, OutputPatternElementReference}
+import org.atlanmod.tl.sequential.{Model, OutputPatternElement, OutputPatternElementReference}
 
-class OutputPatternElementImpl[TL, SM, SME, TME, TML](name: String, elementExpr: (Int, SM, List[SME]) => Option[TME],
-                                                      outputElemRefs: List[OutputPatternElementReference[TL, SM, SME, TME, TML]])
-  extends OutputPatternElement[TL, SM, SME, TME, TML] {
+class OutputPatternElementImpl[SME, SML, TME, TML]
+    (name: String,
+     elementExpr: (Int, Model[SME, SML], List[SME]) => Option[TME],
+     outputElemRefs: List[OutputPatternElementReference[SME, SML, TME, TML]])
+  extends OutputPatternElement[SME, SML, TME, TML] {
     /*
-     *  TL : TraceLink
-     *  SM : SourceModel
      *  SME : SourceModelElement
+     *  SML : SourceModelLink
      *  TME : TargetModelElement
      *  TML : TargetModelLink
      */
@@ -16,6 +17,6 @@ class OutputPatternElementImpl[TL, SM, SME, TME, TML](name: String, elementExpr:
     // Accessors
     def getName: String = name
     def getElementExpr: (Int, SM, List[SME]) => Option[TME] = elementExpr
-    def getOutputElementReferences: List[OutputPatternElementReference[TL, SM, SME, TME, TML]] = outputElemRefs
+    def getOutputElementReferences: List[OutputPatternElementReference[SME, SML, TME, TML]] = outputElemRefs
 
 }

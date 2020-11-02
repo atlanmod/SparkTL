@@ -1,17 +1,19 @@
 package org.atlanmod.tl.sequential
 
-trait OutputPatternElement[TL, SM, SME, TME, TML] {
+trait OutputPatternElement[SME, SML, TME, TML] {
     /*
-     *  TL : TraceLink
-     *  SM : SourceModel
      *  SME : SourceModelElement
+     *  SML : SourceModelLink
      *  TME : TargetModelElement
      *  TML : TargetModelLink
      */
 
+    // Type definition
+    type SM = Model[SME, SML]
+
     // Accessors
     def getName: String
     def getElementExpr: (Int, SM, List[SME]) => Option[TME]
-    def getOutputElementReferences: List[OutputPatternElementReference[TL, SM, SME, TME, TML]]
+    def getOutputElementReferences: List[OutputPatternElementReference[SME, SML, TME, TML]]
 
 }

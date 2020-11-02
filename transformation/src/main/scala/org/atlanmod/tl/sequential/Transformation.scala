@@ -1,15 +1,18 @@
 package org.atlanmod.tl.sequential
 
-trait Transformation[SMC, SM, SME, TL, TME, TML] {
+trait Transformation[SME, SML, SMC, TME, TML] {
     /*
      *  SMC : SourceModelClass
-     *  SM : SourceModel
      *  SME : SourceModelElement
-     *  TL : TraceLink
+     *  SML : SourceModelLink
      *  TME : TargetModelElement
      *  TML : TargetModelLink
      */
 
+    // Types
+    type SM = Model[SME, SML] // Source Model
+    type TM = Model[SME, SML] // Source Model
+
     // Accessors
-    def getRules: List[Rule[SMC, SM, SME, TL, TME, TML]]
+    def getRules: List[Rule[SME, SML, SMC, TME, TML]]
 }

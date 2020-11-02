@@ -2,16 +2,16 @@ package org.atlanmod.tl.sequential.impl
 
 import org.atlanmod.tl.sequential.{Rule, Transformation}
 
-class TransformationImpl[SMC, SM, SME, TL, TME, TML](rules: List[Rule[SMC, SM, SME, TL, TME, TML]]) extends Transformation[SMC, SM, SME, TL, TME, TML] {
+class TransformationImpl[SME, SML, SMC, TME, TML](rules: List[Rule[SME, SML, SMC, TME, TML]])
+  extends Transformation[SME, SML, SMC, TME, TML] {
     /*
      *  SMC : SourceModelClass
-     *  SM : SourceModel
      *  SME : SourceModelElement
-     *  TL : TraceLink
+     *  SML : SourceModelLink
      *  TME : TargetModelElement
      *  TML : TargetModelLink
      */
 
-    // Accessors
-    def getRules: List[Rule[SMC, SM, SME, TL, TME, TML]] = rules
+    // Accessor
+    def getRules: List[Rule[SME, SML, SMC, TME, TML]] = rules
 }
