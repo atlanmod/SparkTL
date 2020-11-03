@@ -1,4 +1,4 @@
-package org.atlanmod.tl.tool
+package org.atlanmod.tl.util
 
 object ListUtils {
 
