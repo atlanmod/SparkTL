@@ -9,4 +9,7 @@ trait Metamodel[ME, ML, MC, MR] {
     */
 
     def equals(that: Any): Boolean
+
+    // TODO see with Massimo
+    def toModelClass(sc: MC, se: ME): Option[MC]
 }
