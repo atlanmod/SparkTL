@@ -2,9 +2,9 @@ package org.atlanmod.tl.sequential
 
 trait Transformation[SME, SML, SMC, TME, TML] {
     /*
-     *  SMC : SourceModelClass
      *  SME : SourceModelElement
      *  SML : SourceModelLink
+     *  SMC : SourceModelClass
      *  TME : TargetModelElement
      *  TML : TargetModelLink
      */
