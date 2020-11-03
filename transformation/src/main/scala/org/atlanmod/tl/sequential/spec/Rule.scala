@@ -1,4 +1,4 @@
-package org.atlanmod.tl.sequential
+package org.atlanmod.tl.sequential.spec
 
 trait Rule[SME, SML, SMC, TME, TML] {
     /*
@@ -15,9 +15,13 @@ trait Rule[SME, SML, SMC, TME, TML] {
 
     // Accessors
     def getName: String
+
     def getGuardExpr: (SM, List[SME]) => Option[Boolean]
+
     def getInTypes: List[SMC]
+
     def getIteratorExpr: (SM, List[SME]) => Option[Int]
+
     def getOutputPatternElements: List[OutputPatternElement[SME, SML, TME, TML]]
 
     def findOutputPatternElemen(name: String): Option[OutputPatternElement[SME, SML, TME, TML]]

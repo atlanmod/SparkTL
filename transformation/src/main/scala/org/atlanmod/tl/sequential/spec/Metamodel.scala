@@ -1,4 +1,4 @@
-package org.atlanmod.tl.sequential
+package org.atlanmod.tl.sequential.spec
 
 trait Metamodel[ME, ML, MC, MR] {
     /*

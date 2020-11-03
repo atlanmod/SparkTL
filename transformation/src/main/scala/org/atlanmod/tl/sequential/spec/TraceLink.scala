@@ -1,4 +1,4 @@
-package org.atlanmod.tl.sequential
+package org.atlanmod.tl.sequential.spec
 
 trait TraceLink[SME, TME] {
     /*
@@ -8,7 +8,10 @@ trait TraceLink[SME, TME] {
 
     // Accessors
     def getSourcePattern: List[SME]
+
     def getIterator: Int
+
     def getName: String
+
     def degTargetElement: TME
 }

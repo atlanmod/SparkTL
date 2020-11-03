@@ -1,8 +1,9 @@
 package org.atlanmod.tl.sequential
 
+import org.atlanmod.tl.sequential.spec.{Model, TraceLink, Transformation}
 import org.atlanmod.tl.tool.TupleUtils
 
-static class Semantics[SME, SML, SMC, TME, TML, TMC] {
+class Engine[SME, SML, SMC, TME, TML, TMC] {
     /*
      *  SME : SourceModelElement
      *  SML : SourceModelLink

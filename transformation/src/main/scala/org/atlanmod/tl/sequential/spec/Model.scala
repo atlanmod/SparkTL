@@ -1,4 +1,4 @@
-package org.atlanmod.tl.sequential
+package org.atlanmod.tl.sequential.spec
 
 trait Model[ME, ML] {
     /*
@@ -6,5 +6,6 @@ trait Model[ME, ML] {
     *  ML: ModelLinks
     */
     def allModelElements: List[ME]
+
     def allModelLinks: List[ML]
 }
