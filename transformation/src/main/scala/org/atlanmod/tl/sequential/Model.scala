@@ -5,6 +5,6 @@ trait Model[ME, ML] {
     *  ME: ModelElements
     *  ML: ModelLinks
     */
-    def allElements: List[ME]
-    def allLinks: List[ML]
+    def allModelElements: List[ME]
+    def allModelLinks: List[ML]
 }
