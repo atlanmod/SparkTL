@@ -1,21 +1,17 @@
 package org.atlanmod.tl.sequential
 
 import org.atlanmod.tl.sequential.Eval.{evalGuardExpr, evalIteratorExpr, evalOutputPatternElementExpr}
-import org.atlanmod.tl.sequential.spec.{Model, OutputPatternElement, Rule, Transformation}
+import org.atlanmod.tl.sequential.spec.{Metamodel, Model, OutputPatternElement, Rule, Transformation}
 import org.atlanmod.tl.util.ArithUtils.indexes
 import org.atlanmod.tl.util.ListUtils
 
 object Instantiate {
 
-    def toModelClass[SME, SMC](sc: SMC, se: SME) : Option[Any] =
-     Some(true)
-
-    def checkTypes[SME, SMC](ses: List[SME], scs: List[SMC]): Boolean = {
+    def checkTypes[SME, SML, SMC, SMR](ses: List[SME], scs: List[SMC], mm: Metamodel[SME, SML, SMC, SMR]): Boolean = {
         (ses, scs) match {
             case (se::ses2, sc::scs2) =>
-                // TODO : add a metamodel instance, for toModelClass
-                toModelClass(sc, se) match {
-                    case Some(_) => checkTypes(ses2, scs2)
+                mm.toModelClass(sc, se) match {
+                    case Some(_) => checkTypes(ses2, scs2, mm)
                     case _ => return false
                 }
             case (List(), List()) => return true
@@ -24,20 +20,23 @@ object Instantiate {
         true
     }
 
-    def matchRuleOnPattern[SME, SML, SMC, TME, TML](r: Rule[SME, SML, SMC, TME, TML], sm: Model[SME, SML], sp: List[SME]):
+    def matchRuleOnPattern[SME, SML, SMC, SMR, TME, TML](r: Rule[SME, SML, SMC, TME, TML],
+                                                         sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
+                                                         sp: List[SME]):
         Boolean =
-        if (checkTypes(sp, r.getInTypes))
+        if (checkTypes(sp, r.getInTypes, mm))
             evalGuardExpr(r, sm, sp) match {
                 case Some(true) => true
                 case _ => false
             }
         else false
 
-    def matchPattern[SME, SML, SMC, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
-                                              sp: List[SME]) : List[Rule[SME, SML, SMC, TME, TML]] =
-        tr.getRules.filter(r => matchRuleOnPattern(r, sm, sp))
+    def matchPattern[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
+                                                   sm: Model[SME, SML],  mm: Metamodel[SME, SML, SMC, SMR],
+                                                   sp: List[SME]) : List[Rule[SME, SML, SMC, TME, TML]] =
+        tr.getRules.filter(r => matchRuleOnPattern(r, sm, mm, sp))
 
-    def instantiateElementOnPattern[SME, SML, TME, TML](o: OutputPatternElement[SME, SML, TME, TML],
+    def instantiateElementOnPattern[SME, SML, SMC, TME, TML](o: OutputPatternElement[SME, SML, TME, TML],
                                                         sm: Model[SME, SML], sp: List[SME], iter: Int): Option[TME] =
         evalOutputPatternElementExpr(sm, sp, iter, o)
 
@@ -50,8 +49,9 @@ object Instantiate {
                                                           sp: List[SME]): List[TME] =
         indexes(evalIteratorExpr(r, sm, sp)).flatMap(index => instantiateIterationOnPattern(r, sm, sp, index))
 
-    def instantiatePattern[SME, SML, SMC, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
-                                                    sm: Model[SME, SML], sp: List[SME]): List[TME]={
-        matchPattern(tr, sm, sp).flatMap(r => instantiateRuleOnPattern(r, sm, sp))
+    def instantiatePattern[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
+                                                    sm: Model[SME, SML],  mm: Metamodel[SME, SML, SMC, SMR],
+                                                    sp: List[SME]): List[TME]={
+        matchPattern(tr, sm, mm, sp).flatMap(r => instantiateRuleOnPattern(r, sm, sp))
     }
 }

@@ -13,5 +13,5 @@ trait TraceLink[SME, TME] {
 
     def getName: String
 
-    def degTargetElement: TME
+    def getTargetElement: TME
 }

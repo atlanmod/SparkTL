@@ -12,6 +12,6 @@ class TraceLinkImpl[SME, TME](spin: (List[SME], Int, String), te: TME)  extends 
     override def getSourcePattern: List[SME] = spin._1
     override def getIterator: Int = spin._2
     override def getName: String = spin._3
-    override def degTargetElement: TME = te
+    override def getTargetElement: TME = te
 
 }
