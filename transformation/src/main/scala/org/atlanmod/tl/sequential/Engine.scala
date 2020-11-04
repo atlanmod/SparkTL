@@ -22,7 +22,7 @@ class Engine[SME, SML, SMC, SMR, TME, TML, TMC] {
     : TargetModelType = {
         val tuples = allTuples(tr, sm)
         /* Instantiate */ val elements = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t))
-        /* Apply */       val links = tuples.flatMap(t => Apply.applyPattern(tr, sm, t))
+        /* Apply */       val links = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t))
 
         class tupleTModel(elements: List[TME], links: List[TML]) extends TargetModelType {
             override def allModelElements: List[TME] = elements
