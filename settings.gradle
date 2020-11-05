@@ -1,4 +1,5 @@
 rootProject.name = 'SparkTL'
 
 include 'transformation'
-
+include 'modelIO'
+include 'class2relational'

@@ -1,0 +1,5 @@
+group 'org.atlanmod'
+version '1.0-SNAPSHOT'
+
+dependencies {
+}
