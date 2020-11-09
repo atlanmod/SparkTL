@@ -10,7 +10,7 @@ object ModelLoader {
 
         private var resSet : ResourceSet = null
 
-        private def instanciateRS(name: String, obj: Object): Unit = {
+        private def instantiateRS(name: String, obj: Object): Unit = {
             val reg = Resource.Factory.Registry.INSTANCE
             val m = reg.getExtensionToFactoryMap
             m.put("xmi", new XMIResourceFactoryImpl)
@@ -21,7 +21,7 @@ object ModelLoader {
 
         def loadFromUri(uri: String, packageName: String, obj: Object): EObject = {
             if (resSet == null)
-                instanciateRS(packageName, obj)
+                instantiateRS(packageName, obj)
             // Load the resource
             val resource = resSet.getResource(URI.createURI(uri), true)
             resource.getContents.get(0)
