@@ -3,8 +3,8 @@ package org.atlanmod.tl.sequential
 import org.atlanmod.tl.sequential.Eval.evalIteratorExpr
 import org.atlanmod.tl.sequential.Instantiate.{instantiateElementOnPattern, matchPattern}
 import org.atlanmod.tl.sequential.Utils.allTuples
-import org.atlanmod.tl.sequential.impl.TraceLinkImpl
-import org.atlanmod.tl.sequential.spec.{Metamodel, Model, OutputPatternElement, Rule, TraceLink, Transformation}
+import org.atlanmod.tl.model.impl.TraceLinkImpl
+import org.atlanmod.tl.model.{Metamodel, Model, OutputPatternElement, Rule, TraceLink, Transformation}
 import org.atlanmod.tl.util.ArithUtils.indexes
 import org.atlanmod.tl.util.ListUtils.optionToList
 

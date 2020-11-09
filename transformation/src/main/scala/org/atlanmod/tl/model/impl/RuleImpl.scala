@@ -1,6 +1,6 @@
-package org.atlanmod.tl.sequential.impl
+package org.atlanmod.tl.model.impl
 
-import org.atlanmod.tl.sequential.spec.{Model, OutputPatternElement, Rule}
+import org.atlanmod.tl.model.{Model, OutputPatternElement, Rule}
 
 class RuleImpl[SME, SML, SMC, TME, TML](name: String,
                                    types: List[SMC],

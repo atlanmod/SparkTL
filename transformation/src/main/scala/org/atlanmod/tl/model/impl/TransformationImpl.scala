@@ -1,6 +1,6 @@
-package org.atlanmod.tl.sequential.impl
+package org.atlanmod.tl.model.impl
 
-import org.atlanmod.tl.sequential.spec.{Rule, Transformation}
+import org.atlanmod.tl.model.{Rule, Transformation}
 
 class TransformationImpl[SME, SML, SMC, TME, TML](rules: List[Rule[SME, SML, SMC, TME, TML]])
   extends Transformation[SME, SML, SMC, TME, TML] {

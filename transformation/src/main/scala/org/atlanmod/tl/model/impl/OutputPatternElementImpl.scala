@@ -1,6 +1,6 @@
-package org.atlanmod.tl.sequential.impl
+package org.atlanmod.tl.model.impl
 
-import org.atlanmod.tl.sequential.spec.{Model, OutputPatternElement, OutputPatternElementReference}
+import org.atlanmod.tl.model.{Model, OutputPatternElement, OutputPatternElementReference}
 
 class OutputPatternElementImpl[SME, SML, TME, TML]
     (name: String,

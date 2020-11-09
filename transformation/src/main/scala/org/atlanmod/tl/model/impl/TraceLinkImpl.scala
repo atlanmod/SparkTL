@@ -1,6 +1,6 @@
-package org.atlanmod.tl.sequential.impl
+package org.atlanmod.tl.model.impl
 
-import org.atlanmod.tl.sequential.spec.TraceLink
+import org.atlanmod.tl.model.TraceLink
 
 class TraceLinkImpl[SME, TME](spin: (List[SME], Int, String), te: TME)  extends TraceLink[SME, TME]  {
     /*

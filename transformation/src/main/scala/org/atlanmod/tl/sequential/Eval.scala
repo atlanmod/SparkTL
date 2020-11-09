@@ -1,6 +1,6 @@
 package org.atlanmod.tl.sequential
 
-import org.atlanmod.tl.sequential.spec.{Model, OutputPatternElement, OutputPatternElementReference, Rule, TraceLink}
+import org.atlanmod.tl.model.{Model, OutputPatternElement, OutputPatternElementReference, Rule, TraceLink}
 
 object Eval {
 

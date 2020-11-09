@@ -1,6 +1,6 @@
-package org.atlanmod.tl.sequential.impl
+package org.atlanmod.tl.model.impl
 
-import org.atlanmod.tl.sequential.spec.{Model, OutputPatternElementReference, TraceLink}
+import org.atlanmod.tl.model.{Model, OutputPatternElementReference, TraceLink}
 
 class OutputPatternElementReferenceImpl[SME, SML, TME, TML]
     (linkExpr: (List[TraceLink[SME, TME]], Int, Model[SME, SML], List[SME], TME) => Option[TML])

@@ -1,4 +1,4 @@
-package org.atlanmod.tl.sequential.spec
+package org.atlanmod.tl.model
 
 trait OutputPatternElementReference[SME, SML, TME, TML] {
     /*
