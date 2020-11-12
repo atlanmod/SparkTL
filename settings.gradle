@@ -1,11 +1,11 @@
 rootProject.name = 'SparkTL'
 
 include ':transformation'
-include ':modelIO'
+include ':EMFmodeling'
 include ':class2relational'
 
 project(':transformation').projectDir = file('./transformation')
-project(':modelIO').projectDir = file('./modelIO')
+project(':EMFmodeling').projectDir = file('./EMFmodeling')
 project(':class2relational').projectDir = file('./class2relational')
 
 

@@ -1,7 +1,7 @@
 package org.atlanmod.tl.sequential
 
-import org.atlanmod.tl.sequential.Utils.allTuples
 import org.atlanmod.tl.model.{Metamodel, Model, Transformation}
+import org.atlanmod.tl.sequential.Utils.allTuples
 
 class Engine[SME, SML, SMC, SMR, TME, TML, TMC] {
     /*
