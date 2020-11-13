@@ -4,4 +4,5 @@ version '1.0-SNAPSHOT'
 dependencies {
     implementation project(":EMFmodeling")
     implementation project(":transformation")
+    implementation group: 'org.atlanmod.zoo', name: 'emf.relational'
 }
