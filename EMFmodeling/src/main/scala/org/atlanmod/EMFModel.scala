@@ -1,4 +1,4 @@
-package org.atlanmod.io
+package org.atlanmod
 
 import org.atlanmod.tl.model.Model
 import org.eclipse.emf.ecore.EObject

@@ -1,4 +1,4 @@
-package org.atlanmod.tl.sequential.io
+package org.atlanmod
 
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl

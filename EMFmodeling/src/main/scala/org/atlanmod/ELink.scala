@@ -1,4 +1,4 @@
-package org.atlanmod.io
+package org.atlanmod
 
 import org.eclipse.emf.ecore.{EObject, EReference}
 

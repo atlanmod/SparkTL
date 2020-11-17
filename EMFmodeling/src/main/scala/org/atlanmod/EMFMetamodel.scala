@@ -1,4 +1,4 @@
-package org.atlanmod.io
+package org.atlanmod
 
 import org.atlanmod.tl.model.Metamodel
 import org.eclipse.emf.ecore.{EClass, EObject, EReference}
