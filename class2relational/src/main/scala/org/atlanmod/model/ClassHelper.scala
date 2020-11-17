@@ -1,93 +1,104 @@
 package org.atlanmod.model
 
 import org.atlanmod.tl.sequential.io.EMFTool
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.emf.ecore.{EClass, EObject, EPackage, EReference}
+import org.eclipse.emf.ecore.util.EcoreUtil
 
-object RelationalHelper {
-
+object ClassHelper {
     // Constants for class names
-    final val TABLE : String = "Table"
-    final val COLUMN : String = "Column"
+    final val CLASS : String = "Class"
+    final val ATTRIBUTE : String = "Attribute"
 
     // Singleton for EPackage
     var pack : EPackage = null
 
     private def instantiatePackage: Unit ={
         if (pack == null)
-            pack = EMFTool.loadEcore("class2relational/model/Relational.ecore") // Load a resource
+            pack = EMFTool.loadEcore("class2relational/model/Class.ecore") // Load a resource
               .getContents.get(0) // Get the first (and unique) EObject of the resource
               .asInstanceOf[EPackage] // Convert it to a EPackage
     }
 
-
     /* *********************************************************************************** */
 
     // Return EClass of Table
-    def getEClass_Table: EClass = {
+    def getEClass_Class: EClass = {
         instantiatePackage
-        pack.getEClassifier(TABLE).asInstanceOf[EClass]
+        pack.getEClassifier(CLASS).asInstanceOf[EClass]
     }
 
-    def buildTable(id: String, name: String): EObject = {
-        val eclass = getEClass_Table
+    def buildClass(id: String, name: String, attributes: EObject = null): EObject = {
+        val eclass = getEClass_Class
         val id_field = eclass.getEAllAttributes.get(0)
         val name_field = eclass.getEAllAttributes.get(1)
+        val attributes_ref : EReference = eclass.getEAllReferences.get(0)
         val p = EcoreUtil.create(eclass)
         p.eSet(id_field, id)
         p.eSet(name_field, name)
+        p.eSet(attributes_ref, attributes)
         p
     }
 
-    def getTable_Id(c: EObject): String = {
-        val eclass = getEClass_Table
+    def getClass_Id(c: EObject): String = {
+        val eclass = getEClass_Class
         val id_field = eclass.getEAllAttributes.get(0)
         c.eGet(id_field).asInstanceOf[String]
     }
 
-    def getTable_name(c: EObject): String = {
-        val eclass = getEClass_Table
+    def getClass_name(c: EObject): String = {
+        val eclass = getEClass_Class
         val name_field = eclass.getEAllAttributes.get(1)
         c.eGet(name_field).asInstanceOf[String]
+    }
+
+    def getClass_attributes(c: EObject): EObject = {
+        val eclass = getEClass_Class
+        val attributes_field = eclass.getEAllReferences.get(0)
+        c.eGet(attributes_field).asInstanceOf[EObject]
     }
 
     /* *********************************************************************************** */
 
     // Return EClass of Column
-    def getEClass_Column: EClass = {
+    def getEClass_Attribute: EClass = {
         instantiatePackage
-        pack.getEClassifier(COLUMN).asInstanceOf[EClass]
+        pack.getEClassifier(ATTRIBUTE).asInstanceOf[EClass]
     }
 
-    def buildColumn(id: String, name: String, table: EObject): EObject = {
-        assert(table.eClass() == getEClass_Table)
-        val eclass = getEClass_Column
+    def buildAttribute(id: String, name: String, table: EObject = null): EObject = {
+        assert(table.eClass() == getEClass_Class)
+        val eclass = getEClass_Attribute
         val id_field = eclass.getEAllAttributes.get(0)
         val name_field = eclass.getEAllAttributes.get(1)
-        val ref_reference : EReference = eclass.getEAllReferences.get(0)
+        val table_ref : EReference = eclass.getEAllReferences.get(0)
         val p = EcoreUtil.create(eclass)
         p.eSet(id_field, id)
         p.eSet(name_field, name)
-        p.eSet(ref_reference, table)
+        p.eSet(table_ref, table)
         p
     }
 
-    def getColumn_Id(c: EObject): String = {
-        val eclass = getEClass_Column
+    def getAttribute_Id(c: EObject): String = {
+        val eclass = getEClass_Attribute
         val id_field = eclass.getEAllAttributes.get(0)
         c.eGet(id_field).asInstanceOf[String]
     }
 
-    def getColumn_name(c: EObject): String = {
-        val eclass = getEClass_Column
+    def getAttribute_name(c: EObject): String = {
+        val eclass = getEClass_Attribute
         val name_field = eclass.getEAllAttributes.get(1)
         c.eGet(name_field).asInstanceOf[String]
     }
 
-    def getColumn_reference(c: EObject): EObject = {
-        val eclass = getEClass_Column
+    def getAttribute_reference(c: EObject): EObject = {
+        val eclass = getEClass_Attribute
         val ref_field = eclass.getEAllAttributes.get(2)
         c.eGet(ref_field).asInstanceOf[EObject]
     }
 
+    def getAttribute_isDerived(c: EObject): Boolean = {
+        // TODO
+        val eclass = getEClass_Attribute
+        eclass.getEAllAttributes.get(2).isDerived
+    }
 }
