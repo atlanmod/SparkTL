@@ -13,6 +13,6 @@ class OutputPatternElementReferenceImpl[SME, SML, TME, TML]
      */
 
     // Accessor
-    def getLinkExpr: (List[TL], Int, SM, List[SME], TME) => Option[TML] = linkExpr
+    def getLinkExpr: (List[TraceLink[SME, TME]], Int, Model[SME, SML], List[SME], TME) => Option[TML] = linkExpr
 
 }
