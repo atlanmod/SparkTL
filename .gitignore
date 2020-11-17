@@ -7,7 +7,6 @@
 .vscode
 .bloop
 .metals
-
 .gradle
 build
 
@@ -19,6 +18,9 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
+
+# Eclipse auto-generated files
+*/.classpath
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
