@@ -29,13 +29,15 @@ object RelationalHelper {
         pack.getEClassifier(TABLE).asInstanceOf[EClass]
     }
 
-    def buildTable(id: String, name: String): EObject = {
+    def buildTable(id: String, name: String, attributes: EObject = null): EObject = {
         val eclass = getEClass_Table
         val id_field = eclass.getEAllAttributes.get(0)
         val name_field = eclass.getEAllAttributes.get(1)
+        val attributes_reference : EReference = eclass.getEAllReferences.get(0)
         val p = EcoreUtil.create(eclass)
         p.eSet(id_field, id)
         p.eSet(name_field, name)
+        p.eSet(attributes_reference, attributes)
         p
     }
 
@@ -59,16 +61,16 @@ object RelationalHelper {
         pack.getEClassifier(COLUMN).asInstanceOf[EClass]
     }
 
-    def buildColumn(id: String, name: String, table: EObject): EObject = {
+    def buildColumn(id: String, name: String, table: EObject = null): EObject = {
         assert(table.eClass() == getEClass_Table)
         val eclass = getEClass_Column
         val id_field = eclass.getEAllAttributes.get(0)
         val name_field = eclass.getEAllAttributes.get(1)
-        val ref_reference : EReference = eclass.getEAllReferences.get(0)
+        val table_reference : EReference = eclass.getEAllReferences.get(0)
         val p = EcoreUtil.create(eclass)
         p.eSet(id_field, id)
         p.eSet(name_field, name)
-        p.eSet(ref_reference, table)
+        p.eSet(table_reference, table)
         p
     }
 
