@@ -1,6 +1,6 @@
 package org.atlanmod.model
 
-import org.atlanmod.tl.sequential.io.EMFTool
+import org.atlanmod.EMFTool
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.emf.ecore.{EClass, EObject, EPackage, EReference}
 
