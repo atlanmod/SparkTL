@@ -9,7 +9,7 @@ object Resolve {
     private def resolveIter [SME, SML, TME, TML, TMC, TMR](tlr: List[TraceLink[SME,TME]], sm: Model[SME,SML],
                                                            mm: Metamodel[TME, TML, TMC, TMR],
                                                            name: String, typ: TMC, sp: List[SME], iter: Int)
-    : Option[TMC] = {
+    : Option[TME] = {
         /*
          let tl := find (fun tl: @TraceLink SourceModelElement TargetModelElement =>
          match tl with
@@ -34,32 +34,30 @@ object Resolve {
     private def resolve[SME, SML, TME, TML, TMC, TMR](tr: List[TraceLink[SME,TME]], sm: Model[SME,SML],
                                             mm: Metamodel[TME, TML, TMC, TMR],
                                             name: String, typ: TMC, sp: List[SME])
-    : Option[TMC] =
+    : Option[TME] =
         resolveIter(tr, sm, mm, name, typ, sp, 0)
 
-    private def resolveAllIter[SME, SML, TME, TMC](tr: List[TraceLink[SME, TME]], sm: Model[SME,TME], name: String,
-                                                   typ: TMC, sps: List[List[SME]], iter: Int)
-    : Option[List[TMC]] =
+    private def resolveAllIter[SME, SML, TME, TML, TMC, TMR](tr: List[TraceLink[SME, TME]], sm: Model[SME,TME], 
+                                               mm: Metamodel[TME, TML, TMC, TMR],
+                                               name: String,
+                                               typ: TMC, sps: List[List[SME]], iter: Int)
+    : Option[List[TME]] =
         Some(sps.flatMap(l => ListUtils.optionToList(resolveIter(tr, sm, mm, name, typ, l, iter))))
 
-    private def resolveAll[SME, SML, TME, TMC](tr: List[TraceLink[SME, TME]], sm: Model[SME,TME], name: String,
+    private def resolveAll[SME, SML, TME, TML, TMC, TMR](tr: List[TraceLink[SME, TME]], sm: Model[SME,TME],
+                                               mm: Metamodel[TME, TML, TMC, TMR],
+                                               name: String,
                                                typ: TMC, sps: List[List[SME]])
-    : Option[List[TMC]] =
-        resolveAllIter(tr, sm, name, typ, sps, 0)
+    : Option[List[TME]] =
+        resolveAllIter(tr, sm, mm, name, typ, sps, 0)
 
-    private def maybeResolve[SME, SML, TME, TMC](tr: List[TraceLink[SME, TME]], sm: Model[SME,TME], name: String,
+    private def maybeResolve[SME, SML, TME, TML, TMC, TMR](tr: List[TraceLink[SME, TME]], sm: Model[SME,TME], 
+                                                 mm: Metamodel[TME, TML, TMC, TMR],
+                                                 name: String,
                                                  typ: TMC, sp: Option[List[SME]])
-    : Option[TMC] =
+    : Option[TME] =
         sp match {
-            case Some(sp2) => resolve(tr, sm, name, typ, sp2)
-            case None => None
-        }
-
-    private def  maybeResolve[SME, SML, TME, TMC](tr: List[TraceLink[SME, TME]], sm: Model[SME,TME], name: String,
-                                                  typ: TMC, sp: Option[List[List[SME]]])
-    : Option[List[TMC]] =
-        sp match {
-            case Some(sp2) => resolveAll(tr, sm, name, typ, sp2)
+            case Some(sp2) => resolve(tr, sm, mm, name, typ, sp2)
             case None => None
         }
 }
