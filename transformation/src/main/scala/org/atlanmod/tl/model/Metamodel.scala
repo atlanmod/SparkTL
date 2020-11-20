@@ -8,6 +8,8 @@ trait Metamodel[ME, ML, MC, MR] {
     *  MR: ModelReference
     */
 
+    def denoteClass(sc: MC): MC
+
     def toModelClass(sc: MC, se: ME): Option[ME]
     def toModelReference(sr: MR, sl: ML): Option[ML]
 
