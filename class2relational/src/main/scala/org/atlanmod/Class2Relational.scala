@@ -1,12 +1,15 @@
 package org.atlanmod
 
-import org.atlanmod.model.{ClassHelper, RelationalHelper}
-import org.atlanmod.relationalModel.impl.{ColumnImpl, TableImpl}
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.eclipse.emf.ecore.{EClass, EObject}
 
+// Is Multivalued -> derived
+
 class Class2Relational() {
+
+    private val classPackage =  classModel.ClassPackage.eINSTANCE
+    private val relationalPackage =  relationalModel.RelationalPackage.eINSTANCE
 
     private def transformation() : Transformation[EObject, ELink, EClass, EObject, ELink] = {
 
@@ -16,9 +19,9 @@ class Class2Relational() {
                     name = "Class2Table",
                   // CoqTL : use a label instead of an EClass :
                     // types = List(ClassHelper.CLASS)
-                    types = List(classModel.Class),
+                    types = List(classPackage.getClass_),
                     from = (_, _) => Some(true), // No guard condition
-                    itExpr = (_, _)  => Some(1), // No iterator
+                    itExpr = (_, _)  => Some(1), // No iteratorre
                     to =
                       List(
                         new OutputPatternElementImpl(
@@ -26,20 +29,22 @@ class Class2Relational() {
                             // TODO : why l is a list ? How to use ``elem''
                             elementExpr = (_, _, l) => {
                                 val _class = l.head.asInstanceOf[classModel.Class]
-                                val table = new TableImpl
+                                val table = relationalPackage.getRelationalFactory.createTable()
                                 table.setId(_class.getId)
                                 table.setName(_class.getName)
                                 Some(table)
                             },
                             outputElemRefs = List(
-                                new OutputPatternElementReferenceImpl(null) // TODO
+                                new OutputPatternElementReferenceImpl(
+                                    null
+                                ) // TODO
                             )
                         )
                     )
                 ),
                 new RuleImpl(
                     name = "Attribute2Column",
-                    types = List(classModel.Attribute),
+                    types = List(classPackage.getAttribute),
                     from = (_, l) => Some(true), // TODO : not derived
                     itExpr = (_, _) => Some(1), // No where clause
                     to =
@@ -54,7 +59,7 @@ class Class2Relational() {
                             elementExpr = (_, _, l) =>
                                 {
                                     val attribute = l.head.asInstanceOf[classModel.Attribute]
-                                    val column = new ColumnImpl
+                                    val column =  relationalPackage.getRelationalFactory.createColumn()
                                     column.setId(attribute.getId)
                                     column.setName(attribute.getName)
                                     Some(column)
