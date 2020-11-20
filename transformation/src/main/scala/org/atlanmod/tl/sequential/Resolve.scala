@@ -1,13 +1,14 @@
 package org.atlanmod.tl.sequential
 
-import org.atlanmod.tl.model.{Model, TraceLink}
+import org.atlanmod.tl.model.{Metamodel, Model, TraceLink}
 import org.atlanmod.tl.util.ListUtils
 
 object Resolve {
 
 
-    private def resolveIter [SME, SML, TME, TMC](tlr: List[TraceLink[SME,TME]], sm: Model[SME,SML],
-                                                 name: String, typ: TMC, sp: List[SME], iter: Int)
+    private def resolveIter [SME, SML, TME, TML, TMC, TMR](tlr: List[TraceLink[SME,TME]], sm: Model[SME,SML],
+                                                           mm: Metamodel[TME, TML, TMC, TMR],
+                                                           name: String, typ: TMC, sp: List[SME], iter: Int)
     : Option[TMC] = {
         /*
          let tl := find (fun tl: @TraceLink SourceModelElement TargetModelElement =>
@@ -21,18 +22,25 @@ object Resolve {
          | None => None
         end.
   */
-        None // TODO
+        val tl = tlr.find(tl => sp == tl.getSourcePattern
+          & iter == tl.getIterator
+          & name == tl.getName)
+        tl match {
+            case Some(tl2) => mm.toModelClass(typ, tl2.getTargetElement)
+            case None => None
+        }
     }
 
-    private def resolve[SME, SML, TME, TMC](tr: List[TraceLink[SME,TME]], sm: Model[SME,SML],
+    private def resolve[SME, SML, TME, TML, TMC, TMR](tr: List[TraceLink[SME,TME]], sm: Model[SME,SML],
+                                            mm: Metamodel[TME, TML, TMC, TMR],
                                             name: String, typ: TMC, sp: List[SME])
     : Option[TMC] =
-        resolveIter(tr, sm, name, typ, sp, 0)
+        resolveIter(tr, sm, mm, name, typ, sp, 0)
 
     private def resolveAllIter[SME, SML, TME, TMC](tr: List[TraceLink[SME, TME]], sm: Model[SME,TME], name: String,
                                                    typ: TMC, sps: List[List[SME]], iter: Int)
     : Option[List[TMC]] =
-        Some(sps.flatMap(l => ListUtils.optionToList(resolveIter(tr, sm, name, typ, l, iter))))
+        Some(sps.flatMap(l => ListUtils.optionToList(resolveIter(tr, sm, mm, name, typ, l, iter))))
 
     private def resolveAll[SME, SML, TME, TMC](tr: List[TraceLink[SME, TME]], sm: Model[SME,TME], name: String,
                                                typ: TMC, sps: List[List[SME]])
