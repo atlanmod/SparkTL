@@ -131,13 +131,13 @@ public interface ClassPackage extends EPackage {
 	int ATTRIBUTE__ID = 0;
 
 	/**
-	 * The feature id for the '<em><b>Multi Valued</b></em>' attribute.
+	 * The feature id for the '<em><b>Derived</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ATTRIBUTE__MULTI_VALUED = 1;
+	int ATTRIBUTE__DERIVED = 1;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -240,15 +240,15 @@ public interface ClassPackage extends EPackage {
 	EAttribute getAttribute_Id();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.atlanmod.classModel.Attribute#isMultiValued <em>Multi Valued</em>}'.
+	 * Returns the meta object for the attribute '{@link org.atlanmod.classModel.Attribute#isDerived <em>Derived</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Multi Valued</em>'.
-	 * @see org.atlanmod.classModel.Attribute#isMultiValued()
+	 * @return the meta object for the attribute '<em>Derived</em>'.
+	 * @see org.atlanmod.classModel.Attribute#isDerived()
 	 * @see #getAttribute()
 	 * @generated
 	 */
-	EAttribute getAttribute_MultiValued();
+	EAttribute getAttribute_Derived();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.atlanmod.classModel.Attribute#getName <em>Name</em>}'.
@@ -348,12 +348,12 @@ public interface ClassPackage extends EPackage {
 		EAttribute ATTRIBUTE__ID = eINSTANCE.getAttribute_Id();
 
 		/**
-		 * The meta object literal for the '<em><b>Multi Valued</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Derived</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ATTRIBUTE__MULTI_VALUED = eINSTANCE.getAttribute_MultiValued();
+		EAttribute ATTRIBUTE__DERIVED = eINSTANCE.getAttribute_Derived();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.

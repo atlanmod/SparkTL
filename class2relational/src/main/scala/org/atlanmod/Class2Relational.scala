@@ -45,7 +45,7 @@ class Class2Relational() {
                 new RuleImpl(
                     name = "Attribute2Column",
                     types = List(classPackage.getAttribute),
-                    from = (_, l) => Some(true), // TODO : not derived
+                    from = (_, l) => Some(l.asInstanceOf[classModel.Attribute].isDerived),
                     itExpr = (_, _) => Some(1), // No where clause
                     to =
 //                      elem [AttributeClass] ColumnClass "col"

@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.atlanmod.classModel.Attribute#getId <em>Id</em>}</li>
- *   <li>{@link org.atlanmod.classModel.Attribute#isMultiValued <em>Multi Valued</em>}</li>
+ *   <li>{@link org.atlanmod.classModel.Attribute#isDerived <em>Derived</em>}</li>
  *   <li>{@link org.atlanmod.classModel.Attribute#getName <em>Name</em>}</li>
  *   <li>{@link org.atlanmod.classModel.Attribute#getType <em>Type</em>}</li>
  * </ul>
@@ -48,27 +48,27 @@ public interface Attribute extends EObject {
 	void setId(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Multi Valued</b></em>' attribute.
+	 * Returns the value of the '<em><b>Derived</b></em>' attribute.
 	 * The default value is <code>"true"</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Multi Valued</em>' attribute.
-	 * @see #setMultiValued(boolean)
-	 * @see org.atlanmod.classModel.ClassPackage#getAttribute_MultiValued()
+	 * @return the value of the '<em>Derived</em>' attribute.
+	 * @see #setDerived(boolean)
+	 * @see org.atlanmod.classModel.ClassPackage#getAttribute_Derived()
 	 * @model default="true"
 	 * @generated
 	 */
-	boolean isMultiValued();
+	boolean isDerived();
 
 	/**
-	 * Sets the value of the '{@link org.atlanmod.classModel.Attribute#isMultiValued <em>Multi Valued</em>}' attribute.
+	 * Sets the value of the '{@link org.atlanmod.classModel.Attribute#isDerived <em>Derived</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Multi Valued</em>' attribute.
-	 * @see #isMultiValued()
+	 * @param value the new value of the '<em>Derived</em>' attribute.
+	 * @see #isDerived()
 	 * @generated
 	 */
-	void setMultiValued(boolean value);
+	void setDerived(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.

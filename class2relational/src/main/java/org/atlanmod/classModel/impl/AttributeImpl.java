@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * </p>
  * <ul>
  *   <li>{@link org.atlanmod.classModel.impl.AttributeImpl#getId <em>Id</em>}</li>
- *   <li>{@link org.atlanmod.classModel.impl.AttributeImpl#isMultiValued <em>Multi Valued</em>}</li>
+ *   <li>{@link org.atlanmod.classModel.impl.AttributeImpl#isDerived <em>Derived</em>}</li>
  *   <li>{@link org.atlanmod.classModel.impl.AttributeImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.atlanmod.classModel.impl.AttributeImpl#getType <em>Type</em>}</li>
  * </ul>
@@ -54,24 +54,24 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isMultiValued() <em>Multi Valued</em>}' attribute.
+	 * The default value of the '{@link #isDerived() <em>Derived</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isMultiValued()
+	 * @see #isDerived()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean MULTI_VALUED_EDEFAULT = true;
+	protected static final boolean DERIVED_EDEFAULT = true;
 
 	/**
-	 * The cached value of the '{@link #isMultiValued() <em>Multi Valued</em>}' attribute.
+	 * The cached value of the '{@link #isDerived() <em>Derived</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isMultiValued()
+	 * @see #isDerived()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean multiValued = MULTI_VALUED_EDEFAULT;
+	protected boolean derived = DERIVED_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -141,8 +141,8 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
 	 * @generated
 	 */
 	@Override
-	public boolean isMultiValued() {
-		return multiValued;
+	public boolean isDerived() {
+		return derived;
 	}
 
 	/**
@@ -151,12 +151,12 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
 	 * @generated
 	 */
 	@Override
-	public void setMultiValued(boolean newMultiValued) {
-		boolean oldMultiValued = multiValued;
-		multiValued = newMultiValued;
+	public void setDerived(boolean newDerived) {
+		boolean oldDerived = derived;
+		derived = newDerived;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ClassPackage.ATTRIBUTE__MULTI_VALUED, oldMultiValued,
-					multiValued));
+			eNotify(new ENotificationImpl(this, Notification.SET, ClassPackage.ATTRIBUTE__DERIVED, oldDerived,
+					derived));
 	}
 
 	/**
@@ -283,8 +283,8 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
 		switch (featureID) {
 		case ClassPackage.ATTRIBUTE__ID:
 			return getId();
-		case ClassPackage.ATTRIBUTE__MULTI_VALUED:
-			return isMultiValued();
+		case ClassPackage.ATTRIBUTE__DERIVED:
+			return isDerived();
 		case ClassPackage.ATTRIBUTE__NAME:
 			return getName();
 		case ClassPackage.ATTRIBUTE__TYPE:
@@ -304,8 +304,8 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
 		case ClassPackage.ATTRIBUTE__ID:
 			setId((String) newValue);
 			return;
-		case ClassPackage.ATTRIBUTE__MULTI_VALUED:
-			setMultiValued((Boolean) newValue);
+		case ClassPackage.ATTRIBUTE__DERIVED:
+			setDerived((Boolean) newValue);
 			return;
 		case ClassPackage.ATTRIBUTE__NAME:
 			setName((String) newValue);
@@ -328,8 +328,8 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
 		case ClassPackage.ATTRIBUTE__ID:
 			setId(ID_EDEFAULT);
 			return;
-		case ClassPackage.ATTRIBUTE__MULTI_VALUED:
-			setMultiValued(MULTI_VALUED_EDEFAULT);
+		case ClassPackage.ATTRIBUTE__DERIVED:
+			setDerived(DERIVED_EDEFAULT);
 			return;
 		case ClassPackage.ATTRIBUTE__NAME:
 			setName(NAME_EDEFAULT);
@@ -351,8 +351,8 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
 		switch (featureID) {
 		case ClassPackage.ATTRIBUTE__ID:
 			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-		case ClassPackage.ATTRIBUTE__MULTI_VALUED:
-			return multiValued != MULTI_VALUED_EDEFAULT;
+		case ClassPackage.ATTRIBUTE__DERIVED:
+			return derived != DERIVED_EDEFAULT;
 		case ClassPackage.ATTRIBUTE__NAME:
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		case ClassPackage.ATTRIBUTE__TYPE:
@@ -374,8 +374,8 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (id: ");
 		result.append(id);
-		result.append(", multiValued: ");
-		result.append(multiValued);
+		result.append(", derived: ");
+		result.append(derived);
 		result.append(", name: ");
 		result.append(name);
 		result.append(')');

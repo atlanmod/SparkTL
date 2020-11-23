@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel"
+    modelDirectory="/Class/src-gen" creationIcons="false" editDirectory="/Class.edit/src-gen"
+    editorDirectory="/Class.editor/src-gen" modelPluginID="Class" modelName="Class"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" codeFormatting="true"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>class.ecore</foreignModel>
+  <testsDirectory xsi:nil="true"/>
+  <genPackages prefix="Class" basePackage="org.atlanmod" disposableProviderFactory="true"
+      ecorePackage="class.ecore#/">
+    <genClasses ecoreClass="class.ecore#//Class">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute class.ecore#//Class/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute class.ecore#//Class/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference class.ecore#//Class/attributes"/>
+    </genClasses>
+    <genClasses ecoreClass="class.ecore#//Attribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute class.ecore#//Attribute/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute class.ecore#//Attribute/derived"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute class.ecore#//Attribute/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference class.ecore#//Attribute/type"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

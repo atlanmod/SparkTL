@@ -164,7 +164,7 @@ public class ClassPackageImpl extends EPackageImpl implements ClassPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAttribute_MultiValued() {
+	public EAttribute getAttribute_Derived() {
 		return (EAttribute) attributeEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -225,7 +225,7 @@ public class ClassPackageImpl extends EPackageImpl implements ClassPackage {
 
 		attributeEClass = createEClass(ATTRIBUTE);
 		createEAttribute(attributeEClass, ATTRIBUTE__ID);
-		createEAttribute(attributeEClass, ATTRIBUTE__MULTI_VALUED);
+		createEAttribute(attributeEClass, ATTRIBUTE__DERIVED);
 		createEAttribute(attributeEClass, ATTRIBUTE__NAME);
 		createEReference(attributeEClass, ATTRIBUTE__TYPE);
 	}
@@ -276,7 +276,7 @@ public class ClassPackageImpl extends EPackageImpl implements ClassPackage {
 				IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getAttribute_Id(), ecorePackage.getEString(), "id", "-1", 0, 1, Attribute.class, !IS_TRANSIENT,
 				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAttribute_MultiValued(), ecorePackage.getEBoolean(), "multiValued", "true", 0, 1,
+		initEAttribute(getAttribute_Derived(), ecorePackage.getEBoolean(), "derived", "true", 0, 1,
 				Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAttribute_Name(), ecorePackage.getEString(), "name", "\"\"", 1, 1, Attribute.class,
