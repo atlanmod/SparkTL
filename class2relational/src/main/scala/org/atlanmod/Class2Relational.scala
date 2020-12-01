@@ -45,7 +45,9 @@ class Class2Relational() {
                                     */
                                     (tls, i, m, c, t) => {
                                         val attrs = m.allModelElements.filter(o => o.eClass() == classPackage.getAttribute)
-                                        Some(new ELink(t , new EReferenceImpl(), attrs(i)))
+//                                        Some(new ELink(t , new EReferenceImpl(), attrs(i)))
+                                        // TODO
+                                        None
                                     }
                                 )
                             )
@@ -81,7 +83,9 @@ class Class2Relational() {
                                     */
                                     (tls, i, m, a, c) => {
                                         val cls = m.allModelElements.filter(o => o.eClass() == classPackage.getClass_)
-                                        Some(new ELink(c , new EReferenceImpl(), cls(i)))
+//                                        Some(new ELink(c , new EReferenceImpl(), cls(i)))
+                                        // TODO
+                                        None
                                     }
                                 )
                             )
