@@ -5,12 +5,8 @@ import org.eclipse.emf.ecore.{EClass, EObject, EReference}
 
 class EMFMetamodel extends Metamodel[EObject, ELink, EClass, EReference] {
 
-    def toModelClass(sc: EClass, se: EObject): Option[EObject] = {
-        if (se.eClass().getEAllSuperTypes().contains(sc))
-            Some (se)
-        else
-            None
-    }
+    def toModelClass(sc: EClass, se: EObject): Option[EClass] =
+        Some(sc).filter(se.eClass().getEAllSuperTypes().contains)
 
     def toModelReference(sr: EReference, sl: ELink): Option[ELink] =
         if (sl.getReference.equals(sr))
@@ -24,4 +20,5 @@ class EMFMetamodel extends Metamodel[EObject, ELink, EClass, EReference] {
         }
     }
 
+//    override def denoteClass(sc: EClass): EClass = sc
 }

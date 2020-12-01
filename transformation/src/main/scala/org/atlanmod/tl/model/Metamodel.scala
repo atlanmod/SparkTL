@@ -8,9 +8,9 @@ trait Metamodel[ME, ML, MC, MR] {
     *  MR: ModelReference
     */
 
-    def denoteClass(sc: MC): MC
+//    def denoteClass(sc: MC): MC
 
-    def toModelClass(sc: MC, se: ME): Option[ME]
+    def toModelClass(sc: MC, se: ME): Option[MC]
     def toModelReference(sr: MR, sl: ML): Option[ML]
 
     def equals(that: Any): Boolean

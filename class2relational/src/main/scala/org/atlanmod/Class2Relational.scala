@@ -2,6 +2,7 @@ package org.atlanmod
 
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
+import org.eclipse.emf.ecore.impl.EReferenceImpl
 import org.eclipse.emf.ecore.{EClass, EObject}
 
 // Is Multivalued -> derived
@@ -18,15 +19,13 @@ class Class2Relational() {
                 new RuleImpl(
                     name = "Class2Table",
                   // CoqTL : use a label instead of an EClass :
-                    // types = List(ClassHelper.CLASS)
                     types = List(classPackage.getClass_),
                     from = (_, _) => Some(true), // No guard condition
-                    itExpr = (_, _)  => Some(1), // No iteratorre
+                    itExpr = (_, _)  => Some(1), // No iterator
                     to =
                       List(
                         new OutputPatternElementImpl(
                             name = "tab",
-                            // TODO : why l is a list ? How to use ``elem''
                             elementExpr = (_, _, l) => {
                                 val _class = l.head.asInstanceOf[classModel.Class]
                                 val table = relationalPackage.getRelationalFactory.createTable()
@@ -36,8 +35,19 @@ class Class2Relational() {
                             },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
-                                    null
-                                ) // TODO
+                                    /*
+                                    tls: List[TraceLink[EObject, EObject]]
+                                    i: Int
+                                    m: Model[EObject, ELink]
+                                    c: List[EObject]
+                                    t: EObject
+                                    => Option[TML]
+                                    */
+                                    (tls, i, m, c, t) => {
+                                        val attrs = m.allModelElements.filter(o => o.eClass() == classPackage.getAttribute)
+                                        Some(new ELink(t , new EReferenceImpl(), attrs(i)))
+                                    }
+                                )
                             )
                         )
                     )
@@ -48,14 +58,9 @@ class Class2Relational() {
                     from = (_, l) => Some(l.asInstanceOf[classModel.Attribute].isDerived),
                     itExpr = (_, _) => Some(1), // No where clause
                     to =
-//                      elem [AttributeClass] ColumnClass "col"
-//                        (fun i m a => BuildColumn (getAttributeId a) (getAttributeName a))
                       List(
                         new OutputPatternElementImpl(
                             name = "col",
-                            // TODO : why l is a list ? How to use ``elem''
-                            // ConcreteSyntax.v : elem
-                            //
                             elementExpr = (_, _, l) =>
                                 {
                                     val attribute = l.head.asInstanceOf[classModel.Attribute]
@@ -65,7 +70,20 @@ class Class2Relational() {
                                     Some(column)
                                 },
                             outputElemRefs = List(
-                                new OutputPatternElementReferenceImpl(null) // TODO
+                                new OutputPatternElementReferenceImpl(
+                                    /*
+                                    tls: List[TraceLink[EObject, EObject]]
+                                    i: Int
+                                    m: Model[EObject, ELink]
+                                    a: List[Eobject]
+                                    c: EObject
+                                    => Option[TML]
+                                    */
+                                    (tls, i, m, a, c) => {
+                                        val cls = m.allModelElements.filter(o => o.eClass() == classPackage.getClass_)
+                                        Some(new ELink(c , new EReferenceImpl(), cls(i)))
+                                    }
+                                )
                             )
                         )
                     )

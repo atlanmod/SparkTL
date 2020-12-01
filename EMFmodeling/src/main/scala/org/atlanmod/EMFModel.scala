@@ -16,8 +16,11 @@ class EMFModel(resource: EObject) extends Model[EObject, ELink] {
     }
 
     def allModelLinks: List[ELink] = {
-        // TODO
-        ???
+        var res: List[ELink] = List()
+        for (a <- allModelElements){
+            res = new ELink(a, a.eContainmentFeature(), a.eContainer()) :: res
+        }
+        res
     }
 
 }
