@@ -1,30 +1,43 @@
 package org.atlanmod
 
 import org.atlanmod.tl.model.Model
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.{EObject, EReference}
-
 
 class EMFModel(resource: Resource) extends Model[EObject, ELink] {
 
+    var elements: List[EObject] = null
+    var links : List[ELink] = null
+
+    private def initialize() = {
+        if (elements == null | links == null){
+            elements = List() // init
+            links = List() // init
+            // Iteration on elements
+            val itr_content = resource.getAllContents
+            while(itr_content.hasNext) {
+                val e = itr_content.next()
+                // Add to elements
+                elements = e :: elements
+                // Add element's links
+                val itr_reference = e.eClass().getEAllReferences.iterator()
+                while(itr_reference.hasNext){
+                    val reference = itr_reference.next()
+                    val link = new ELink(e, reference, e.eGet(reference))
+                    links = link :: links
+                }
+            }
+        }
+    }
+
     def allModelElements: List[EObject] = {
-        var res: List[EObject] = resource.getContents.toArray().toList.map(a => a.asInstanceOf[EObject])
-//        val i = resource.getAllContents
-//        while (i.hasNext) {
-//            res = i.next() :: res
-//        }
-        res
+        initialize()
+        elements
     }
 
     def allModelLinks: List[ELink] = {
-        var res: List[ELink] = List()
-        for (source <- allModelElements){
-            val allRef = source.eClass().getEAllReferences
-            for (ref : EReference <- allRef.asInstanceOf[List[EReference]]){
-                res = new ELink(source, ref, source.eGet(ref)) :: res
-            }
-        }
-        res
+        initialize()
+        links
     }
 
 }

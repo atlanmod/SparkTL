@@ -7,4 +7,6 @@ class ELink(src: EObject, ref: EReference, trg: Object){
     def getSource: EObject = src
     def getReference: EReference = ref
     def getTarget: Object = trg
+
+    override def toString: String = "(" + src.toString + ", " + ref.toString + ", " + trg.toString + ")"
 }
