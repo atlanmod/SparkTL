@@ -2,8 +2,8 @@ package org.atlanmod
 
 import org.eclipse.emf.ecore.{EObject, EReference}
 
-class ELink(src: EObject, ref: EReference, trg: Object){
-    // TODO : add a trait in transformation.model : Link + with 3 getters
+class ELink(src: EObject, ref: EReference, trg: Object) extends {
+
     def getSource: EObject = src
     def getReference: EReference = ref
     def getTarget: Object = trg

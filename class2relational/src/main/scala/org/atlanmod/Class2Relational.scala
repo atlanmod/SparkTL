@@ -2,7 +2,6 @@ package org.atlanmod
 
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
-import org.eclipse.emf.ecore.impl.EReferenceImpl
 import org.eclipse.emf.ecore.{EClass, EObject}
 
 // Is Multivalued -> derived

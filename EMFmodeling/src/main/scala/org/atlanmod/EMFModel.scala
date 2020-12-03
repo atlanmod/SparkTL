@@ -6,10 +6,10 @@ import org.eclipse.emf.ecore.resource.Resource
 
 class EMFModel(resource: Resource) extends Model[EObject, ELink] {
 
-    var elements: List[EObject] = null
-    var links : List[ELink] = null
+    var elements: List[EObject] = _
+    var links : List[ELink] = _
 
-    private def initialize() = {
+    { // Constructor
         if (elements == null | links == null){
             elements = List() // init
             links = List() // init
@@ -31,13 +31,21 @@ class EMFModel(resource: Resource) extends Model[EObject, ELink] {
     }
 
     def allModelElements: List[EObject] = {
-        initialize()
         elements
     }
 
     def allModelLinks: List[ELink] = {
-        initialize()
         links
+    }
+
+    override def toString: String = {
+        val str_builder = new StringBuilder("")
+        str_builder.append("elements (size="+ elements.size +"):\n")
+        str_builder.append(elements)
+        str_builder.append("\n")
+        str_builder.append("links (size="+ links.size +"):\n")
+        str_builder.append(links)
+        str_builder.toString()
     }
 
 }
