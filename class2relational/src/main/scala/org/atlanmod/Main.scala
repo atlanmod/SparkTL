@@ -23,11 +23,11 @@ object Main {
         new EMFModel(resource)
     }
 
-
     def main (args : Array[String]): Unit = {
         val m = model(1, 1)
         val mm = new EMFMetamodel
         val tr = Class2Relational.transformation()
-        TransformationEngine.execute(tr, m, mm)
+        val res =  TransformationEngine.execute(tr, m, mm)
+        print(res.allModelElements)
     }
 }

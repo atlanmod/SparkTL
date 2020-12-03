@@ -46,7 +46,7 @@ object Class2Relational {
                                     (tls, i, m, c, t) => {
                                         val attrs = c.head.asInstanceOf[org.atlanmod.classModel.Class].getAttributes
                                         val cols = tls.filter(tl => {tl.getSourcePattern == null}) // TODO
-                                        Some(new ELink(t , new EReferenceImpl(), cols))
+                                        Some(new ELink(t , relationalPackage.getTable_Columns, cols))
                                     }
                                 )
                             )
@@ -85,7 +85,7 @@ object Class2Relational {
                                         val cl = a.head.asInstanceOf[org.atlanmod.classModel.Attribute].eContainer()
                                           .asInstanceOf[org.atlanmod.classModel.Class]
                                         val tb = tls.filter(tl => {tl.getSourcePattern == null}) // TODO
-                                        Some(new ELink(c, new EReferenceImpl(), tb))
+                                        Some(new ELink(cl, relationalPackage.getColumn_Reference, tb))
                                     }
                                 )
                             )
