@@ -20,5 +20,4 @@ class EMFMetamodel extends Metamodel[EObject, ELink, EClass, EReference] {
         }
     }
 
-//    override def denoteClass(sc: EClass): EClass = sc
 }

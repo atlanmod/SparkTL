@@ -2,16 +2,17 @@ package org.atlanmod
 
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
+import org.eclipse.emf.ecore.impl.EReferenceImpl
 import org.eclipse.emf.ecore.{EClass, EObject}
 
 // Is Multivalued -> derived
 
-class Class2Relational() {
+object Class2Relational {
 
     private val classPackage =  classModel.ClassPackage.eINSTANCE
     private val relationalPackage =  relationalModel.RelationalPackage.eINSTANCE
 
-    private def transformation() : Transformation[EObject, ELink, EClass, EObject, ELink] = {
+    def transformation() : Transformation[EObject, ELink, EClass, EObject, ELink] = {
 
         new TransformationImpl[EObject, ELink, EClass, EObject, ELink](
             List(
@@ -43,10 +44,9 @@ class Class2Relational() {
                                     => Option[TML]
                                     */
                                     (tls, i, m, c, t) => {
-                                        val attrs = m.allModelElements.filter(o => o.eClass() == classPackage.getAttribute)
-//                                        Some(new ELink(t , new EReferenceImpl(), attrs(i)))
-                                        // TODO
-                                        None
+                                        val attrs = c.head.asInstanceOf[org.atlanmod.classModel.Class].getAttributes
+                                        val cols = tls.filter(tl => {tl.getSourcePattern == null}) // TODO
+                                        Some(new ELink(t , new EReferenceImpl(), cols))
                                     }
                                 )
                             )
@@ -81,10 +81,11 @@ class Class2Relational() {
                                     => Option[TML]
                                     */
                                     (tls, i, m, a, c) => {
-                                        val cls = m.allModelElements.filter(o => o.eClass() == classPackage.getClass_)
-//                                        Some(new ELink(c , new EReferenceImpl(), cls(i)))
-                                        // TODO
-                                        None
+                                        // get the class related to a
+                                        val cl = a.head.asInstanceOf[org.atlanmod.classModel.Attribute].eContainer()
+                                          .asInstanceOf[org.atlanmod.classModel.Class]
+                                        val tb = tls.filter(tl => {tl.getSourcePattern == null}) // TODO
+                                        Some(new ELink(c, new EReferenceImpl(), tb))
                                     }
                                 )
                             )
