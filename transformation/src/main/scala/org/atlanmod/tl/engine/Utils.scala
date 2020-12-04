@@ -1,4 +1,4 @@
-package org.atlanmod.tl.sequential
+package org.atlanmod.tl.engine
 
 import org.atlanmod.tl.model.{Model, Transformation}
 import org.atlanmod.tl.util.TupleUtils

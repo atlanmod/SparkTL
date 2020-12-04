@@ -1,7 +1,8 @@
-package org.atlanmod.tl.sequential
+package org.atlanmod.tl.engine.sequential
 
+import org.atlanmod.tl.engine.Utils.allTuples
+import org.atlanmod.tl.engine.{Apply, Instantiate}
 import org.atlanmod.tl.model.{Metamodel, Model, Transformation}
-import org.atlanmod.tl.sequential.Utils.allTuples
 
 object TransformationEngine {
     /*
@@ -15,13 +16,14 @@ object TransformationEngine {
 
     def execute[SME, SML, SMC, SMR, TME, TML, TMC](tr: Transformation[SME, SML, SMC, TME, TML],
                                                    sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
-    :Model[TME, TML] = {
+    : Model[TME, TML] = {
         val tuples = allTuples(tr, sm)
         /* Instantiate */ val elements = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t))
-        /* Apply */       val links = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t))
+        /* Apply */ val links = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t))
 
         class tupleTModel(elements: List[TME], links: List[TML]) extends Model[TME, TML] {
             override def allModelElements: List[TME] = elements
+
             override def allModelLinks: List[TML] = links
         }
 

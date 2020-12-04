@@ -1,6 +1,6 @@
 package org.atlanmod
 
-import org.atlanmod.tl.sequential.TransformationEngine
+import org.atlanmod.tl.util.SparkUtil
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl
 
 object Main {
@@ -26,12 +26,22 @@ object Main {
         val m = model(1, 2)
         val mm = new EMFMetamodel
         val tr = Class2Relational.transformation()
-        val res =  TransformationEngine.execute(tr, m, mm)
-        println(res.allModelElements.size + " elemtns")
-        println(res.allModelElements)
-        println(res.allModelLinks.size + " links")
-        println(res.allModelLinks)
+        val sc = SparkUtil.context
 
+        val res_seq =  org.atlanmod.tl.engine.sequential.TransformationEngine.execute(tr, m, mm)
+        val res_par =  org.atlanmod.tl.engine.parallel.TransformationEngine.execute(tr, m, mm, sc)
+
+        println(res_seq.allModelElements.size + " elemtns")
+        println(res_seq.allModelElements)
+        println(res_seq.allModelLinks.size + " links")
+        println(res_seq.allModelLinks)
+
+        println("-----------------------------------")
+
+        println(res_par.allModelElements.size + " elemtns")
+        println(res_par.allModelElements)
+        println(res_par.allModelLinks.size + " links")
+        println(res_par.allModelLinks)
 
     }
 }
