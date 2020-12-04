@@ -32,12 +32,16 @@ object Class2Relational {
                                 table.setName(_class.getName)
                                 Some(table)
                             },
+
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
                                     (tls, i, m, c, t) => {
-                                         val attrs = c.head.asInstanceOf[org.atlanmod.classModel.Class].getAttributes
-                                         val cols = tls.filter(tl => {tl.getSourcePattern == null}) // TODO
-                                         Some(new ELink(t , relationalPackage.getTable_Columns, cols))
+                                        val attrs = c.head.asInstanceOf[org.atlanmod.classModel.Class].getAttributes
+                                        val cols = tls // all the tracelink
+                                          // get in tls, all the TraceLink, where all the elements in source are in attrs.
+                                          .filter(tl => attrs.contains(tl.getSourcePattern.head))
+                                          .map(tl => tl.getTargetElement)
+                                        Some(new ELink(t , relationalPackage.getTable_Columns, cols))
                                     }
                                 )
                             )
@@ -63,12 +67,16 @@ object Class2Relational {
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
-                                    (tls, i, m, a, c) => {
+                                    (tls, _, _, a, c) => {
                                         // get the class related to a
-                                         val cl = a.head.asInstanceOf[org.atlanmod.classModel.Attribute].eContainer()
-                                          .asInstanceOf[org.atlanmod.classModel.Class]
-                                         val tb = tls.filter(tl => {tl.getSourcePattern == null}) // TODO
-                                         Some(new ELink(cl, relationalPackage.getColumn_Reference, tb))
+                                        val cl =
+                                            a.head.asInstanceOf[org.atlanmod.classModel.Attribute].eContainer()
+                                              .asInstanceOf[org.atlanmod.classModel.Class]
+                                        val tb =
+                                            tls // All the trace links
+                                              .filter(tl => {tl.getSourcePattern.contains(cl)}) // Get the ones whose source is the class
+                                              .map(tl => tl.getTargetElement) // Get the corresponding tables
+                                         Some(new ELink(c, relationalPackage.getColumn_Reference, tb))
                                     }
                                 )
                             )

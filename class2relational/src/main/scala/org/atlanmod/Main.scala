@@ -23,13 +23,15 @@ object Main {
     }
 
     def main (args : Array[String]): Unit = {
-        val m = model(1, 1)
+        val m = model(1, 2)
         val mm = new EMFMetamodel
         val tr = Class2Relational.transformation()
         val res =  TransformationEngine.execute(tr, m, mm)
-        println(res.allModelElements.size + " links")
+        println(res.allModelElements.size + " elemtns")
         println(res.allModelElements)
         println(res.allModelLinks.size + " links")
         println(res.allModelLinks)
+
+
     }
 }
