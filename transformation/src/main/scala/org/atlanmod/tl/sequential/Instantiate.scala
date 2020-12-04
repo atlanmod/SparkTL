@@ -19,7 +19,7 @@ object Instantiate {
                     case _ => false
                 }
             case (List(), List()) => true
-            case _ => false
+            case (_,_) => false
         }
         true
 
@@ -65,6 +65,7 @@ object Instantiate {
                                                          sm: Model[SME, SML],  mm: Metamodel[SME, SML, SMC, SMR],
                                                          sp: List[SME])
     : List[TME]={
-        matchPattern(tr, sm, mm, sp).flatMap(r => instantiateRuleOnPattern(r, sm, sp))
+        val matched = matchPattern(tr, sm, mm, sp)
+        matched.flatMap(r => instantiateRuleOnPattern(r, sm, sp))
     }
 }

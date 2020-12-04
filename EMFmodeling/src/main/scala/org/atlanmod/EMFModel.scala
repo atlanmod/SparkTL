@@ -4,12 +4,14 @@ import org.atlanmod.tl.model.Model
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 
-class EMFModel(resource: Resource) extends Model[EObject, ELink] {
+class EMFModel(res: Resource) extends Model[EObject, ELink] {
 
     var elements: List[EObject] = _
     var links : List[ELink] = _
+    var resource: Resource = _
 
     { // Constructor
+        resource = res
         if (elements == null | links == null){
             elements = List() // init
             links = List() // init

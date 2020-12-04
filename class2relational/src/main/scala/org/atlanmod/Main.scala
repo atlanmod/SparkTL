@@ -12,7 +12,6 @@ object Main {
         for (i <- 1 to nclass) {
             val a_class = classFactory.createClass()
             a_class.setId(i.toString)
-            val j = 1
             for (j <- 1 to nattribute) {
                 val an_attribute = classFactory.createAttribute()
                 an_attribute.setId(i.toString+"."+j.toString)
@@ -28,6 +27,9 @@ object Main {
         val mm = new EMFMetamodel
         val tr = Class2Relational.transformation()
         val res =  TransformationEngine.execute(tr, m, mm)
-        print(res.allModelElements)
+        println(res.allModelElements.size + " links")
+        println(res.allModelElements)
+        println(res.allModelLinks.size + " links")
+        println(res.allModelLinks)
     }
 }

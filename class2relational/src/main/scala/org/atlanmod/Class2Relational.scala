@@ -2,7 +2,6 @@ package org.atlanmod
 
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
-import org.eclipse.emf.ecore.impl.EReferenceImpl
 import org.eclipse.emf.ecore.{EClass, EObject}
 
 // Is Multivalued -> derived
@@ -35,18 +34,10 @@ object Class2Relational {
                             },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
-                                    /*
-                                    tls: List[TraceLink[EObject, EObject]]
-                                    i: Int
-                                    m: Model[EObject, ELink]
-                                    c: List[EObject]
-                                    t: EObject
-                                    => Option[TML]
-                                    */
                                     (tls, i, m, c, t) => {
-                                        val attrs = c.head.asInstanceOf[org.atlanmod.classModel.Class].getAttributes
-                                        val cols = tls.filter(tl => {tl.getSourcePattern == null}) // TODO
-                                        Some(new ELink(t , relationalPackage.getTable_Columns, cols))
+                                         val attrs = c.head.asInstanceOf[org.atlanmod.classModel.Class].getAttributes
+                                         val cols = tls.filter(tl => {tl.getSourcePattern == null}) // TODO
+                                         Some(new ELink(t , relationalPackage.getTable_Columns, cols))
                                     }
                                 )
                             )
@@ -56,7 +47,7 @@ object Class2Relational {
                 new RuleImpl(
                     name = "Attribute2Column",
                     types = List(classPackage.getAttribute),
-                    from = (_, l) => Some(l.asInstanceOf[classModel.Attribute].isDerived),
+                    from = (_, l) => Some(l.head.asInstanceOf[classModel.Attribute].isDerived),
                     itExpr = (_, _) => Some(1), // No where clause
                     to =
                       List(
@@ -72,20 +63,12 @@ object Class2Relational {
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
-                                    /*
-                                    tls: List[TraceLink[EObject, EObject]]
-                                    i: Int
-                                    m: Model[EObject, ELink]
-                                    a: List[Eobject]
-                                    c: EObject
-                                    => Option[TML]
-                                    */
                                     (tls, i, m, a, c) => {
                                         // get the class related to a
-                                        val cl = a.head.asInstanceOf[org.atlanmod.classModel.Attribute].eContainer()
+                                         val cl = a.head.asInstanceOf[org.atlanmod.classModel.Attribute].eContainer()
                                           .asInstanceOf[org.atlanmod.classModel.Class]
-                                        val tb = tls.filter(tl => {tl.getSourcePattern == null}) // TODO
-                                        Some(new ELink(cl, relationalPackage.getColumn_Reference, tb))
+                                         val tb = tls.filter(tl => {tl.getSourcePattern == null}) // TODO
+                                         Some(new ELink(cl, relationalPackage.getColumn_Reference, tb))
                                     }
                                 )
                             )
