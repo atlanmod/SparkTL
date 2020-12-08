@@ -19,7 +19,8 @@ object SparkUtil {
 
     def context: SparkContext ={
         if (scontext == null) {
-            scontext = new SparkContext(config)
+            val conf = config
+            scontext = new SparkContext(conf)
             scontext.setLogLevel("OFF")
         }
         scontext

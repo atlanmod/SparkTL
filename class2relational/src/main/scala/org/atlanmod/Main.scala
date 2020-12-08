@@ -1,5 +1,6 @@
 package org.atlanmod
 
+import org.apache.spark.SparkContext
 import org.atlanmod.tl.util.SparkUtil
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl
 
@@ -26,7 +27,7 @@ object Main {
         val m = model(1, 2)
         val mm = new EMFMetamodel
         val tr = Class2Relational.transformation()
-        val sc = SparkUtil.context
+        val sc : SparkContext = SparkUtil.context
 
         val res_seq =  org.atlanmod.tl.engine.sequential.TransformationEngine.execute(tr, m, mm)
         val res_par =  org.atlanmod.tl.engine.parallel.TransformationEngine.execute(tr, m, mm, sc)
