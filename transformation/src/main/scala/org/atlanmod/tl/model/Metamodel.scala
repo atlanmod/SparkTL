@@ -1,6 +1,6 @@
 package org.atlanmod.tl.model
 
-trait Metamodel[ME, ML, MC, MR] {
+trait Metamodel[ME, ML, MC, MR] extends Serializable {
     /*
     *  ME: ModelElements
     *  ML: ModelLinks

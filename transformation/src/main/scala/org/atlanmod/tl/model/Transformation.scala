@@ -1,6 +1,6 @@
 package org.atlanmod.tl.model
 
-trait Transformation[SME, SML, SMC, TME, TML] {
+trait Transformation[SME, SML, SMC, TME, TML] extends Serializable {
     /*
      *  SME : SourceModelElement
      *  SML : SourceModelLink

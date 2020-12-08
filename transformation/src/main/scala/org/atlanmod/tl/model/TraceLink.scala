@@ -1,6 +1,6 @@
 package org.atlanmod.tl.model
 
-trait TraceLink[SME, TME] {
+trait TraceLink[SME, TME]  extends Serializable {
     /*
      *  SME : SourceModelElement
      *  TME : TargetModelElement

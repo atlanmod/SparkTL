@@ -1,6 +1,6 @@
 package org.atlanmod.tl.model
 
-trait OutputPatternElementReference[SME, SML, TME, TML] {
+trait OutputPatternElementReference[SME, SML, TME, TML]  extends Serializable  {
     /*
      *  SME : SourceModelElement
      *  TME : TargetModelElement
