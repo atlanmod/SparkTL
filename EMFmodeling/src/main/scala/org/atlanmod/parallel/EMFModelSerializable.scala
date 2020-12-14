@@ -41,12 +41,12 @@ class EMFModelSerializable(res: Resource) extends Model[EObjectWrapper, ELinkWra
         val str_builder = new StringBuilder("")
         str_builder.append("elements (size="+ elements.size +"):\n")
         for (e : EObjectWrapper <- elements)
-            str_builder.append("\t" + e.getEObject.toString + "\n")
+            str_builder.append("\t" + e.unwrap.toString + "\n")
         str_builder.append("\n")
         str_builder.append("links (size="+ links.size +"):\n")
         for (l : ELinkWrapper <- links) {
             str_builder.append("\t link \n")
-            str_builder.append(l.getELink.toString(ntab = 2))
+            str_builder.append(l.unwrap.toString(ntab = 2))
         }
         str_builder.toString()
     }

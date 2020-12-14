@@ -13,10 +13,10 @@ object Class2Relational {
 
     private def removeWrapperTL(tl: TraceLink[EObjectWrapper, EObjectWrapper]): TraceLinkImpl[EObject, EObject] = {
         new TraceLinkImpl((
-            tl.getSourcePattern.map(ow => ow.getEObject),
+            tl.getSourcePattern.map(ow => ow.unwrap),
             tl.getIterator,
             tl.getName
-          ), tl.getTargetElement.getEObject)
+          ), tl.getTargetElement.unwrap)
     }
 
     def transformation(): Transformation[EObjectWrapper, ELinkWrapper, EClassWrapper, EObjectWrapper, ELinkWrapper] = {
@@ -33,7 +33,7 @@ object Class2Relational {
                           new OutputPatternElementImpl(
                               name = "tab",
                               elementExpr = (_, _, l) => {
-                                  val _class = l.head.getEObject.asInstanceOf[classModel.Class]
+                                  val _class = l.head.unwrap.asInstanceOf[classModel.Class]
                                   val table = relationalPackage.getRelationalFactory.createTable()
                                   table.setId(_class.getId)
                                   table.setName(_class.getName)
@@ -44,7 +44,7 @@ object Class2Relational {
                               outputElemRefs = List(
                                   new OutputPatternElementReferenceImpl(
                                       (tls, i, m, c, t) => {
-                                          val attrs = c.map(o => o.getEObject).head.asInstanceOf[org.atlanmod.classModel.Class].getAttributes
+                                          val attrs = c.map(o => o.unwrap).head.asInstanceOf[org.atlanmod.classModel.Class].getAttributes
                                           val cols = tls // all the tracelink
                                             // Remove wrappers
                                             .map(tl => removeWrapperTL(tl))
@@ -53,7 +53,7 @@ object Class2Relational {
                                             .map(tl => tl.getTargetElement)
                                           // TODO test removing wrapper
                                           Some(new ELinkWrapper(
-                                              new ELink(t.getEObject, relationalPackage.getTable_Columns, cols)
+                                              new ELink(t.unwrap, relationalPackage.getTable_Columns, cols)
                                           ))
                                       }
                                   )
@@ -71,7 +71,7 @@ object Class2Relational {
                           new OutputPatternElementImpl(
                               name = "col",
                               elementExpr = (_, _, l) => {
-                                  val attribute = l.head.getEObject.asInstanceOf[classModel.Attribute]
+                                  val attribute = l.head.unwrap.asInstanceOf[classModel.Attribute]
                                   val column = relationalPackage.getRelationalFactory.createColumn()
                                   column.setId(attribute.getId)
                                   column.setName(attribute.getName)
@@ -94,7 +94,7 @@ object Class2Relational {
                                                 }) // Get the ones whose source is the class
                                                 .map(tl => tl.getTargetElement) // Get the corresponding tables
                                           // TODO test removing wrapper
-                                          Some(new ELinkWrapper(new ELink(c.getEObject, relationalPackage.getColumn_Reference, tb)))
+                                          Some(new ELinkWrapper(new ELink(c.unwrap, relationalPackage.getColumn_Reference, tb)))
                                       }
                                   )
                               )

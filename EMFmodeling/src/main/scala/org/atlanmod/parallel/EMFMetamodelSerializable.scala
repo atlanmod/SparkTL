@@ -6,14 +6,14 @@ import _root_.org.atlanmod.wrapper.{EClassWrapper, ELinkWrapper, EObjectWrapper,
 class EMFMetamodelSerializable extends Metamodel[EObjectWrapper, ELinkWrapper, EClassWrapper, EReferenceWrapper]{
 
     override def toModelClass(sc: EClassWrapper, se: EObjectWrapper): Option[EObjectWrapper] = {
-        val cl = sc.getEClass
-        val ob = se.getEObject
+        val cl = sc.unwrap
+        val ob = se.unwrap
         if (ob.eClass.getEAllSuperTypes.contains(cl) | ob.eClass() == cl) Some(se) else None
     }
 
     override def toModelReference(sr: EReferenceWrapper, sl: ELinkWrapper): Option[ELinkWrapper] = {
-        val re = sr.getEReference
-        val li = sl.getELink
+        val re = sr.unwrap
+        val li = sl.unwrap
         if (li.getReference.equals(re)) Some(sl) else None
     }
 
