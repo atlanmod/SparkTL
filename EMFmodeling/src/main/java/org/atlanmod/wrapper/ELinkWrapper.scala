@@ -2,6 +2,6 @@ package org.atlanmod.wrapper
 
 import org.atlanmod.ELink
 
-class ELinkWrapper (l: ELink) extends Serializable {
-    def getELink: ELink = l
+class ELinkWrapper (l: ELink) extends WrapperSerializable[ELink] {
+    def unwrap: ELink = l
 }
