@@ -1,5 +1,6 @@
-package org.atlanmod
+package org.atlanmod.sequential
 
+import org.atlanmod.ELink
 import org.atlanmod.tl.model.Model
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
@@ -10,7 +11,7 @@ class EMFModel(res: Resource) extends Model[EObject, ELink] {
     var links : List[ELink] = _
     var resource: Resource = _
 
-    { // Constructor
+    { // Constructing
         resource = res
         if (elements == null | links == null){
             elements = List() // init
@@ -32,21 +33,21 @@ class EMFModel(res: Resource) extends Model[EObject, ELink] {
         }
     }
 
-    def allModelElements: List[EObject] = {
-        elements
-    }
+    def allModelElements: List[EObject] = elements
 
-    def allModelLinks: List[ELink] = {
-        links
-    }
+    def allModelLinks: List[ELink] = links
 
     override def toString: String = {
         val str_builder = new StringBuilder("")
         str_builder.append("elements (size="+ elements.size +"):\n")
-        str_builder.append(elements)
+        for (obj : EObject <- elements)
+            str_builder.append("\t" + obj.toString + "\n")
         str_builder.append("\n")
         str_builder.append("links (size="+ links.size +"):\n")
-        str_builder.append(links)
+        for (link : ELink <- links) {
+            str_builder.append("\t link \n")
+            str_builder.append(link.toString(ntab = 2))
+        }
         str_builder.toString()
     }
 

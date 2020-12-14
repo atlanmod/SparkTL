@@ -16,14 +16,17 @@ object TransformationEngine {
      *  TML : TargetModelLink
      *  TMC : TargetModelClass
      */
-
-    def execute[SME, SML, SMC, SMR, TME: ClassTag, TML : ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
+//    def execute[SME <: Serializable, SML <: Serializable, SMC <: Serializable, SMR <: Serializable,
+//      TME <: Serializable : ClassTag , TML <: Serializable : ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
+//                                                                       sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
+//                                                                       sc: SparkContext)
+    def execute[SME, SML, SMC, SMR, TME : ClassTag , TML : ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                          sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                          sc: SparkContext)
     : Model[TME, TML] = {
         val tuples : RDD[List[SME]] = sc.parallelize(allTuples(tr, sm))
-        /* Instantiate */ val elements : RDD[TME] = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t))// No ClassTag available for TME
-        /* Apply */ val links : RDD[TML] = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t)) // No ClassTaf available for TML
+        /* Instantiate */ val elements : RDD[TME] = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t))
+        /* Apply */ val links : RDD[TML] = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t))
 
         class tupleTModel(elements: RDD[TME], links: RDD[TML]) extends Model[TME, TML] {
             override def allModelElements: List[TME] = elements.collect.toList

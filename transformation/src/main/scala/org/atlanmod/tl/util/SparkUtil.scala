@@ -4,8 +4,8 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object SparkUtil {
 
-    private var scontext : SparkContext = null
-    private var sconf : SparkConf = null
+    private var scontext : SparkContext = _
+    private var sconf : SparkConf = _
 
 
     def config: SparkConf = {
@@ -19,8 +19,7 @@ object SparkUtil {
 
     def context: SparkContext ={
         if (scontext == null) {
-            val conf = config
-            scontext = new SparkContext(conf)
+            scontext = new SparkContext(config)
             scontext.setLogLevel("OFF")
         }
         scontext

@@ -1,5 +1,6 @@
-package org.atlanmod
+package org.atlanmod.sequential
 
+import org.atlanmod.ELink
 import org.atlanmod.tl.model.Metamodel
 import org.eclipse.emf.ecore.{EClass, EObject, EReference}
 
@@ -19,7 +20,7 @@ class EMFMetamodel extends Metamodel[EObject, ELink, EClass, EReference] {
 
     override def equals(that: Any): Boolean = {
         that match {
-            case _ : Metamodel[EObject, ELink, EClass, EReference] => true
+            case _ : EMFMetamodel => true
             case _ => false
         }
     }
