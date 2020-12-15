@@ -1,12 +1,12 @@
-package org.atlanmod
+package org.atlanmod.sequential
 
 import org.apache.spark.SparkContext
+import org.atlanmod.classModel
 import org.atlanmod.parallel.{EMFMetamodelSerializable, EMFModelSerializable}
-import org.atlanmod.sequential.{EMFMetamodel, EMFModel}
 import org.atlanmod.tl.util.SparkUtil
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl
 
-object Main {
+object Test {
 
     private val classFactory = classModel.ClassFactory.eINSTANCE
 
@@ -40,11 +40,13 @@ object Main {
         println(res_seq.allModelElements)
         println(res_seq.allModelLinks.size + " links")
         println(res_seq.allModelLinks)
-        val res_par = org.atlanmod.tl.engine.parallel.TransformationEngine.execute(transformations._2, models._2, metamodels._2, sc)
 
-        println(res_par.allModelElements.size + " elemtns")
-        println(res_par.allModelElements)
-        println(res_par.allModelLinks.size + " links")
-        println(res_par.allModelLinks)
+//        val res_par = org.atlanmod.tl.engine.parallel.TransformationEngine.execute(transformations._2, models._2, metamodels._2, sc)
+//
+//        println(res_par.allModelElements.size + " elemtns")
+//        println(res_par.allModelElements)
+//        println(res_par.allModelLinks.size + " links")
+//        println(res_par.allModelLinks)
     }
+
 }
