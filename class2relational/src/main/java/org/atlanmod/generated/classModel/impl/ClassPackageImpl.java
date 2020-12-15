@@ -1,10 +1,10 @@
 /**
  */
-package org.atlanmod.classModel.impl;
+package org.atlanmod.generated.classModel.impl;
 
-import org.atlanmod.classModel.Attribute;
-import org.atlanmod.classModel.ClassFactory;
-import org.atlanmod.classModel.ClassPackage;
+import org.atlanmod.generated.classModel.Attribute;
+import org.atlanmod.generated.classModel.ClassFactory;
+import org.atlanmod.generated.classModel.ClassPackage;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -45,7 +45,7 @@ public class ClassPackageImpl extends EPackageImpl implements ClassPackage {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
-	 * @see org.atlanmod.classModel.ClassPackage#eNS_URI
+	 * @see org.atlanmod.generated.classModel.ClassPackage#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */
@@ -261,15 +261,15 @@ public class ClassPackageImpl extends EPackageImpl implements ClassPackage {
 		// Add supertypes to classes
 
 		// Initialize classes, features, and operations; add parameters
-		initEClass(classEClass, org.atlanmod.classModel.Class.class, "Class", !IS_ABSTRACT, !IS_INTERFACE,
+		initEClass(classEClass, org.atlanmod.generated.classModel.Class.class, "Class", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getClass_Id(), ecorePackage.getEString(), "id", "-1", 1, 1, org.atlanmod.classModel.Class.class,
+		initEAttribute(getClass_Id(), ecorePackage.getEString(), "id", "-1", 1, 1, org.atlanmod.generated.classModel.Class.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getClass_Name(), ecorePackage.getEString(), "name", "\"\"", 1, 1,
-				org.atlanmod.classModel.Class.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+				org.atlanmod.generated.classModel.Class.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
 				IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 		initEReference(getClass_Attributes(), this.getAttribute(), this.getAttribute_Type(), "attributes", null, 0, -1,
-				org.atlanmod.classModel.Class.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+				org.atlanmod.generated.classModel.Class.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
 				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
 		initEClass(attributeEClass, Attribute.class, "Attribute", !IS_ABSTRACT, !IS_INTERFACE,

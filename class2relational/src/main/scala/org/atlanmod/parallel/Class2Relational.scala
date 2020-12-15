@@ -1,22 +1,22 @@
 package org.atlanmod.parallel
 
+import org.atlanmod.ELink
 import org.atlanmod.tl.model.{TraceLink, Transformation}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TraceLinkImpl, TransformationImpl}
 import org.atlanmod.wrapper.{EClassWrapper, ELinkWrapper, EObjectWrapper}
-import org.atlanmod.{ELink, classModel, relationalModel}
 import org.eclipse.emf.ecore.EObject
 
 object Class2Relational {
 
-    private val classPackage = classModel.ClassPackage.eINSTANCE
-    private val relationalPackage = relationalModel.RelationalPackage.eINSTANCE
+    private val classPackage = org.atlanmod.generated.classModel.ClassPackage.eINSTANCE
+    private val relationalPackage = org.atlanmod.generated.relationalModel.RelationalPackage.eINSTANCE
 
     private def removeWrapperTL(tl: TraceLink[EObjectWrapper, EObjectWrapper]): TraceLinkImpl[EObject, EObject] = {
         new TraceLinkImpl((
-            tl.getSourcePattern.map(ow => ow.unwrap),
-            tl.getIterator,
-            tl.getName
-          ), tl.getTargetElement.unwrap)
+          tl.getSourcePattern.map(ow => ow.unwrap),
+          tl.getIterator,
+          tl.getName
+        ), tl.getTargetElement.unwrap)
     }
 
     def transformation(): Transformation[EObjectWrapper, ELinkWrapper, EClassWrapper, EObjectWrapper, ELinkWrapper] = {
@@ -33,7 +33,7 @@ object Class2Relational {
                           new OutputPatternElementImpl(
                               name = "tab",
                               elementExpr = (_, _, l) => {
-                                  val _class = l.head.unwrap.asInstanceOf[classModel.Class]
+                                  val _class = l.head.unwrap.asInstanceOf[org.atlanmod.generated.classModel.Class]
                                   val table = relationalPackage.getRelationalFactory.createTable()
                                   table.setId(_class.getId)
                                   table.setName(_class.getName)
@@ -43,8 +43,8 @@ object Class2Relational {
 
                               outputElemRefs = List(
                                   new OutputPatternElementReferenceImpl(
-                                      (tls, i, m, c, t) => {
-                                          val attrs = c.map(o => o.unwrap).head.asInstanceOf[org.atlanmod.classModel.Class].getAttributes
+                                      (tls, _, _, c, t) => {
+                                          val attrs = c.map(o => o.unwrap).head.asInstanceOf[org.atlanmod.generated.classModel.Class].getAttributes
                                           val cols = tls // all the tracelink
                                             // Remove wrappers
                                             .map(tl => removeWrapperTL(tl))
@@ -64,14 +64,14 @@ object Class2Relational {
                 new RuleImpl(
                     name = "Attribute2Column",
                     types = List(new EClassWrapper(classPackage.getAttribute)),
-                    from = (_, l) => Some(l.head.asInstanceOf[classModel.Attribute].isDerived),
+                    from = (_, l) => Some(l.head.asInstanceOf[org.atlanmod.generated.classModel.Attribute].isDerived),
                     itExpr = (_, _) => Some(1), // No where clause
                     to =
                       List(
                           new OutputPatternElementImpl(
                               name = "col",
                               elementExpr = (_, _, l) => {
-                                  val attribute = l.head.unwrap.asInstanceOf[classModel.Attribute]
+                                  val attribute = l.head.unwrap.asInstanceOf[org.atlanmod.generated.classModel.Attribute]
                                   val column = relationalPackage.getRelationalFactory.createColumn()
                                   column.setId(attribute.getId)
                                   column.setName(attribute.getName)
@@ -83,8 +83,8 @@ object Class2Relational {
                                       (tls, _, _, a, c) => {
                                           // get the class related to a
                                           val cl =
-                                              a.head.asInstanceOf[org.atlanmod.classModel.Attribute].eContainer()
-                                                .asInstanceOf[org.atlanmod.classModel.Class]
+                                              a.head.asInstanceOf[org.atlanmod.generated.classModel.Attribute].eContainer()
+                                                .asInstanceOf[org.atlanmod.generated.classModel.Class]
                                           val tb =
                                               tls
                                                 // Remove wrappers

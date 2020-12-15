@@ -1,10 +1,10 @@
 /**
  */
-package org.atlanmod.classModel.impl;
+package org.atlanmod.generated.classModel.impl;
 
-import org.atlanmod.classModel.Attribute;
-import org.atlanmod.classModel.ClassFactory;
-import org.atlanmod.classModel.ClassPackage;
+import org.atlanmod.generated.classModel.Attribute;
+import org.atlanmod.generated.classModel.ClassFactory;
+import org.atlanmod.generated.classModel.ClassPackage;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -72,7 +72,7 @@ public class ClassFactoryImpl extends EFactoryImpl implements ClassFactory {
 	 * @generated
 	 */
 	@Override
-	public org.atlanmod.classModel.Class createClass() {
+	public org.atlanmod.generated.classModel.Class createClass() {
 		ClassImpl class_ = new ClassImpl();
 		return class_;
 	}

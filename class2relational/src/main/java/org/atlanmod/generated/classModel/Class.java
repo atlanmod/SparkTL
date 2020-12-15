@@ -1,6 +1,6 @@
 /**
  */
-package org.atlanmod.classModel;
+package org.atlanmod.generated.classModel;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -15,12 +15,12 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.atlanmod.classModel.Class#getId <em>Id</em>}</li>
- *   <li>{@link org.atlanmod.classModel.Class#getName <em>Name</em>}</li>
- *   <li>{@link org.atlanmod.classModel.Class#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link org.atlanmod.generated.classModel.Class#getId <em>Id</em>}</li>
+ *   <li>{@link org.atlanmod.generated.classModel.Class#getName <em>Name</em>}</li>
+ *   <li>{@link org.atlanmod.generated.classModel.Class#getAttributes <em>Attributes</em>}</li>
  * </ul>
  *
- * @see org.atlanmod.classModel.ClassPackage#getClass_()
+ * @see org.atlanmod.generated.classModel.ClassPackage#getClass_()
  * @model
  * @generated
  */
@@ -32,14 +32,14 @@ public interface Class extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
-	 * @see org.atlanmod.classModel.ClassPackage#getClass_Id()
+	 * @see org.atlanmod.generated.classModel.ClassPackage#getClass_Id()
 	 * @model default="-1" required="true"
 	 * @generated
 	 */
 	String getId();
 
 	/**
-	 * Sets the value of the '{@link org.atlanmod.classModel.Class#getId <em>Id</em>}' attribute.
+	 * Sets the value of the '{@link org.atlanmod.generated.classModel.Class#getId <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Id</em>' attribute.
@@ -55,14 +55,14 @@ public interface Class extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
-	 * @see org.atlanmod.classModel.ClassPackage#getClass_Name()
+	 * @see org.atlanmod.generated.classModel.ClassPackage#getClass_Name()
 	 * @model default="\"\"" required="true" ordered="false"
 	 * @generated
 	 */
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.atlanmod.classModel.Class#getName <em>Name</em>}' attribute.
+	 * Sets the value of the '{@link org.atlanmod.generated.classModel.Class#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' attribute.
@@ -73,13 +73,13 @@ public interface Class extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Attributes</b></em>' containment reference list.
-	 * The list contents are of type {@link org.atlanmod.classModel.Attribute}.
-	 * It is bidirectional and its opposite is '{@link org.atlanmod.classModel.Attribute#getType <em>Type</em>}'.
+	 * The list contents are of type {@link org.atlanmod.generated.classModel.Attribute}.
+	 * It is bidirectional and its opposite is '{@link org.atlanmod.generated.classModel.Attribute#getType <em>Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Attributes</em>' containment reference list.
-	 * @see org.atlanmod.classModel.ClassPackage#getClass_Attributes()
-	 * @see org.atlanmod.classModel.Attribute#getType
+	 * @see org.atlanmod.generated.classModel.ClassPackage#getClass_Attributes()
+	 * @see org.atlanmod.generated.classModel.Attribute#getType
 	 * @model opposite="type" containment="true" ordered="false"
 	 * @generated
 	 */

@@ -1,9 +1,9 @@
 /**
  */
-package org.atlanmod.classModel.util;
+package org.atlanmod.generated.classModel.util;
 
-import org.atlanmod.classModel.Attribute;
-import org.atlanmod.classModel.ClassPackage;
+import org.atlanmod.generated.classModel.Attribute;
+import org.atlanmod.generated.classModel.ClassPackage;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.util.Switch;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
- * @see org.atlanmod.classModel.ClassPackage
+ * @see org.atlanmod.generated.classModel.ClassPackage
  * @generated
  */
 public class ClassSwitch<T> extends Switch<T> {
@@ -68,7 +68,7 @@ public class ClassSwitch<T> extends Switch<T> {
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 		case ClassPackage.CLASS: {
-			org.atlanmod.classModel.Class class_ = (org.atlanmod.classModel.Class) theEObject;
+			org.atlanmod.generated.classModel.Class class_ = (org.atlanmod.generated.classModel.Class) theEObject;
 			T result = caseClass(class_);
 			if (result == null)
 				result = defaultCase(theEObject);
@@ -97,7 +97,7 @@ public class ClassSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseClass(org.atlanmod.classModel.Class object) {
+	public T caseClass(org.atlanmod.generated.classModel.Class object) {
 		return null;
 	}
 

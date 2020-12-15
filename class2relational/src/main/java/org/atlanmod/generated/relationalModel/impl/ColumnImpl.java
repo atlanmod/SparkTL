@@ -1,17 +1,13 @@
 /**
  */
-package org.atlanmod.relationalModel.impl;
+package org.atlanmod.generated.relationalModel.impl;
 
-import java.util.Collection;
-
-import org.atlanmod.relationalModel.Column;
-import org.atlanmod.relationalModel.RelationalPackage;
-import org.atlanmod.relationalModel.Table;
+import org.atlanmod.generated.relationalModel.Column;
+import org.atlanmod.generated.relationalModel.RelationalPackage;
+import org.atlanmod.generated.relationalModel.Table;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -19,25 +15,24 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
-import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Table</b></em>'.
+ * An implementation of the model object '<em><b>Column</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.atlanmod.relationalModel.impl.TableImpl#getId <em>Id</em>}</li>
- *   <li>{@link org.atlanmod.relationalModel.impl.TableImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.atlanmod.relationalModel.impl.TableImpl#getColumns <em>Columns</em>}</li>
+ *   <li>{@link org.atlanmod.generated.relationalModel.impl.ColumnImpl#getId <em>Id</em>}</li>
+ *   <li>{@link org.atlanmod.generated.relationalModel.impl.ColumnImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.atlanmod.generated.relationalModel.impl.ColumnImpl#getReference <em>Reference</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class TableImpl extends MinimalEObjectImpl.Container implements Table {
+public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -46,7 +41,7 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String ID_EDEFAULT = "\"\"";
+	protected static final String ID_EDEFAULT = null;
 
 	/**
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
@@ -79,21 +74,11 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getColumns() <em>Columns</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getColumns()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Column> columns;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TableImpl() {
+	protected ColumnImpl() {
 		super();
 	}
 
@@ -104,7 +89,7 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return RelationalPackage.Literals.TABLE;
+		return RelationalPackage.Literals.COLUMN;
 	}
 
 	/**
@@ -127,7 +112,7 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 		String oldId = id;
 		id = newId;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.TABLE__ID, oldId, id));
+			eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.COLUMN__ID, oldId, id));
 	}
 
 	/**
@@ -150,7 +135,7 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.TABLE__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.COLUMN__NAME, oldName, name));
 	}
 
 	/**
@@ -159,12 +144,10 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	 * @generated
 	 */
 	@Override
-	public EList<Column> getColumns() {
-		if (columns == null) {
-			columns = new EObjectContainmentWithInverseEList<Column>(Column.class, this,
-					RelationalPackage.TABLE__COLUMNS, RelationalPackage.COLUMN__REFERENCE);
-		}
-		return columns;
+	public Table getReference() {
+		if (eContainerFeatureID() != RelationalPackage.COLUMN__REFERENCE)
+			return null;
+		return (Table) eInternalContainer();
 	}
 
 	/**
@@ -172,12 +155,48 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
+	public NotificationChain basicSetReference(Table newReference, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject) newReference, RelationalPackage.COLUMN__REFERENCE, msgs);
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setReference(Table newReference) {
+		if (newReference != eInternalContainer()
+				|| (eContainerFeatureID() != RelationalPackage.COLUMN__REFERENCE && newReference != null)) {
+			if (EcoreUtil.isAncestor(this, newReference))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+			NotificationChain msgs = null;
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			if (newReference != null)
+				msgs = ((InternalEObject) newReference).eInverseAdd(this, RelationalPackage.TABLE__COLUMNS, Table.class,
+						msgs);
+			msgs = basicSetReference(newReference, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.COLUMN__REFERENCE, newReference,
+					newReference));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case RelationalPackage.TABLE__COLUMNS:
-			return ((InternalEList<InternalEObject>) (InternalEList<?>) getColumns()).basicAdd(otherEnd, msgs);
+		case RelationalPackage.COLUMN__REFERENCE:
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
+			return basicSetReference((Table) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -190,8 +209,8 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case RelationalPackage.TABLE__COLUMNS:
-			return ((InternalEList<?>) getColumns()).basicRemove(otherEnd, msgs);
+		case RelationalPackage.COLUMN__REFERENCE:
+			return basicSetReference(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -202,14 +221,28 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+		case RelationalPackage.COLUMN__REFERENCE:
+			return eInternalContainer().eInverseRemove(this, RelationalPackage.TABLE__COLUMNS, Table.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case RelationalPackage.TABLE__ID:
+		case RelationalPackage.COLUMN__ID:
 			return getId();
-		case RelationalPackage.TABLE__NAME:
+		case RelationalPackage.COLUMN__NAME:
 			return getName();
-		case RelationalPackage.TABLE__COLUMNS:
-			return getColumns();
+		case RelationalPackage.COLUMN__REFERENCE:
+			return getReference();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -219,19 +252,17 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case RelationalPackage.TABLE__ID:
+		case RelationalPackage.COLUMN__ID:
 			setId((String) newValue);
 			return;
-		case RelationalPackage.TABLE__NAME:
+		case RelationalPackage.COLUMN__NAME:
 			setName((String) newValue);
 			return;
-		case RelationalPackage.TABLE__COLUMNS:
-			getColumns().clear();
-			getColumns().addAll((Collection<? extends Column>) newValue);
+		case RelationalPackage.COLUMN__REFERENCE:
+			setReference((Table) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -245,14 +276,14 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case RelationalPackage.TABLE__ID:
+		case RelationalPackage.COLUMN__ID:
 			setId(ID_EDEFAULT);
 			return;
-		case RelationalPackage.TABLE__NAME:
+		case RelationalPackage.COLUMN__NAME:
 			setName(NAME_EDEFAULT);
 			return;
-		case RelationalPackage.TABLE__COLUMNS:
-			getColumns().clear();
+		case RelationalPackage.COLUMN__REFERENCE:
+			setReference((Table) null);
 			return;
 		}
 		super.eUnset(featureID);
@@ -266,12 +297,12 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case RelationalPackage.TABLE__ID:
+		case RelationalPackage.COLUMN__ID:
 			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-		case RelationalPackage.TABLE__NAME:
+		case RelationalPackage.COLUMN__NAME:
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-		case RelationalPackage.TABLE__COLUMNS:
-			return columns != null && !columns.isEmpty();
+		case RelationalPackage.COLUMN__REFERENCE:
+			return getReference() != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -295,4 +326,4 @@ public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 		return result.toString();
 	}
 
-} //TableImpl
+} //ColumnImpl

@@ -1,11 +1,11 @@
 /**
  */
-package org.atlanmod.relationalModel.impl;
+package org.atlanmod.generated.relationalModel.impl;
 
-import org.atlanmod.relationalModel.Column;
-import org.atlanmod.relationalModel.RelationalFactory;
-import org.atlanmod.relationalModel.RelationalPackage;
-import org.atlanmod.relationalModel.Table;
+import org.atlanmod.generated.relationalModel.Column;
+import org.atlanmod.generated.relationalModel.RelationalFactory;
+import org.atlanmod.generated.relationalModel.RelationalPackage;
+import org.atlanmod.generated.relationalModel.Table;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -46,7 +46,7 @@ public class RelationalPackageImpl extends EPackageImpl implements RelationalPac
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
-	 * @see org.atlanmod.relationalModel.RelationalPackage#eNS_URI
+	 * @see org.atlanmod.generated.relationalModel.RelationalPackage#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */

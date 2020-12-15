@@ -1,6 +1,6 @@
 /**
  */
-package org.atlanmod.relationalModel;
+package org.atlanmod.generated.relationalModel;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -15,12 +15,12 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.atlanmod.relationalModel.Table#getId <em>Id</em>}</li>
- *   <li>{@link org.atlanmod.relationalModel.Table#getName <em>Name</em>}</li>
- *   <li>{@link org.atlanmod.relationalModel.Table#getColumns <em>Columns</em>}</li>
+ *   <li>{@link org.atlanmod.generated.relationalModel.Table#getId <em>Id</em>}</li>
+ *   <li>{@link org.atlanmod.generated.relationalModel.Table#getName <em>Name</em>}</li>
+ *   <li>{@link org.atlanmod.generated.relationalModel.Table#getColumns <em>Columns</em>}</li>
  * </ul>
  *
- * @see org.atlanmod.relationalModel.RelationalPackage#getTable()
+ * @see org.atlanmod.generated.relationalModel.RelationalPackage#getTable()
  * @model
  * @generated
  */
@@ -32,14 +32,14 @@ public interface Table extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
-	 * @see org.atlanmod.relationalModel.RelationalPackage#getTable_Id()
+	 * @see org.atlanmod.generated.relationalModel.RelationalPackage#getTable_Id()
 	 * @model default="\"\"" required="true"
 	 * @generated
 	 */
 	String getId();
 
 	/**
-	 * Sets the value of the '{@link org.atlanmod.relationalModel.Table#getId <em>Id</em>}' attribute.
+	 * Sets the value of the '{@link org.atlanmod.generated.relationalModel.Table#getId <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Id</em>' attribute.
@@ -54,14 +54,14 @@ public interface Table extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
-	 * @see org.atlanmod.relationalModel.RelationalPackage#getTable_Name()
+	 * @see org.atlanmod.generated.relationalModel.RelationalPackage#getTable_Name()
 	 * @model required="true"
 	 * @generated
 	 */
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.atlanmod.relationalModel.Table#getName <em>Name</em>}' attribute.
+	 * Sets the value of the '{@link org.atlanmod.generated.relationalModel.Table#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' attribute.
@@ -72,13 +72,13 @@ public interface Table extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Columns</b></em>' containment reference list.
-	 * The list contents are of type {@link org.atlanmod.relationalModel.Column}.
-	 * It is bidirectional and its opposite is '{@link org.atlanmod.relationalModel.Column#getReference <em>Reference</em>}'.
+	 * The list contents are of type {@link org.atlanmod.generated.relationalModel.Column}.
+	 * It is bidirectional and its opposite is '{@link org.atlanmod.generated.relationalModel.Column#getReference <em>Reference</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Columns</em>' containment reference list.
-	 * @see org.atlanmod.relationalModel.RelationalPackage#getTable_Columns()
-	 * @see org.atlanmod.relationalModel.Column#getReference
+	 * @see org.atlanmod.generated.relationalModel.RelationalPackage#getTable_Columns()
+	 * @see org.atlanmod.generated.relationalModel.Column#getReference
 	 * @model opposite="reference" containment="true" ordered="false"
 	 * @generated
 	 */

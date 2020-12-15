@@ -1,6 +1,6 @@
 /**
  */
-package org.atlanmod.classModel;
+package org.atlanmod.generated.classModel;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EReference;
  *   <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
- * @see org.atlanmod.classModel.ClassFactory
+ * @see org.atlanmod.generated.classModel.ClassFactory
  * @model kind="package"
  * @generated
  */
@@ -54,14 +54,14 @@ public interface ClassPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	ClassPackage eINSTANCE = org.atlanmod.classModel.impl.ClassPackageImpl.init();
+	ClassPackage eINSTANCE = org.atlanmod.generated.classModel.impl.ClassPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.atlanmod.classModel.impl.ClassImpl <em>Class</em>}' class.
+	 * The meta object id for the '{@link org.atlanmod.generated.classModel.impl.ClassImpl <em>Class</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.atlanmod.classModel.impl.ClassImpl
-	 * @see org.atlanmod.classModel.impl.ClassPackageImpl#getClass_()
+	 * @see org.atlanmod.generated.classModel.impl.ClassImpl
+	 * @see org.atlanmod.generated.classModel.impl.ClassPackageImpl#getClass_()
 	 * @generated
 	 */
 	int CLASS = 0;
@@ -112,11 +112,11 @@ public interface ClassPackage extends EPackage {
 	int CLASS_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.atlanmod.classModel.impl.AttributeImpl <em>Attribute</em>}' class.
+	 * The meta object id for the '{@link org.atlanmod.generated.classModel.impl.AttributeImpl <em>Attribute</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.atlanmod.classModel.impl.AttributeImpl
-	 * @see org.atlanmod.classModel.impl.ClassPackageImpl#getAttribute()
+	 * @see org.atlanmod.generated.classModel.impl.AttributeImpl
+	 * @see org.atlanmod.generated.classModel.impl.ClassPackageImpl#getAttribute()
 	 * @generated
 	 */
 	int ATTRIBUTE = 1;
@@ -176,97 +176,97 @@ public interface ClassPackage extends EPackage {
 	int ATTRIBUTE_OPERATION_COUNT = 0;
 
 	/**
-	 * Returns the meta object for class '{@link org.atlanmod.classModel.Class <em>Class</em>}'.
+	 * Returns the meta object for class '{@link org.atlanmod.generated.classModel.Class <em>Class</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Class</em>'.
-	 * @see org.atlanmod.classModel.Class
+	 * @see org.atlanmod.generated.classModel.Class
 	 * @generated
 	 */
 	EClass getClass_();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.atlanmod.classModel.Class#getId <em>Id</em>}'.
+	 * Returns the meta object for the attribute '{@link org.atlanmod.generated.classModel.Class#getId <em>Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Id</em>'.
-	 * @see org.atlanmod.classModel.Class#getId()
+	 * @see org.atlanmod.generated.classModel.Class#getId()
 	 * @see #getClass_()
 	 * @generated
 	 */
 	EAttribute getClass_Id();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.atlanmod.classModel.Class#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.atlanmod.generated.classModel.Class#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.atlanmod.classModel.Class#getName()
+	 * @see org.atlanmod.generated.classModel.Class#getName()
 	 * @see #getClass_()
 	 * @generated
 	 */
 	EAttribute getClass_Name();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.atlanmod.classModel.Class#getAttributes <em>Attributes</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.atlanmod.generated.classModel.Class#getAttributes <em>Attributes</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Attributes</em>'.
-	 * @see org.atlanmod.classModel.Class#getAttributes()
+	 * @see org.atlanmod.generated.classModel.Class#getAttributes()
 	 * @see #getClass_()
 	 * @generated
 	 */
 	EReference getClass_Attributes();
 
 	/**
-	 * Returns the meta object for class '{@link org.atlanmod.classModel.Attribute <em>Attribute</em>}'.
+	 * Returns the meta object for class '{@link org.atlanmod.generated.classModel.Attribute <em>Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Attribute</em>'.
-	 * @see org.atlanmod.classModel.Attribute
+	 * @see org.atlanmod.generated.classModel.Attribute
 	 * @generated
 	 */
 	EClass getAttribute();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.atlanmod.classModel.Attribute#getId <em>Id</em>}'.
+	 * Returns the meta object for the attribute '{@link org.atlanmod.generated.classModel.Attribute#getId <em>Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Id</em>'.
-	 * @see org.atlanmod.classModel.Attribute#getId()
+	 * @see org.atlanmod.generated.classModel.Attribute#getId()
 	 * @see #getAttribute()
 	 * @generated
 	 */
 	EAttribute getAttribute_Id();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.atlanmod.classModel.Attribute#isDerived <em>Derived</em>}'.
+	 * Returns the meta object for the attribute '{@link org.atlanmod.generated.classModel.Attribute#isDerived <em>Derived</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Derived</em>'.
-	 * @see org.atlanmod.classModel.Attribute#isDerived()
+	 * @see org.atlanmod.generated.classModel.Attribute#isDerived()
 	 * @see #getAttribute()
 	 * @generated
 	 */
 	EAttribute getAttribute_Derived();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.atlanmod.classModel.Attribute#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.atlanmod.generated.classModel.Attribute#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.atlanmod.classModel.Attribute#getName()
+	 * @see org.atlanmod.generated.classModel.Attribute#getName()
 	 * @see #getAttribute()
 	 * @generated
 	 */
 	EAttribute getAttribute_Name();
 
 	/**
-	 * Returns the meta object for the container reference '{@link org.atlanmod.classModel.Attribute#getType <em>Type</em>}'.
+	 * Returns the meta object for the container reference '{@link org.atlanmod.generated.classModel.Attribute#getType <em>Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the container reference '<em>Type</em>'.
-	 * @see org.atlanmod.classModel.Attribute#getType()
+	 * @see org.atlanmod.generated.classModel.Attribute#getType()
 	 * @see #getAttribute()
 	 * @generated
 	 */
@@ -296,11 +296,11 @@ public interface ClassPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link org.atlanmod.classModel.impl.ClassImpl <em>Class</em>}' class.
+		 * The meta object literal for the '{@link org.atlanmod.generated.classModel.impl.ClassImpl <em>Class</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.atlanmod.classModel.impl.ClassImpl
-		 * @see org.atlanmod.classModel.impl.ClassPackageImpl#getClass_()
+		 * @see org.atlanmod.generated.classModel.impl.ClassImpl
+		 * @see org.atlanmod.generated.classModel.impl.ClassPackageImpl#getClass_()
 		 * @generated
 		 */
 		EClass CLASS = eINSTANCE.getClass_();
@@ -330,11 +330,11 @@ public interface ClassPackage extends EPackage {
 		EReference CLASS__ATTRIBUTES = eINSTANCE.getClass_Attributes();
 
 		/**
-		 * The meta object literal for the '{@link org.atlanmod.classModel.impl.AttributeImpl <em>Attribute</em>}' class.
+		 * The meta object literal for the '{@link org.atlanmod.generated.classModel.impl.AttributeImpl <em>Attribute</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.atlanmod.classModel.impl.AttributeImpl
-		 * @see org.atlanmod.classModel.impl.ClassPackageImpl#getAttribute()
+		 * @see org.atlanmod.generated.classModel.impl.AttributeImpl
+		 * @see org.atlanmod.generated.classModel.impl.ClassPackageImpl#getAttribute()
 		 * @generated
 		 */
 		EClass ATTRIBUTE = eINSTANCE.getAttribute();

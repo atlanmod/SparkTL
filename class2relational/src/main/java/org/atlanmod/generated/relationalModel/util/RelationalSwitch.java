@@ -1,8 +1,8 @@
 /**
  */
-package org.atlanmod.relationalModel.util;
+package org.atlanmod.generated.relationalModel.util;
 
-import org.atlanmod.relationalModel.*;
+import org.atlanmod.generated.relationalModel.*;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.util.Switch;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
- * @see org.atlanmod.relationalModel.RelationalPackage
+ * @see org.atlanmod.generated.relationalModel.RelationalPackage
  * @generated
  */
 public class RelationalSwitch<T> extends Switch<T> {

@@ -1,6 +1,6 @@
 /**
  */
-package org.atlanmod.classModel;
+package org.atlanmod.generated.classModel;
 
 import org.eclipse.emf.ecore.EFactory;
 
@@ -9,7 +9,7 @@ import org.eclipse.emf.ecore.EFactory;
  * The <b>Factory</b> for the model.
  * It provides a create method for each non-abstract class of the model.
  * <!-- end-user-doc -->
- * @see org.atlanmod.classModel.ClassPackage
+ * @see org.atlanmod.generated.classModel.ClassPackage
  * @generated
  */
 public interface ClassFactory extends EFactory {
@@ -19,7 +19,7 @@ public interface ClassFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	ClassFactory eINSTANCE = org.atlanmod.classModel.impl.ClassFactoryImpl.init();
+	ClassFactory eINSTANCE = org.atlanmod.generated.classModel.impl.ClassFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Class</em>'.

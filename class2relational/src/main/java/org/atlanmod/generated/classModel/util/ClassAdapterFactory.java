@@ -1,8 +1,9 @@
 /**
  */
-package org.atlanmod.relationalModel.util;
+package org.atlanmod.generated.classModel.util;
 
-import org.atlanmod.relationalModel.*;
+import org.atlanmod.generated.classModel.Attribute;
+import org.atlanmod.generated.classModel.ClassPackage;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -16,17 +17,17 @@ import org.eclipse.emf.ecore.EObject;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
- * @see org.atlanmod.relationalModel.RelationalPackage
+ * @see org.atlanmod.generated.classModel.ClassPackage
  * @generated
  */
-public class RelationalAdapterFactory extends AdapterFactoryImpl {
+public class ClassAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected static RelationalPackage modelPackage;
+	protected static ClassPackage modelPackage;
 
 	/**
 	 * Creates an instance of the adapter factory.
@@ -34,9 +35,9 @@ public class RelationalAdapterFactory extends AdapterFactoryImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public RelationalAdapterFactory() {
+	public ClassAdapterFactory() {
 		if (modelPackage == null) {
-			modelPackage = RelationalPackage.eINSTANCE;
+			modelPackage = ClassPackage.eINSTANCE;
 		}
 	}
 
@@ -65,15 +66,15 @@ public class RelationalAdapterFactory extends AdapterFactoryImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected RelationalSwitch<Adapter> modelSwitch = new RelationalSwitch<Adapter>() {
+	protected ClassSwitch<Adapter> modelSwitch = new ClassSwitch<Adapter>() {
 		@Override
-		public Adapter caseTable(Table object) {
-			return createTableAdapter();
+		public Adapter caseClass(org.atlanmod.generated.classModel.Class object) {
+			return createClassAdapter();
 		}
 
 		@Override
-		public Adapter caseColumn(Column object) {
-			return createColumnAdapter();
+		public Adapter caseAttribute(Attribute object) {
+			return createAttributeAdapter();
 		}
 
 		@Override
@@ -96,30 +97,30 @@ public class RelationalAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.atlanmod.relationalModel.Table <em>Table</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.atlanmod.generated.classModel.Class <em>Class</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.atlanmod.relationalModel.Table
+	 * @see org.atlanmod.generated.classModel.Class
 	 * @generated
 	 */
-	public Adapter createTableAdapter() {
+	public Adapter createClassAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.atlanmod.relationalModel.Column <em>Column</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.atlanmod.generated.classModel.Attribute <em>Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.atlanmod.relationalModel.Column
+	 * @see org.atlanmod.generated.classModel.Attribute
 	 * @generated
 	 */
-	public Adapter createColumnAdapter() {
+	public Adapter createAttributeAdapter() {
 		return null;
 	}
 
@@ -135,4 +136,4 @@ public class RelationalAdapterFactory extends AdapterFactoryImpl {
 		return null;
 	}
 
-} //RelationalAdapterFactory
+} //ClassAdapterFactory

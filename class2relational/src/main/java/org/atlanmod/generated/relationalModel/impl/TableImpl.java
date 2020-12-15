@@ -1,11 +1,12 @@
 /**
  */
-package org.atlanmod.classModel.impl;
+package org.atlanmod.generated.relationalModel.impl;
 
 import java.util.Collection;
 
-import org.atlanmod.classModel.Attribute;
-import org.atlanmod.classModel.ClassPackage;
+import org.atlanmod.generated.relationalModel.Column;
+import org.atlanmod.generated.relationalModel.RelationalPackage;
+import org.atlanmod.generated.relationalModel.Table;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -23,20 +24,20 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Class</b></em>'.
+ * An implementation of the model object '<em><b>Table</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.atlanmod.classModel.impl.ClassImpl#getId <em>Id</em>}</li>
- *   <li>{@link org.atlanmod.classModel.impl.ClassImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.atlanmod.classModel.impl.ClassImpl#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link org.atlanmod.generated.relationalModel.impl.TableImpl#getId <em>Id</em>}</li>
+ *   <li>{@link org.atlanmod.generated.relationalModel.impl.TableImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.atlanmod.generated.relationalModel.impl.TableImpl#getColumns <em>Columns</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlanmod.classModel.Class {
+public class TableImpl extends MinimalEObjectImpl.Container implements Table {
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -45,7 +46,7 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String ID_EDEFAULT = "-1";
+	protected static final String ID_EDEFAULT = "\"\"";
 
 	/**
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
@@ -65,7 +66,7 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String NAME_EDEFAULT = "\"\"";
+	protected static final String NAME_EDEFAULT = null;
 
 	/**
 	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -78,21 +79,21 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' containment reference list.
+	 * The cached value of the '{@link #getColumns() <em>Columns</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getAttributes()
+	 * @see #getColumns()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Attribute> attributes;
+	protected EList<Column> columns;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ClassImpl() {
+	protected TableImpl() {
 		super();
 	}
 
@@ -103,7 +104,7 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ClassPackage.Literals.CLASS;
+		return RelationalPackage.Literals.TABLE;
 	}
 
 	/**
@@ -126,7 +127,7 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 		String oldId = id;
 		id = newId;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ClassPackage.CLASS__ID, oldId, id));
+			eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.TABLE__ID, oldId, id));
 	}
 
 	/**
@@ -149,7 +150,7 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ClassPackage.CLASS__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.TABLE__NAME, oldName, name));
 	}
 
 	/**
@@ -158,12 +159,12 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 	 * @generated
 	 */
 	@Override
-	public EList<Attribute> getAttributes() {
-		if (attributes == null) {
-			attributes = new EObjectContainmentWithInverseEList<Attribute>(Attribute.class, this,
-					ClassPackage.CLASS__ATTRIBUTES, ClassPackage.ATTRIBUTE__TYPE);
+	public EList<Column> getColumns() {
+		if (columns == null) {
+			columns = new EObjectContainmentWithInverseEList<Column>(Column.class, this,
+					RelationalPackage.TABLE__COLUMNS, RelationalPackage.COLUMN__REFERENCE);
 		}
-		return attributes;
+		return columns;
 	}
 
 	/**
@@ -175,8 +176,8 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ClassPackage.CLASS__ATTRIBUTES:
-			return ((InternalEList<InternalEObject>) (InternalEList<?>) getAttributes()).basicAdd(otherEnd, msgs);
+		case RelationalPackage.TABLE__COLUMNS:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getColumns()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -189,8 +190,8 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case ClassPackage.CLASS__ATTRIBUTES:
-			return ((InternalEList<?>) getAttributes()).basicRemove(otherEnd, msgs);
+		case RelationalPackage.TABLE__COLUMNS:
+			return ((InternalEList<?>) getColumns()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -203,12 +204,12 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ClassPackage.CLASS__ID:
+		case RelationalPackage.TABLE__ID:
 			return getId();
-		case ClassPackage.CLASS__NAME:
+		case RelationalPackage.TABLE__NAME:
 			return getName();
-		case ClassPackage.CLASS__ATTRIBUTES:
-			return getAttributes();
+		case RelationalPackage.TABLE__COLUMNS:
+			return getColumns();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -222,15 +223,15 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ClassPackage.CLASS__ID:
+		case RelationalPackage.TABLE__ID:
 			setId((String) newValue);
 			return;
-		case ClassPackage.CLASS__NAME:
+		case RelationalPackage.TABLE__NAME:
 			setName((String) newValue);
 			return;
-		case ClassPackage.CLASS__ATTRIBUTES:
-			getAttributes().clear();
-			getAttributes().addAll((Collection<? extends Attribute>) newValue);
+		case RelationalPackage.TABLE__COLUMNS:
+			getColumns().clear();
+			getColumns().addAll((Collection<? extends Column>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -244,14 +245,14 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ClassPackage.CLASS__ID:
+		case RelationalPackage.TABLE__ID:
 			setId(ID_EDEFAULT);
 			return;
-		case ClassPackage.CLASS__NAME:
+		case RelationalPackage.TABLE__NAME:
 			setName(NAME_EDEFAULT);
 			return;
-		case ClassPackage.CLASS__ATTRIBUTES:
-			getAttributes().clear();
+		case RelationalPackage.TABLE__COLUMNS:
+			getColumns().clear();
 			return;
 		}
 		super.eUnset(featureID);
@@ -265,12 +266,12 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ClassPackage.CLASS__ID:
+		case RelationalPackage.TABLE__ID:
 			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-		case ClassPackage.CLASS__NAME:
+		case RelationalPackage.TABLE__NAME:
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-		case ClassPackage.CLASS__ATTRIBUTES:
-			return attributes != null && !attributes.isEmpty();
+		case RelationalPackage.TABLE__COLUMNS:
+			return columns != null && !columns.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -294,4 +295,4 @@ public class ClassImpl extends MinimalEObjectImpl.Container implements org.atlan
 		return result.toString();
 	}
 
-} //ClassImpl
+} //TableImpl

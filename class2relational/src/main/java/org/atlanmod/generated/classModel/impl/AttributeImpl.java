@@ -1,10 +1,9 @@
 /**
  */
-package org.atlanmod.relationalModel.impl;
+package org.atlanmod.generated.classModel.impl;
 
-import org.atlanmod.relationalModel.Column;
-import org.atlanmod.relationalModel.RelationalPackage;
-import org.atlanmod.relationalModel.Table;
+import org.atlanmod.generated.classModel.Attribute;
+import org.atlanmod.generated.classModel.ClassPackage;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -19,20 +18,21 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Column</b></em>'.
+ * An implementation of the model object '<em><b>Attribute</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.atlanmod.relationalModel.impl.ColumnImpl#getId <em>Id</em>}</li>
- *   <li>{@link org.atlanmod.relationalModel.impl.ColumnImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.atlanmod.relationalModel.impl.ColumnImpl#getReference <em>Reference</em>}</li>
+ *   <li>{@link org.atlanmod.generated.classModel.impl.AttributeImpl#getId <em>Id</em>}</li>
+ *   <li>{@link org.atlanmod.generated.classModel.impl.AttributeImpl#isDerived <em>Derived</em>}</li>
+ *   <li>{@link org.atlanmod.generated.classModel.impl.AttributeImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.atlanmod.generated.classModel.impl.AttributeImpl#getType <em>Type</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
+public class AttributeImpl extends MinimalEObjectImpl.Container implements Attribute {
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -41,7 +41,7 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String ID_EDEFAULT = null;
+	protected static final String ID_EDEFAULT = "-1";
 
 	/**
 	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
@@ -54,6 +54,26 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	protected String id = ID_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #isDerived() <em>Derived</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDerived()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DERIVED_EDEFAULT = true;
+
+	/**
+	 * The cached value of the '{@link #isDerived() <em>Derived</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDerived()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean derived = DERIVED_EDEFAULT;
+
+	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -61,7 +81,7 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String NAME_EDEFAULT = null;
+	protected static final String NAME_EDEFAULT = "\"\"";
 
 	/**
 	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -78,7 +98,7 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ColumnImpl() {
+	protected AttributeImpl() {
 		super();
 	}
 
@@ -89,7 +109,7 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return RelationalPackage.Literals.COLUMN;
+		return ClassPackage.Literals.ATTRIBUTE;
 	}
 
 	/**
@@ -112,7 +132,31 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 		String oldId = id;
 		id = newId;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.COLUMN__ID, oldId, id));
+			eNotify(new ENotificationImpl(this, Notification.SET, ClassPackage.ATTRIBUTE__ID, oldId, id));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDerived() {
+		return derived;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDerived(boolean newDerived) {
+		boolean oldDerived = derived;
+		derived = newDerived;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ClassPackage.ATTRIBUTE__DERIVED, oldDerived,
+					derived));
 	}
 
 	/**
@@ -135,7 +179,7 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.COLUMN__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, ClassPackage.ATTRIBUTE__NAME, oldName, name));
 	}
 
 	/**
@@ -144,10 +188,10 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * @generated
 	 */
 	@Override
-	public Table getReference() {
-		if (eContainerFeatureID() != RelationalPackage.COLUMN__REFERENCE)
+	public org.atlanmod.generated.classModel.Class getType() {
+		if (eContainerFeatureID() != ClassPackage.ATTRIBUTE__TYPE)
 			return null;
-		return (Table) eInternalContainer();
+		return (org.atlanmod.generated.classModel.Class) eInternalContainer();
 	}
 
 	/**
@@ -155,8 +199,8 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetReference(Table newReference, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject) newReference, RelationalPackage.COLUMN__REFERENCE, msgs);
+	public NotificationChain basicSetType(org.atlanmod.generated.classModel.Class newType, NotificationChain msgs) {
+		msgs = eBasicSetContainer((InternalEObject) newType, ClassPackage.ATTRIBUTE__TYPE, msgs);
 		return msgs;
 	}
 
@@ -166,23 +210,22 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	 * @generated
 	 */
 	@Override
-	public void setReference(Table newReference) {
-		if (newReference != eInternalContainer()
-				|| (eContainerFeatureID() != RelationalPackage.COLUMN__REFERENCE && newReference != null)) {
-			if (EcoreUtil.isAncestor(this, newReference))
+	public void setType(org.atlanmod.generated.classModel.Class newType) {
+		if (newType != eInternalContainer()
+				|| (eContainerFeatureID() != ClassPackage.ATTRIBUTE__TYPE && newType != null)) {
+			if (EcoreUtil.isAncestor(this, newType))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
 			NotificationChain msgs = null;
 			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
-			if (newReference != null)
-				msgs = ((InternalEObject) newReference).eInverseAdd(this, RelationalPackage.TABLE__COLUMNS, Table.class,
-						msgs);
-			msgs = basicSetReference(newReference, msgs);
+			if (newType != null)
+				msgs = ((InternalEObject) newType).eInverseAdd(this, ClassPackage.CLASS__ATTRIBUTES,
+						org.atlanmod.generated.classModel.Class.class, msgs);
+			msgs = basicSetType(newType, msgs);
 			if (msgs != null)
 				msgs.dispatch();
 		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RelationalPackage.COLUMN__REFERENCE, newReference,
-					newReference));
+			eNotify(new ENotificationImpl(this, Notification.SET, ClassPackage.ATTRIBUTE__TYPE, newType, newType));
 	}
 
 	/**
@@ -193,10 +236,10 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case RelationalPackage.COLUMN__REFERENCE:
+		case ClassPackage.ATTRIBUTE__TYPE:
 			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
-			return basicSetReference((Table) otherEnd, msgs);
+			return basicSetType((org.atlanmod.generated.classModel.Class) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -209,8 +252,8 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case RelationalPackage.COLUMN__REFERENCE:
-			return basicSetReference(null, msgs);
+		case ClassPackage.ATTRIBUTE__TYPE:
+			return basicSetType(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -223,8 +266,9 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
 		switch (eContainerFeatureID()) {
-		case RelationalPackage.COLUMN__REFERENCE:
-			return eInternalContainer().eInverseRemove(this, RelationalPackage.TABLE__COLUMNS, Table.class, msgs);
+		case ClassPackage.ATTRIBUTE__TYPE:
+			return eInternalContainer().eInverseRemove(this, ClassPackage.CLASS__ATTRIBUTES,
+					org.atlanmod.generated.classModel.Class.class, msgs);
 		}
 		return super.eBasicRemoveFromContainerFeature(msgs);
 	}
@@ -237,12 +281,14 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case RelationalPackage.COLUMN__ID:
+		case ClassPackage.ATTRIBUTE__ID:
 			return getId();
-		case RelationalPackage.COLUMN__NAME:
+		case ClassPackage.ATTRIBUTE__DERIVED:
+			return isDerived();
+		case ClassPackage.ATTRIBUTE__NAME:
 			return getName();
-		case RelationalPackage.COLUMN__REFERENCE:
-			return getReference();
+		case ClassPackage.ATTRIBUTE__TYPE:
+			return getType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -255,14 +301,17 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case RelationalPackage.COLUMN__ID:
+		case ClassPackage.ATTRIBUTE__ID:
 			setId((String) newValue);
 			return;
-		case RelationalPackage.COLUMN__NAME:
+		case ClassPackage.ATTRIBUTE__DERIVED:
+			setDerived((Boolean) newValue);
+			return;
+		case ClassPackage.ATTRIBUTE__NAME:
 			setName((String) newValue);
 			return;
-		case RelationalPackage.COLUMN__REFERENCE:
-			setReference((Table) newValue);
+		case ClassPackage.ATTRIBUTE__TYPE:
+			setType((org.atlanmod.generated.classModel.Class) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -276,14 +325,17 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case RelationalPackage.COLUMN__ID:
+		case ClassPackage.ATTRIBUTE__ID:
 			setId(ID_EDEFAULT);
 			return;
-		case RelationalPackage.COLUMN__NAME:
+		case ClassPackage.ATTRIBUTE__DERIVED:
+			setDerived(DERIVED_EDEFAULT);
+			return;
+		case ClassPackage.ATTRIBUTE__NAME:
 			setName(NAME_EDEFAULT);
 			return;
-		case RelationalPackage.COLUMN__REFERENCE:
-			setReference((Table) null);
+		case ClassPackage.ATTRIBUTE__TYPE:
+			setType((org.atlanmod.generated.classModel.Class) null);
 			return;
 		}
 		super.eUnset(featureID);
@@ -297,12 +349,14 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case RelationalPackage.COLUMN__ID:
+		case ClassPackage.ATTRIBUTE__ID:
 			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-		case RelationalPackage.COLUMN__NAME:
+		case ClassPackage.ATTRIBUTE__DERIVED:
+			return derived != DERIVED_EDEFAULT;
+		case ClassPackage.ATTRIBUTE__NAME:
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-		case RelationalPackage.COLUMN__REFERENCE:
-			return getReference() != null;
+		case ClassPackage.ATTRIBUTE__TYPE:
+			return getType() != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -320,10 +374,12 @@ public class ColumnImpl extends MinimalEObjectImpl.Container implements Column {
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (id: ");
 		result.append(id);
+		result.append(", derived: ");
+		result.append(derived);
 		result.append(", name: ");
 		result.append(name);
 		result.append(')');
 		return result.toString();
 	}
 
-} //ColumnImpl
+} //AttributeImpl

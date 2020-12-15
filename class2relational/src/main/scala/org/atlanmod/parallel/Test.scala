@@ -1,8 +1,7 @@
 package org.atlanmod.parallel
 
 import org.apache.spark.SparkContext
-import org.atlanmod.classModel
-import org.atlanmod.sequential.{EMFMetamodel, EMFModel}
+import org.atlanmod.generated.classModel
 import org.atlanmod.tl.util.SparkUtil
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl
 
@@ -10,7 +9,7 @@ object Test {
 
     private val classFactory = classModel.ClassFactory.eINSTANCE
 
-    def model(nclass: Int = 1, nattribute: Int = 1): (EMFModel, EMFModelSerializable) = {
+    def model(nclass: Int = 1, nattribute: Int = 1): EMFModelSerializable = {
         val resource = new ResourceImpl()
         for (i <- 1 to nclass) {
             val a_class = classFactory.createClass()
@@ -22,31 +21,21 @@ object Test {
             }
             resource.getContents.add(a_class)
         }
-        (new EMFModel(resource), new EMFModelSerializable(resource))
+        new EMFModelSerializable(resource)
     }
 
     def main(args: Array[String]): Unit = {
-        val models = model(1, 2)
-//        val m = model(1, 2)
-        val metamodels = (new EMFMetamodel, new EMFMetamodelSerializable)
-        val transformations = (
-          org.atlanmod.sequential.Class2Relational.transformation(),
-          org.atlanmod.parallel.Class2Relational.transformation()
-        )
+        val model = model(1, 2)
+        val metamodel = new EMFMetamodelSerializable
+        val transformation = Class2Relational.transformation()
         val sc: SparkContext = SparkUtil.context
-//        val res_seq = org.atlanmod.tl.engine.sequential.TransformationEngine.execute(transformations._1, models._1, metamodels._1)
-//
-//        println(res_seq.allModelElements.size + " elemtns")
-//        println(res_seq.allModelElements)
-//        println(res_seq.allModelLinks.size + " links")
-//        println(res_seq.allModelLinks)
 
-        val res_par = org.atlanmod.tl.engine.parallel.TransformationEngine.execute(transformations._2, models._2, metamodels._2, sc)
+        val res = org.atlanmod.tl.engine.parallel.TransformationEngine.execute(transformation, model, metamodel, sc)
 
-        println(res_par.allModelElements.size + " elemtns")
-        println(res_par.allModelElements)
-        println(res_par.allModelLinks.size + " links")
-        println(res_par.allModelLinks)
+        println(res.allModelElements.size + " elemtns")
+        println(res.allModelElements)
+        println(res.allModelLinks.size + " links")
+        println(res.allModelLinks)
     }
 
 }

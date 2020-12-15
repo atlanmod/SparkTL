@@ -1,6 +1,6 @@
 /**
  */
-package org.atlanmod.relationalModel;
+package org.atlanmod.generated.relationalModel;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EReference;
  *   <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
- * @see org.atlanmod.relationalModel.RelationalFactory
+ * @see org.atlanmod.generated.relationalModel.RelationalFactory
  * @model kind="package"
  * @generated
  */
@@ -54,14 +54,14 @@ public interface RelationalPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	RelationalPackage eINSTANCE = org.atlanmod.relationalModel.impl.RelationalPackageImpl.init();
+	RelationalPackage eINSTANCE = org.atlanmod.generated.relationalModel.impl.RelationalPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.atlanmod.relationalModel.impl.TableImpl <em>Table</em>}' class.
+	 * The meta object id for the '{@link org.atlanmod.generated.relationalModel.impl.TableImpl <em>Table</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.atlanmod.relationalModel.impl.TableImpl
-	 * @see org.atlanmod.relationalModel.impl.RelationalPackageImpl#getTable()
+	 * @see org.atlanmod.generated.relationalModel.impl.TableImpl
+	 * @see org.atlanmod.generated.relationalModel.impl.RelationalPackageImpl#getTable()
 	 * @generated
 	 */
 	int TABLE = 0;
@@ -112,11 +112,11 @@ public interface RelationalPackage extends EPackage {
 	int TABLE_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.atlanmod.relationalModel.impl.ColumnImpl <em>Column</em>}' class.
+	 * The meta object id for the '{@link org.atlanmod.generated.relationalModel.impl.ColumnImpl <em>Column</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.atlanmod.relationalModel.impl.ColumnImpl
-	 * @see org.atlanmod.relationalModel.impl.RelationalPackageImpl#getColumn()
+	 * @see org.atlanmod.generated.relationalModel.impl.ColumnImpl
+	 * @see org.atlanmod.generated.relationalModel.impl.RelationalPackageImpl#getColumn()
 	 * @generated
 	 */
 	int COLUMN = 1;
@@ -167,86 +167,86 @@ public interface RelationalPackage extends EPackage {
 	int COLUMN_OPERATION_COUNT = 0;
 
 	/**
-	 * Returns the meta object for class '{@link org.atlanmod.relationalModel.Table <em>Table</em>}'.
+	 * Returns the meta object for class '{@link org.atlanmod.generated.relationalModel.Table <em>Table</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Table</em>'.
-	 * @see org.atlanmod.relationalModel.Table
+	 * @see org.atlanmod.generated.relationalModel.Table
 	 * @generated
 	 */
 	EClass getTable();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.atlanmod.relationalModel.Table#getId <em>Id</em>}'.
+	 * Returns the meta object for the attribute '{@link org.atlanmod.generated.relationalModel.Table#getId <em>Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Id</em>'.
-	 * @see org.atlanmod.relationalModel.Table#getId()
+	 * @see org.atlanmod.generated.relationalModel.Table#getId()
 	 * @see #getTable()
 	 * @generated
 	 */
 	EAttribute getTable_Id();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.atlanmod.relationalModel.Table#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.atlanmod.generated.relationalModel.Table#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.atlanmod.relationalModel.Table#getName()
+	 * @see org.atlanmod.generated.relationalModel.Table#getName()
 	 * @see #getTable()
 	 * @generated
 	 */
 	EAttribute getTable_Name();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.atlanmod.relationalModel.Table#getColumns <em>Columns</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.atlanmod.generated.relationalModel.Table#getColumns <em>Columns</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Columns</em>'.
-	 * @see org.atlanmod.relationalModel.Table#getColumns()
+	 * @see org.atlanmod.generated.relationalModel.Table#getColumns()
 	 * @see #getTable()
 	 * @generated
 	 */
 	EReference getTable_Columns();
 
 	/**
-	 * Returns the meta object for class '{@link org.atlanmod.relationalModel.Column <em>Column</em>}'.
+	 * Returns the meta object for class '{@link org.atlanmod.generated.relationalModel.Column <em>Column</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Column</em>'.
-	 * @see org.atlanmod.relationalModel.Column
+	 * @see org.atlanmod.generated.relationalModel.Column
 	 * @generated
 	 */
 	EClass getColumn();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.atlanmod.relationalModel.Column#getId <em>Id</em>}'.
+	 * Returns the meta object for the attribute '{@link org.atlanmod.generated.relationalModel.Column#getId <em>Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Id</em>'.
-	 * @see org.atlanmod.relationalModel.Column#getId()
+	 * @see org.atlanmod.generated.relationalModel.Column#getId()
 	 * @see #getColumn()
 	 * @generated
 	 */
 	EAttribute getColumn_Id();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.atlanmod.relationalModel.Column#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.atlanmod.generated.relationalModel.Column#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.atlanmod.relationalModel.Column#getName()
+	 * @see org.atlanmod.generated.relationalModel.Column#getName()
 	 * @see #getColumn()
 	 * @generated
 	 */
 	EAttribute getColumn_Name();
 
 	/**
-	 * Returns the meta object for the container reference '{@link org.atlanmod.relationalModel.Column#getReference <em>Reference</em>}'.
+	 * Returns the meta object for the container reference '{@link org.atlanmod.generated.relationalModel.Column#getReference <em>Reference</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the container reference '<em>Reference</em>'.
-	 * @see org.atlanmod.relationalModel.Column#getReference()
+	 * @see org.atlanmod.generated.relationalModel.Column#getReference()
 	 * @see #getColumn()
 	 * @generated
 	 */
@@ -276,11 +276,11 @@ public interface RelationalPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link org.atlanmod.relationalModel.impl.TableImpl <em>Table</em>}' class.
+		 * The meta object literal for the '{@link org.atlanmod.generated.relationalModel.impl.TableImpl <em>Table</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.atlanmod.relationalModel.impl.TableImpl
-		 * @see org.atlanmod.relationalModel.impl.RelationalPackageImpl#getTable()
+		 * @see org.atlanmod.generated.relationalModel.impl.TableImpl
+		 * @see org.atlanmod.generated.relationalModel.impl.RelationalPackageImpl#getTable()
 		 * @generated
 		 */
 		EClass TABLE = eINSTANCE.getTable();
@@ -310,11 +310,11 @@ public interface RelationalPackage extends EPackage {
 		EReference TABLE__COLUMNS = eINSTANCE.getTable_Columns();
 
 		/**
-		 * The meta object literal for the '{@link org.atlanmod.relationalModel.impl.ColumnImpl <em>Column</em>}' class.
+		 * The meta object literal for the '{@link org.atlanmod.generated.relationalModel.impl.ColumnImpl <em>Column</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.atlanmod.relationalModel.impl.ColumnImpl
-		 * @see org.atlanmod.relationalModel.impl.RelationalPackageImpl#getColumn()
+		 * @see org.atlanmod.generated.relationalModel.impl.ColumnImpl
+		 * @see org.atlanmod.generated.relationalModel.impl.RelationalPackageImpl#getColumn()
 		 * @generated
 		 */
 		EClass COLUMN = eINSTANCE.getColumn();

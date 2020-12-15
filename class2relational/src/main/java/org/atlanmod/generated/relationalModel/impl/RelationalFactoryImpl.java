@@ -1,8 +1,8 @@
 /**
  */
-package org.atlanmod.relationalModel.impl;
+package org.atlanmod.generated.relationalModel.impl;
 
-import org.atlanmod.relationalModel.*;
+import org.atlanmod.generated.relationalModel.*;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
