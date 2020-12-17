@@ -2,7 +2,7 @@ package org.atlanmod
 
 import org.eclipse.emf.ecore.{EObject, EReference}
 
-class ELink(src: EObject, ref: EReference, trg: Object) {
+class ELink(src: EObject, ref: EReference, trg: Object) extends Link[EObject, EReference, Object] {
 
     def getSource: EObject = src
     def getReference: EReference = ref
