@@ -1,4 +1,4 @@
-package org.atlanmod.scratch.classModel;
+package org.atlanmod.model.scratch.classModel;
 
 import java.io.Serializable;
 

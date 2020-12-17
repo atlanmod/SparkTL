@@ -1,4 +1,4 @@
-package org.atlanmod.scratch.relationalModel;
+package org.atlanmod.model.scratch.relationalModel;
 
 import java.io.Serializable;
 

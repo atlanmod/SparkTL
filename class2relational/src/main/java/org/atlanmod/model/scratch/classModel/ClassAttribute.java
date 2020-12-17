@@ -1,7 +1,4 @@
-package org.atlanmod.scratch.classModel;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.atlanmod.model.scratch.classModel;
 
 public class ClassAttribute implements ClassElement {
 

@@ -1,4 +1,4 @@
-package org.atlanmod.scratch.relationalModel;
+package org.atlanmod.model.scratch.relationalModel;
 
 public class RelationalColumn implements RelationalElement {
 
