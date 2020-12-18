@@ -1,5 +1,6 @@
 package org.atlanmod.model.dynamic;
 
+import scala.collection.JavaConverters;
 import java.util.List;
 
 public class DynamicLink {
@@ -12,6 +13,12 @@ public class DynamicLink {
         this.type = type;
         this.source = source;
         this.target = target;
+    }
+
+    public DynamicLink(String type, DynamicElement source, scala.collection.immutable.List<DynamicElement> target) {
+        this.type = type;
+        this.source = source;
+        this.target =  JavaConverters.seqAsJavaList(target);
     }
 
     public String getType() {

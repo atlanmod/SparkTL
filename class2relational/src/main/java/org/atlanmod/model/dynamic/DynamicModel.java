@@ -30,6 +30,11 @@ public class DynamicModel implements Model<DynamicElement, DynamicLink> {
         links = new ArrayList<>();
     }
 
+    public DynamicModel(List<DynamicElement> elements, List<DynamicLink> links){
+        this.elements = elements;
+        this.links = links;
+    }
+
     @Override
     public scala.collection.immutable.List<DynamicElement> allModelElements() {
         // convert java.util.List to scala.List

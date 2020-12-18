@@ -36,6 +36,8 @@ public class DynamicElement implements Serializable {
         return properties.get(name);
     }
 
+    public void eSet(String name, Object value){ properties.putIfAbsent(name, value); }
+
     public String getType(){
         return this.type;
     }
