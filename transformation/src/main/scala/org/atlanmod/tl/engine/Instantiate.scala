@@ -21,7 +21,6 @@ object Instantiate {
             case (List(), List()) => true
             case (_,_) => false
         }
-        true
 
 
     private def matchRuleOnPattern[SME, SML, SMC, SMR, TME, TML](r: Rule[SME, SML, SMC, TME, TML],
