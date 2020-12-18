@@ -3,6 +3,7 @@ package org.atlanmod.model.dynamic;
 import org.atlanmod.EMFTool;
 import org.atlanmod.tl.model.Model;
 import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -58,8 +59,11 @@ public class DynamicModel implements Model<DynamicElement, DynamicLink> {
             EObject obj = it.next();
             EClass obj_class = obj.eClass();
 
-            String type = obj.eResource().getURI() + obj_class.toString();
-            DynamicElement e = new DynamicElement(type);
+            String class_name = obj_class.toString();
+            DynamicElement e =
+                    obj.eResource().getURI() == null ?
+                            new DynamicElement(class_name):
+                            new DynamicElement(obj.eResource().getURI().toString(), class_name);
 
             // Adding new e (with attributes) to the list of elements
             Map<String, Object> attributes_of_e = new HashMap<>();
@@ -95,5 +99,18 @@ public class DynamicModel implements Model<DynamicElement, DynamicLink> {
         }
     }
 
-
+    @Override
+    public String toString() {
+        StringBuilder str_builder = new StringBuilder("");
+        str_builder.append("elements (size="+ elements.size() +"):\n------------------------\n");
+        for(DynamicElement element : elements)
+            str_builder.append(element.toString() + "\n");
+        str_builder.append("\n");
+        str_builder.append("links (size="+ links.size() +"):\n------------------------\n");
+        for(DynamicLink link : links){
+            str_builder.append(link.toString(0));
+            str_builder.append("\n");
+        }
+        return str_builder.toString();
+    }
 }

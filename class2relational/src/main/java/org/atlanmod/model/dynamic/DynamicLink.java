@@ -25,4 +25,12 @@ public class DynamicLink {
     public List<DynamicElement> getTarget() {
         return target;
     }
+
+    public String toString() {
+        return "(" + source.toString() + ", " + type + ", " + target.toString() + ")";
+    }
+
+    public String toString(int ntab) {
+        return source.toString() + "\n" + type + "\n" + target.toString() + "\n";
+    }
 }

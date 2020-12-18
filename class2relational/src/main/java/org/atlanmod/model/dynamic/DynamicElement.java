@@ -7,11 +7,14 @@ import java.util.Map;
 public class DynamicElement implements Serializable {
 
     private String type;
-    // private String namespace;
     private Map<String, Object> properties;
 
-    public DynamicElement(String type){
-        this.type = type;
+    public DynamicElement(String classname){
+        this.type = classname;
+        properties = new HashMap<>();
+    }
+    public DynamicElement(String namespace, String classname){
+        this.type = namespace + ":" + classname;
         properties = new HashMap<>();
     }
 
@@ -44,6 +47,17 @@ public class DynamicElement implements Serializable {
             return this.getType().equals(obj_.getType()) && this.getProperties() == obj_.getProperties();
         }
         return false;
+    }
+
+    public String toString() {
+        StringBuilder str_builder = new StringBuilder();
+        str_builder.append(type);
+        if (properties.keySet().isEmpty()) return str_builder.toString();
+        str_builder.append("\n");
+        for(String property : properties.keySet()){
+            str_builder.append(property + "\n");
+        }
+        return str_builder.toString();
     }
 
 }
