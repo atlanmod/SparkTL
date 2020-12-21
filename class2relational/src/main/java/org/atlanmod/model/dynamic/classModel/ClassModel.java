@@ -1,8 +1,45 @@
 package org.atlanmod.model.dynamic.classModel;
 
-public class ClassModel {
-    public static String CLASS = "Class";
-    public static String ATTRIBUTE = "Attribute";
-    public static String CLASS_ATTRIBUTES = "attributes";
-    public static String ATTRIBUTE_CLASS = "class";
+import org.atlanmod.model.dynamic.DynamicElement;
+import org.atlanmod.model.dynamic.DynamicLink;
+import org.atlanmod.model.dynamic.DynamicModel;
+import scala.collection.JavaConverters;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ClassModel extends DynamicModel {
+
+    public ClassModel(){
+        super();
+    }
+
+    public ClassModel(List<ClassElement> elements, List<ClassLink> links){
+        super();
+        this.elements.addAll(elements);
+        this.links.addAll(links);
+    }
+
+    public ClassModel(scala.collection.immutable.List<ClassElement> elements,
+                      scala.collection.immutable.List<ClassLink> links){
+        super();
+        this.elements.addAll(JavaConverters.seqAsJavaList(elements));
+        this.links.addAll(JavaConverters.seqAsJavaList(links));
+    }
+
+    public scala.collection.immutable.List<ClassElement> allClassElements() {
+        List<ClassElement> result = new ArrayList<>();
+        for(DynamicElement e: this.elements)
+            result.add((ClassElement) e);
+        return JavaConverters.asScalaBuffer(result).toList();
+    }
+
+    public scala.collection.immutable.List<ClassLink> allClassLinks() {
+        List<ClassLink> result = new ArrayList<>();
+        for(DynamicLink e: this.links)
+            result.add((ClassLink) e);
+        return JavaConverters.asScalaBuffer(result).toList();
+    }
+
+
 }

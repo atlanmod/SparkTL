@@ -14,7 +14,7 @@ object TransformationEngine {
      *  TMC : TargetModelClass
      */
 
-    def execute[SME, SML, SMC, SMR, TME, TML, TMC](tr: Transformation[SME, SML, SMC, TME, TML],
+    def execute[ SME, SML, SMC, SMR, TME, TML, TMC](tr: Transformation[SME, SML, SMC, TME, TML],
                                                    sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
     : Model[TME, TML] = {
         val tuples = allTuples(tr, sm)

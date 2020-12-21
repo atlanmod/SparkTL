@@ -1,6 +1,7 @@
 package org.atlanmod.model.dynamic.classModel;
 
 import org.atlanmod.model.dynamic.DynamicElement;
+import scala.collection.JavaConverters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +9,11 @@ import java.util.List;
 public class ClassToAttributes extends ClassLink {
 
     public ClassToAttributes(ClassClass source, List<ClassAttribute> target) {
-        super(ClassModel.CLASS_ATTRIBUTES, source, null);
-        this.setTarget(new ArrayList<>(target));
+        super(ClassMetamodel.CLASS_ATTRIBUTES, source, new ArrayList<>(target));
+    }
+
+    public ClassToAttributes(ClassClass source, scala.collection.immutable.List<ClassAttribute> target) {
+        super(ClassMetamodel.CLASS_ATTRIBUTES, source, new ArrayList<>(JavaConverters.seqAsJavaList(target)));
     }
 
     public String toString() {

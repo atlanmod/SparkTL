@@ -3,7 +3,7 @@ package org.atlanmod.model.dynamic.classModel;
 public class ClassClass extends ClassElement {
 
     public ClassClass(String id, String name){
-        super(ClassModel.CLASS);
+        super(ClassMetamodel.CLASS);
         super.eSet("id", id);
         super.eSet("name", name);
     }

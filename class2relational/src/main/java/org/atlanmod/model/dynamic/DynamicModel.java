@@ -21,8 +21,8 @@ import scala.collection.JavaConverters;
 public class DynamicModel implements Model<DynamicElement, DynamicLink> {
 
 //    private DynamicMetamodel metamodel;
-    private List<DynamicElement> elements;
-    private List<DynamicLink> links;
+    protected List<DynamicElement> elements;
+    protected List<DynamicLink> links;
 
     public DynamicModel(){
         // Instantiate lists
@@ -41,6 +41,7 @@ public class DynamicModel implements Model<DynamicElement, DynamicLink> {
         this.elements = JavaConverters.seqAsJavaList(elements);
         this.links = JavaConverters.seqAsJavaList(links);
     }
+
     @Override
     public scala.collection.immutable.List<DynamicElement> allModelElements() {
         // convert java.util.List to scala.List

@@ -3,14 +3,14 @@ package org.atlanmod.model.dynamic.classModel;
 public class ClassAttribute extends ClassElement {
 
     public ClassAttribute(String id, String name){
-        super(ClassModel.ATTRIBUTE);
+        super(ClassMetamodel.ATTRIBUTE);
         super.eSet("id", id);
         super.eSet("name", name);
         super.eSet("derived", false);
     }
 
     public ClassAttribute(String id, String name, Boolean derived){
-        super(ClassModel.ATTRIBUTE);
+        super(ClassMetamodel.ATTRIBUTE);
         super.eSet("id", id);
         super.eSet("name", name);
         super.eSet("derived", derived);

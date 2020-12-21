@@ -8,7 +8,7 @@ import java.util.List;
 public class AttributeToClass extends ClassLink {
 
     public AttributeToClass(ClassAttribute source, ClassClass target) {
-        super(ClassModel.ATTRIBUTE_CLASS, source, null);
+        super(ClassMetamodel.ATTRIBUTE_CLASS, source, null);
         List<DynamicElement> new_target = new ArrayList<>();
         new_target.add(target);
         this.setTarget(new_target);

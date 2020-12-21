@@ -1,6 +1,10 @@
 package org.atlanmod.model.dynamic.relationalModel;
 
 import org.atlanmod.model.dynamic.DynamicElement;
+import org.atlanmod.model.dynamic.classModel.ClassAttribute;
+import org.atlanmod.model.dynamic.classModel.ClassClass;
+import org.atlanmod.model.dynamic.classModel.ClassModel;
+import scala.collection.JavaConverters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +12,11 @@ import java.util.List;
 public class TableToColumns extends RelationalLink {
 
     public TableToColumns(RelationalTable source, List<RelationalColumn> target){
-        super(RelationalModel.TABLE_COLUMNS, source, null);
-        this.setTarget(new ArrayList<>(target));
+        super(RelationalModel.TABLE_COLUMNS, source, new ArrayList<>(target));
+    }
+
+    public TableToColumns(RelationalTable source, scala.collection.immutable.List<RelationalColumn> target) {
+        super(RelationalModel.TABLE_COLUMNS, source, new ArrayList<>(JavaConverters.seqAsJavaList(target)));
     }
 
     public String toString() {
