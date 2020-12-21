@@ -29,18 +29,14 @@ object Class2Relational {
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, c, t) => {
-                                        try {
-                                            val attrs =
-                                                sm.allModelLinks.filter(cl => cl.getType.equals(ClassMetamodel.CLASS_ATTRIBUTES)
-                                                  && cl.getSource.equals(c.head)).head.getTarget
-                                            val cols = tls
-                                              .filter(tl => attrs.contains(tl.getSourcePattern.head))
-                                              .map(tl => tl.getTargetElement)
-                                            Some(new TableToColumns(t.asInstanceOf[RelationalTable],
-                                                cols.asInstanceOf[List[RelationalColumn]]))
-                                        } catch {
-                                            case _: Exception => None
-                                        }
+                                        val attrs =
+                                            sm.allModelLinks.filter(cl => cl.getType.equals(ClassMetamodel.CLASS_ATTRIBUTES)
+                                              && cl.getSource.equals(c.head)).head.getTarget
+                                        val cols = tls
+                                          .filter(tl => attrs.contains(tl.getSourcePattern.head))
+                                          .map(tl => tl.getTargetElement)
+                                        Some(new TableToColumns(t.asInstanceOf[RelationalTable],
+                                            cols.asInstanceOf[List[RelationalColumn]]))
                                     }
                                 )
                             )
@@ -64,17 +60,13 @@ object Class2Relational {
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, a, c) => {
-                                        try {
-                                            val class_ = // get class of a
-                                                sm.allModelLinks.filter(cl => cl.isInstanceOf[ClassToAttributes]
-                                                  && cl.getTarget.contains(a)).head.getSource.asInstanceOf[ClassClass]
-                                            val tb =
-                                                tls.filter(tl => tl.getSourcePattern.contains(class_))
-                                                  .map(tl => tl.getTargetElement).head.asInstanceOf[RelationalTable]
-                                            Some(new ColumnToTable(c.asInstanceOf[RelationalColumn], tb))
-                                        } catch {
-                                            case _: Exception => None
-                                        }
+                                        val class_ = // get class of a
+                                            sm.allModelLinks.filter(cl => cl.isInstanceOf[ClassToAttributes]
+                                              && cl.getTarget.contains(a.head)).head.getSource.asInstanceOf[ClassClass]
+                                        val tb =
+                                            tls.filter(tl => tl.getSourcePattern.contains(class_))
+                                              .map(tl => tl.getTargetElement).head.asInstanceOf[RelationalTable]
+                                        Some(new ColumnToTable(c.asInstanceOf[RelationalColumn], tb))
                                     }
                                 )
                             )

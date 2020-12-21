@@ -25,7 +25,12 @@ object Eval {
 
     def evalOutputPatternLinkExpr[SME, SML, TME, TML](sm: Model[SME, SML], sp: List[SME], oe: TME, iter: Int,
                                   tr: List[TraceLink[SME, TME]], o: OutputPatternElementReference[SME, SML, TME, TML])
-    : Option[TML]=
-        o.getLinkExpr(tr, iter, sm, sp, oe)
+    : Option[TML]= {
+        try {
+            o.getLinkExpr(tr, iter, sm, sp, oe)
+        }catch {
+            case _: Exception => None
+        }
+    }
 
 }
