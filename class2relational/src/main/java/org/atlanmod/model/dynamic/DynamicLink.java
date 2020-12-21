@@ -29,9 +29,13 @@ public class DynamicLink {
         return source;
     }
 
+    protected void setSource(DynamicElement source) { this.source = source; }
+
     public List<DynamicElement> getTarget() {
         return target;
     }
+
+    protected void setTarget(List<DynamicElement> target) { this.target = target; }
 
     public String toString() {
         return "(" + source.toString() + ", " + type + ", " + target.toString() + ")";

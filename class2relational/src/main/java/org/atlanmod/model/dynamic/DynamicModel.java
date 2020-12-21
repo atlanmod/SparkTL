@@ -31,10 +31,16 @@ public class DynamicModel implements Model<DynamicElement, DynamicLink> {
     }
 
     public DynamicModel(List<DynamicElement> elements, List<DynamicLink> links){
+        assert(elements != null && links != null);
         this.elements = elements;
         this.links = links;
     }
 
+    public DynamicModel(scala.collection.immutable.List<DynamicElement> elements, scala.collection.immutable.List<DynamicLink> links){
+        assert(elements != null && links != null);
+        this.elements = JavaConverters.seqAsJavaList(elements);
+        this.links = JavaConverters.seqAsJavaList(links);
+    }
     @Override
     public scala.collection.immutable.List<DynamicElement> allModelElements() {
         // convert java.util.List to scala.List
@@ -64,7 +70,7 @@ public class DynamicModel implements Model<DynamicElement, DynamicLink> {
             EObject obj = it.next();
             EClass obj_class = obj.eClass();
 
-            String class_name = obj_class.toString();
+            String class_name = obj_class.getName();
             DynamicElement e =
                     obj.eResource().getURI() == null ?
                             new DynamicElement(class_name):
