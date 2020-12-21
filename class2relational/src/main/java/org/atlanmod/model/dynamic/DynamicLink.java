@@ -1,9 +1,10 @@
 package org.atlanmod.model.dynamic;
 
+import scala.Serializable;
 import scala.collection.JavaConverters;
 import java.util.List;
 
-public class DynamicLink {
+public class DynamicLink implements Serializable {
 
     private String type;
     private DynamicElement source;
