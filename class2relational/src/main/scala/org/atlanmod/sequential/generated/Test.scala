@@ -28,7 +28,7 @@ object Test {
         val m: EMFModel = create_simple_model(1, 2)
         val metamodel = new EMFMetamodel
         val transformation = Class2Relational.transformation()
-        val res_seq = org.atlanmod.tl.engine.sequential.TransformationEngine.execute(transformation, m, metamodel)
+        val res_seq = org.atlanmod.tl.engine.sequential.TransformationEngineImpl.execute(transformation, m, metamodel)
 
         println(res_seq.allModelElements.size + " elemtns")
         println(res_seq.allModelElements)

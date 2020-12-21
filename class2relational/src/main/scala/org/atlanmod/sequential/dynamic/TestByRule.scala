@@ -2,9 +2,10 @@ package org.atlanmod.sequential.dynamic
 
 import org.atlanmod.model.dynamic.classModel._
 import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
+import org.atlanmod.tl.engine.sequential.TransformationEngineByRule
 import org.atlanmod.transformation.dynamic.Class2Relational
 
-object Test {
+object TestByRule {
 
     def dynamic_simple_model(nclass: Int = 1, nattribute: Int = 1): ClassModel = {
         var elements : List[ClassElement] = List()
@@ -30,7 +31,7 @@ object Test {
         print(model)
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
         val transformation = Class2Relational.transformation()
-        val res = org.atlanmod.tl.engine.sequential.TransformationEngine.execute(transformation, model, metamodel)
+        val res = TransformationEngineByRule.execute(transformation, model, metamodel)
         println("----------------------------------")
         println("RESULT")
         println("----------------------------------")

@@ -1,11 +1,10 @@
-package org.atlanmod.parallel.dynamic
+package org.atlanmod.sequential.dynamic
 
 import org.atlanmod.model.dynamic.classModel._
 import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
-import org.atlanmod.tl.util.SparkUtil
 import org.atlanmod.transformation.dynamic.Class2Relational
 
-object Test {
+object TestImpl {
 
     def dynamic_simple_model(nclass: Int = 1, nattribute: Int = 1): ClassModel = {
         var elements : List[ClassElement] = List()
@@ -28,14 +27,14 @@ object Test {
 
     def main(args: Array[String]): Unit = {
         val model = dynamic_simple_model(1, 2)
-//        print(model)
+        print(model)
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
         val transformation = Class2Relational.transformation()
-        val sc = SparkUtil.context
-        val res = org.atlanmod.tl.engine.parallel.TransformationEngineImpl.execute(transformation, model, metamodel, sc)
+        val res = org.atlanmod.tl.engine.sequential.TransformationEngineImpl.execute(transformation, model, metamodel)
         println("----------------------------------")
         println("RESULT")
         println("----------------------------------")
         println(new DynamicModel(res.allModelElements, res.allModelLinks))
     }
+
 }
