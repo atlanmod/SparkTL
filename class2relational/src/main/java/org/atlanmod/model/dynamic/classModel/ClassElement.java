@@ -2,8 +2,6 @@ package org.atlanmod.model.dynamic.classModel;
 
 import org.atlanmod.model.dynamic.DynamicElement;
 
-import java.util.Map;
-
 public abstract class ClassElement extends DynamicElement {
 
     abstract String getId();
@@ -11,4 +9,14 @@ public abstract class ClassElement extends DynamicElement {
     public ClassElement(String classname) {
         super(classname);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ClassElement){
+            ClassElement obj_ = (ClassElement) obj;
+            return this.getType().equals(obj_.getType()) && this.getId().equals(obj_.getId());
+        }
+        return false;
+    }
+
 }

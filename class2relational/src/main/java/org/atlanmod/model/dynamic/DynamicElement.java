@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class DynamicElement implements Serializable {
 
-    private String type;
-    private Map<String, Object> properties;
+    private final String type;
+    private final Map<String, Object> properties;
 
     public DynamicElement(String classname){
         this.type = classname;
@@ -46,7 +46,7 @@ public class DynamicElement implements Serializable {
     public boolean equals(Object obj) {
         if (obj instanceof DynamicElement){
             DynamicElement obj_ = (DynamicElement) obj;
-            return this.getType().equals(obj_.getType()) && this.getProperties() == obj_.getProperties();
+            return this.getType().equals(obj_.getType()) && this.getProperties().equals(obj_.getProperties());
         }
         return false;
     }
@@ -57,7 +57,7 @@ public class DynamicElement implements Serializable {
         if (properties.keySet().isEmpty()) return str_builder.toString();
         str_builder.append("\n");
         for(String property : properties.keySet()){
-            str_builder.append(property + "\n");
+            str_builder.append(property).append("\n");
         }
         return str_builder.toString();
     }

@@ -10,4 +10,13 @@ public abstract class RelationalElement extends DynamicElement {
         super(classname);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof RelationalElement){
+            RelationalElement obj_ = (RelationalElement) obj;
+            return this.getType().equals(obj_.getType()) && this.getId().equals(obj_.getId());
+        }
+        return false;
+    }
+
 }

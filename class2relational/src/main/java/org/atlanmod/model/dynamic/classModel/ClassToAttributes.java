@@ -1,6 +1,5 @@
 package org.atlanmod.model.dynamic.classModel;
 
-import org.atlanmod.model.dynamic.DynamicElement;
 import scala.collection.JavaConverters;
 
 import java.util.ArrayList;

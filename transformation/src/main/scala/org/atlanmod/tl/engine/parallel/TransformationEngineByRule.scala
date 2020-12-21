@@ -1,6 +1,7 @@
-package org.atlanmod.tl.engine.sequential
+package org.atlanmod.tl.engine.parallel
 
 import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
 import org.atlanmod.tl.engine.Utils.allTuplesByRule
 import org.atlanmod.tl.engine.{Apply, Instantiate, TransformationEngine}
 import org.atlanmod.tl.model.{Metamodel, Model, Transformation}
@@ -12,16 +13,15 @@ object TransformationEngineByRule extends TransformationEngine {
                                                                            sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                            sc: SparkContext = null)
     : Model[TME, TML] = {
-        val tuples = allTuplesByRule(tr, sm, mm)
-        /* Instantiate */ val elements = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t))
-        /* Apply */ val links = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t))
+        val tuples : RDD[List[SME]] = sc.parallelize(allTuplesByRule(tr, sm, mm))
+        /* Instantiate */ val elements : RDD[TME] = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t))
+        /* Apply */ val links : RDD[TML] = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t))
 
-        class tupleTModel(elements: List[TME], links: List[TML]) extends Model[TME, TML] {
-            override def allModelElements: List[TME] = elements
-            override def allModelLinks: List[TML] = links
+        class tupleTModel(elements: RDD[TME], links: RDD[TML]) extends Model[TME, TML] {
+            override def allModelElements: List[TME] = elements.collect.toList
+            override def allModelLinks: List[TML] = links.collect.toList
         }
 
         new tupleTModel(elements, links)
     }
-
 }

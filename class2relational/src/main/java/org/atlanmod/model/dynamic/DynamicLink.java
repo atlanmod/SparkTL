@@ -45,4 +45,15 @@ public class DynamicLink implements Serializable {
     public String toString(int ntab) {
         return source.toString() + "\n" + type + "\n" + target.toString() + "\n";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof DynamicLink){
+            DynamicLink obj_ = (DynamicLink) obj;
+            return this.getType().equals(obj_.getType())
+                    && this.getSource().equals(obj_.getSource())
+                    && this.getTarget().equals(obj_.getTarget());
+        }
+        return false;
+    }
 }
