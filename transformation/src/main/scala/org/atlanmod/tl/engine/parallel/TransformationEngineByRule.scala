@@ -5,7 +5,8 @@ import org.apache.spark.rdd.RDD
 import org.atlanmod.tl.engine.Utils.allTuplesByRule
 import org.atlanmod.tl.engine.{Apply, Instantiate, TransformationEngine}
 import org.atlanmod.tl.model.{Metamodel, Model, Transformation}
-import spire.ClassTag
+
+import scala.reflect.ClassTag
 
 object TransformationEngineByRule extends TransformationEngine {
 

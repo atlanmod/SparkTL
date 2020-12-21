@@ -2,7 +2,8 @@ package org.atlanmod.tl.engine
 
 import org.apache.spark.SparkContext
 import org.atlanmod.tl.model.{Metamodel, Model, Transformation}
-import spire.ClassTag
+
+import scala.reflect.ClassTag
 
 trait TransformationEngine {
 
