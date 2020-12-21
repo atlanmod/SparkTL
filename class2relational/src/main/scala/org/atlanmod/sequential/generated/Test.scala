@@ -2,6 +2,7 @@ package org.atlanmod.sequential.generated
 
 import org.atlanmod.model.generated.classModel
 import org.atlanmod.sequential.{EMFMetamodel, EMFModel}
+import org.atlanmod.transformation.generated.Class2Relational
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl
 
 object Test {

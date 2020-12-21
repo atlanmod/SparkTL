@@ -4,6 +4,7 @@ import org.apache.spark.SparkContext
 import org.atlanmod.model.generated.classModel
 import org.atlanmod.parallel.{EMFMetamodelSerializable, EMFModelSerializable}
 import org.atlanmod.tl.util.SparkUtil
+import org.atlanmod.transformation.generated.Class2Relational
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl
 
 object Test {

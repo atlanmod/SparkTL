@@ -1,30 +1,13 @@
 package org.atlanmod.parallel.dynamic
 
+import org.atlanmod.model.dynamic.classModel._
 import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
-import org.atlanmod.model.dynamic.classModel.{AttributeToClass, ClassAttribute, ClassClass, ClassElement, ClassLink, ClassModel, ClassToAttributes}
 import org.atlanmod.model.generated.classModel
 import org.atlanmod.tl.util.SparkUtil
-import org.eclipse.emf.ecore.resource.impl.ResourceImpl
+import org.atlanmod.transformation.dynamic.Class2Relational
 
 object Test {
     private val classFactory = classModel.ClassFactory.eINSTANCE
-
-    def create_simple_model(nclass: Int = 1, nattribute: Int = 1): DynamicModel = {
-        val resource = new ResourceImpl()
-        for (i <- 1 to nclass) {
-            val a_class = classFactory.createClass()
-            a_class.setId(i.toString)
-            for (j <- 1 to nattribute) {
-                val an_attribute = classFactory.createAttribute()
-                an_attribute.setId(i.toString + "." + j.toString)
-                a_class.getAttributes.add(an_attribute)
-            }
-            resource.getContents.add(a_class)
-        }
-        val a = new DynamicModel()
-        a.load(resource)
-        a
-    }
 
     def dynamic_simple_model(nclass: Int = 1, nattribute: Int = 1): ClassModel = {
         var elements : List[ClassElement] = List()

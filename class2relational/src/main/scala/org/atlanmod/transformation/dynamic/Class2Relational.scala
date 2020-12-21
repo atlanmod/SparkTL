@@ -1,8 +1,8 @@
-package org.atlanmod.sequential.dynamic
+package org.atlanmod.transformation.dynamic
 
+import org.atlanmod.model.dynamic.classModel.{ClassAttribute, ClassClass, ClassMetamodel, ClassToAttributes}
+import org.atlanmod.model.dynamic.relationalModel.{ColumnToTable, RelationalColumn, RelationalTable, TableToColumns}
 import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink}
-import org.atlanmod.model.dynamic.classModel._
-import org.atlanmod.model.dynamic.relationalModel._
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 
@@ -44,7 +44,7 @@ object Class2Relational {
                                     }
                                 )
                             )
-                    ))
+                        ))
                 ),
                 new RuleImpl(
                     name = "Attribute2Column",
@@ -54,7 +54,7 @@ object Class2Relational {
                     to = List(
                         new OutputPatternElementImpl(
                             name = "col",
-                            elementExpr = (_,_,l) => {
+                            elementExpr = (_, _, l) => {
                                 if (l.isEmpty) None
                                 else {
                                     val attribute = l.head.asInstanceOf[ClassAttribute]
