@@ -2,11 +2,9 @@ package org.atlanmod.sequential.dynamic
 
 import org.atlanmod.model.dynamic.classModel._
 import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
-import org.atlanmod.model.generated.classModel
 import org.atlanmod.transformation.dynamic.Class2Relational
 
 object Test {
-    private val classFactory = classModel.ClassFactory.eINSTANCE
 
     def dynamic_simple_model(nclass: Int = 1, nattribute: Int = 1): ClassModel = {
         var elements : List[ClassElement] = List()
