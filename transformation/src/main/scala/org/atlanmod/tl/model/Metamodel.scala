@@ -15,4 +15,10 @@ trait Metamodel[ME, ML, MC, MR] extends Serializable {
 
     def equals(that: Any): Boolean
 
+    def hasType(t: MC, e: ME) : Boolean ={
+        toModelClass(t, e) match {
+            case Some(e) => true
+            case _ => false
+        }
+    }
 }
