@@ -107,6 +107,5 @@ object TestAll {
         val filename = DIR_RES_NAME + "/" + FILE_RES_NAME + "_" + get_local_time + "." + FILE_RES_EXT
         write_content(filename, total_vector)
 
-
     }
 }
