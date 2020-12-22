@@ -10,7 +10,8 @@ object TestByRule {
 
 
     def main(args: Array[String]): Unit = {
-        val model = Util.dynamic_simple_model(1, 2)
+        val model = Util.dynamic_simple_model(500000, 1)
+        print("a")
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
         val transformation = Class2Relational.transformation()
         val sc = SparkUtil.context

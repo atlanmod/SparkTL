@@ -85,7 +85,7 @@ object Util {
 
         for (i <- 1 to max_ten) {
             val size = Math.pow(10, i).toInt
-            val model = TestAll.dynamic_simple_model(size, size)
+            val model = dynamic_simple_model(size, size)
             for (test <- tests) {
                 val name_test = test._1
                 val foo_test = test._2

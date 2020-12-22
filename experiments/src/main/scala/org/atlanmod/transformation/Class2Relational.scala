@@ -65,12 +65,12 @@ object Class2Relational{
     def get_tests(): List[(String, transformation_function)] = {
         val res : List[(String, transformation_function)] =
             List(
-                ("seq.simple", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.parallel.TransformationEngineImpl.execute(tr, m, mm, sc)),
-                ("par.simple", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.sequential.TransformationEngineImpl.execute(tr, m, mm, sc)),
-                ("seq.byrule", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
-                ("par.byrule", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
-                ("seq.twophase", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.parallel.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
-                ("par.twophase", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
+                ("par.simple", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.parallel.TransformationEngineImpl.execute(tr, m, mm, sc)),
+                ("par.byrule", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
+                ("seq.simple", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.sequential.TransformationEngineImpl.execute(tr, m, mm, sc)),
+                ("seq.byrule", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
+                ("seq.twophase", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
+                ("par.twophase", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.parallel.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
             )
         res
     }
