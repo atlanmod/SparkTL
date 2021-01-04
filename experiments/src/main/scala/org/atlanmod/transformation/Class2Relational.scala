@@ -5,7 +5,7 @@ import org.atlanmod.model.dynamic.classModel._
 import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.model.{Model, Transformation}
 import org.atlanmod.tl.util.SparkUtil
-import org.atlanmod.util.{FileUtil, RUtil, TimeUtil}
+import org.atlanmod.util.{FileUtil, TimeUtil}
 
 object Class2Relational{
 
@@ -21,10 +21,12 @@ object Class2Relational{
     type source_metamodel = DynamicMetamodel[DynamicElement, DynamicLink]
     type target_model = Model[DynamicElement, DynamicLink]
 
-    type transformation_function = (transformation_type, source_model, source_metamodel, SparkContext) => target_model
+    type transformation_function = (transformation_type, source_model, source_metamodel, SparkContext) => (Double, List[Double])
 
-    final val DIR_RES_NAME = "c2r_results"
-    final val FILE_RES_EXT = "r"
+    final val GLOBAL_DIR_RES_NAME = "c2r_results"
+    final val DIR_RES_NAME = GLOBAL_DIR_RES_NAME + "/" + TimeUtil.strLocalTime
+    final val FILE_RES_DATA_EXT = "csv"
+    final val FILE_RES_ANALYSE_EXT = "r"
     final val FILE_RES_NAME = "results"
 
     def dynamic_simple_model(nclass: Int = 1, nattribute: Int = 1): ClassModel = {
@@ -47,66 +49,179 @@ object Class2Relational{
     }
 
     def run_test(tr_foo: transformation_function, tr: transformation_type,
-                 sm: source_model, mm: source_metamodel, sc: SparkContext): Double = {
-        val t1 = System.nanoTime
+                 sm: source_model, mm: source_metamodel, sc: SparkContext): (Double, List[Double]) = {
         tr_foo(tr, sm, mm, sc)
-        (System.nanoTime - t1) * 1000 / 1e9d
     }
 
     def run_tests(tr_foo: transformation_function, tr: transformation_type,
-                 sm: source_model, mm: source_metamodel, sc: SparkContext, times: Int): List[Double] = {
-        var res: List[Double] = List()
-        for(i <- 1 to times) {
+                 sm: source_model, mm: source_metamodel, sc: SparkContext, times: Int): List[(Double, List[Double])] = {
+        var res: List[(Double, List[Double])] = List()
+        for(_ <- 1 to times) {
             res = run_test(tr_foo, tr, sm, mm, sc) :: res
         }
         res
     }
 
-    def get_tests(): List[(String, transformation_function)] = {
-        val res : List[(String, transformation_function)] =
+    def get_tests(): List[(String, String, transformation_function)] = {
+        val res : List[(String, String, transformation_function)] =
             List(
-                ("par.simple", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.parallel.TransformationEngineImpl.execute(tr, m, mm, sc)),
-                ("par.byrule", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
-                ("seq.simple", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.sequential.TransformationEngineImpl.execute(tr, m, mm, sc)),
-                ("seq.byrule", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
-                ("seq.twophase", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
-                ("par.twophase", (tr, m, mm, sc) =>  org.atlanmod.tl.engine.parallel.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
+                ("seq", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineImpl.execute(tr, m, mm, sc)),
+                ("par", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineImpl.execute(tr, m, mm, sc)),
+                ("seq", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
+                ("par", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
+                ("seq", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
+                ("par", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
             )
         res
     }
 
-    def main(args: Array[String]) : Unit = {
+    def print_sizes_raw() : Unit = {
+        print(get_sizes_raw())
+    }
+
+    def get_sizes_raw() : List[(Int, Int)] = {
+        var results : List[(Int, Int)]= List()
+        val sizes_1 = List(0, 1, 5, 10, 20, 50, 100)
+        val sizes_2 = List(200, 500, 1000)
+        for(i <- sizes_1){
+            if (i != 0)
+                for(j <- sizes_1){
+                    results = (i, j) :: results
+                }
+        }
+        for(i <- sizes_1){
+            for(j <- sizes_2){
+                results = (i, j) :: (j, i) :: results
+            }
+        }
+        for(i <- sizes_2){
+            for(j <- sizes_2){
+                results = (i, j) :: results
+            }
+        }
+        results.reverse
+    }
+
+    def get_sizes() : List[(Int, Int)] = {
+        get_sizes_raw()
+//        List((1,0), (1,1), (1,5))
+//        List((0,0), (0,1), (0,5), (0,10), (0,20), (0,50), (0,100), (1,0), (1,1), (1,5), (1,10), (1,20), (1,50), (1,100), (5,0), (5,1), (5,5), (5,10), (5,20), (5,50), (5,100), (10,0))
+    }
+
+    def conduct_time_experiments() : List[String] = {
+        FileUtil.create_if_not_exits(GLOBAL_DIR_RES_NAME)
         FileUtil.create_if_not_exits(DIR_RES_NAME)
+        var filenames : List[String] = List()
 
-        val max_ten = 10
-        val ntests = 30
+        // -------------------------------------------------------------------------------------------------
+        // Gobal setup for experiments
+        // -------------------------------------------------------------------------------------------------
 
-        var r_file_content_global = ""
+        val sizes = get_sizes()
+        val ntests = 2
+        val methods = get_tests()
+
+        // -------------------------------------------------------------------------------------------------
+        // Gobal setup for transformation
+        // -------------------------------------------------------------------------------------------------
 
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
         val transformation = org.atlanmod.transformation.dynamic.Class2Relational.transformation()
         val sc = SparkUtil.context
 
-        for(i <- 0 to max_ten){
-            val size = Math.pow(10, i).toInt
-            val model = dynamic_simple_model(size, size)
+        // -------------------------------------------------------------------------------------------------
+        // Header for data file (CSV)
+        // -------------------------------------------------------------------------------------------------
 
-            var r_file_content_current = ""
+        val header = "fullname,par or seq,technique,total size,classes,attributes,combo,global time,step1 time,step2 time,step3 time\n"
+        // -------------------------------------------------------------------------------------------------
+        // Create data file (CSV): one per size
+        // -------------------------------------------------------------------------------------------------
 
-            for (test <- get_tests()){
-                val name_test = test._1
-                val foo_test = test._2
-                val list_of_times = run_tests(foo_test, transformation, model, metamodel, sc, ntests)
-                val vector = RUtil.r_vector(name = name_test + "." + size, times = list_of_times)
-                println(vector)
-                r_file_content_current += vector + "\n"
-                r_file_content_global += vector + "\n"
+        for(size <- sizes) {
+            val total_size = size._1 + size._1 * size._2
+            var local_content = header
+            val model = dynamic_simple_model(size._1, size._2)
+            for(method <- methods){
+                val par_seq =  method._1
+                val name_test = method._2
+                val foo_test = method._3
+                val list_of_times : List[(Double, List[Double])] = run_tests(foo_test, transformation, model, metamodel, sc, ntests)
+                for(result <- list_of_times){
+                    val a_line = List(par_seq+"."+name_test, par_seq, name_test, total_size, size._1, size._2, "\"" + size._1 +"."+ size._2 + "\"" ,result._1,
+                        if (result._2.size < 1) "0" else result._2.head,
+                        if (result._2.size < 2) "0" else result._2(1),
+                        if (result._2.size < 3) "0" else result._2(2))
+                      .mkString(",")
+                    local_content += a_line + "\n"
+                }
             }
-            val filename_current = DIR_RES_NAME + "/" + FILE_RES_NAME + "_" + TimeUtil.strLocalTime + "_" + size + "." + FILE_RES_EXT
-            FileUtil.write_content(filename_current, r_file_content_current)
+            val filename_local = DIR_RES_NAME + "/" + FILE_RES_NAME + "_" + TimeUtil.strLocalTime + "_" + size + "." + FILE_RES_DATA_EXT
+            filenames = ( "paste(getwd(),\"/Scala/SparkTL/\",\"" + filename_local + "\",sep=\"\")") :: filenames
+            FileUtil.write_content(filename_local, local_content)
+        }
+        filenames
+    }
+
+    def create_analysis(filenames: List[String]) : Unit = {
+
+        val header_types = "c(\"character\", \"character\", \"character\", \"numeric\",\"numeric\",\"numeric\",\"character\",\"numeric\",\"numeric\",\"numeric\",\"numeric\")"
+
+        val methods = get_tests()
+
+        // -------------------------------------------------------------------------------------------------
+        // Create analysing file (R)
+        // -------------------------------------------------------------------------------------------------
+
+        var analyse_file_content = "library(ggplot2)\nlibrary(dplyr)\nlibrary(Rmpfr)\n" // ggplot2 is needed for printing nice plots
+
+        // Merge resulting files into a dataframe
+        var nresult = 1
+        for(filename <- filenames) {
+            analyse_file_content += "result" + nresult +" <- read.csv(file =" + filename +", colClasses = "+header_types+")\n"
+            nresult += 1
+        }
+        analyse_file_content += "results <- rbind("
+        for(i <- 1 until nresult){
+            analyse_file_content += "result" + i + (if (i == nresult - 1) ")\n" else ",")
+        }
+        analyse_file_content += "raw_df <- data.frame(results)" + "\n"
+        analyse_file_content += "df <- raw_df %>% \n  " +
+          "group_by(fullname, par.or.seq, technique, total.size, classes, attributes, combo) %>% \n" +
+          "summarise(mean_global.time = mean(global.time),\n" +
+          "mean_step1.time = mean(step1.time), \n" +
+          "mean_step2.time = mean(step2.time), \n" +
+          "mean_step3.time = mean(step3.time)) \n \n" +
+          "df <- df[order(df$total.size), ]\n \n" +
+          "ggplot(data=df, aes(x=total.size, y=mean_global.time, group=fullname, color=fullname)) + \n" +
+          " \t geom_line() + geom_point() + \n" +
+          " \t xlab(\"Size\") + ylab(\"Computation time (ms)\") + scale_color_discrete(name = \"Approach\") + \n" +
+          " \t ggtitle(\"Computation time per size with 6 different approaches\")\n\n"
+
+        analyse_file_content += "colors <- c(\"step1\" = \"darkred\", \"step2\" = \"steelblue\", \"step3\" = \"darkgreen\")\n"
+
+        for(method <- methods) {
+            val method_name =  method._1 + "." + method._2
+            val name_df_method = "df." + method_name
+            analyse_file_content += name_df_method + " <- subset(df, fullname == \""+ method_name + "\")\n"
+            analyse_file_content += "ggplot(data=" + name_df_method + ", aes(x=total.size)) +\n" +
+              "\t geom_line(aes(y=mean_step1.time, color=\"step1\")) +\n" +
+              "\t geom_line(aes(y=mean_step2.time, color=\"step2\")) +\n" +
+              "\t geom_line(aes(y=mean_step3.time, color=\"step3\")) +\n" +
+              "\t   labs(x = \"Size\",\n" +
+              "\t        y = \"Computation time (ms)\",\n" +
+              "\t        color = \"Legend\") +" +
+              "\n   scale_color_manual(values = colors)" + "\n\n"
         }
 
-        val filename_global = DIR_RES_NAME + "/" + FILE_RES_NAME + "_" + TimeUtil.strLocalTime  + "." + FILE_RES_EXT
-        FileUtil.write_content( filename_global, r_file_content_global)
+        // Write content of the file
+        val filename_analysis = DIR_RES_NAME + "/" + FILE_RES_NAME + "_" + TimeUtil.strLocalTime + "." + FILE_RES_ANALYSE_EXT
+        FileUtil.write_content(filename_analysis, analyse_file_content)
     }
+
+    def main(args: Array[String]) : Unit = {
+        val filenames = conduct_time_experiments()
+        create_analysis(filenames)
+    }
+
 }
