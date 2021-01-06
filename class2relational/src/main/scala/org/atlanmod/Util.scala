@@ -54,7 +54,7 @@ object Util {
     }
 
     private def create_if_not_exits(dirname: String): Unit = {
-        val dir: File = new File(dirname);
+        val dir: File = new File(dirname)
         if (!dir.exists) dir.mkdirs()
     }
 
@@ -64,7 +64,7 @@ object Util {
         var total_vector = ""
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
         val transformation = Class2Relational.transformation()
-        val sc = SparkUtil.context
+        val sc = SparkUtil.context()
 
         val tests:
             List[(String,

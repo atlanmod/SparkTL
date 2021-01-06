@@ -4,24 +4,13 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object SparkUtil {
 
-    private var scontext : SparkContext = _
-    private var sconf : SparkConf = _
-
-
-    def config: SparkConf = {
-        if (sconf == null) {
-            sconf = new SparkConf()
-            sconf.setAppName("Lab")
-            sconf.setMaster("local")
-        }
-        sconf
-    }
-
-    def context: SparkContext ={
-        if (scontext == null) {
-            scontext = new SparkContext(config)
-            scontext.setLogLevel("OFF")
-        }
+    def context(ncore: Int = 0): SparkContext ={
+        val config = new SparkConf()
+        config.setAppName("Lab")
+        if (ncore == 0) config.setMaster("local") else config.setMaster("local[" + ncore + "]")
+        val scontext : SparkContext = new SparkContext(config)
+        scontext.setLogLevel("OFF")
         scontext
     }
+
 }
