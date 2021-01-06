@@ -107,7 +107,7 @@ object Class2Relational{
         get_sizes_raw()
     }
 
-    def get_cores()  : List[Int] = List(0, 1, 2, 4, 6, 8)
+    def get_cores()  : List[Int] = List(0, 1, 2, 3, 4, 5, 6, 7, 8)
 
     def conduct_time_experiments() : List[String] = {
         FileUtil.create_if_not_exits(GLOBAL_DIR_RES_NAME)
@@ -153,6 +153,7 @@ object Class2Relational{
                         if (ncore == 0 || !par_seq.equals("seq")) {
                             try {
                                 val list_of_times: List[(Double, List[Double])] = run_tests(foo_test, transformation, model, metamodel, sc, ntests)
+                                println("[DONE] (" + size._1 + "." + size._2 + ") with " + par_seq + "." + name_test + " on " + ncore + " cores")
                                 for (result <- list_of_times) {
                                     val a_line = List(par_seq + "." + name_test, par_seq, ncore, name_test, total_size, size._1, size._2, "\"" + size._1 + "_" + size._2 + "\"", result._1,
                                         if (result._2.size < 1) "0" else result._2.head,
