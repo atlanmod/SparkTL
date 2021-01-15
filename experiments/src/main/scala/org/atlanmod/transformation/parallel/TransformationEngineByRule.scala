@@ -19,9 +19,9 @@ object TransformationEngineByRule extends ExperimentalTransformationEngine {
         val t1 = System.nanoTime
         val tuples : RDD[List[SME]] = sc.parallelize(allTuplesByRule(tr, sm, mm))
         val t2 = System.nanoTime
-        /* Instantiate */ val elements : RDD[TME] = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t))
+        /* Instantiate */ val elements = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t)).collect
         val t3 = System.nanoTime
-        /* Apply */ val links : RDD[TML] = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t))
+        /* Apply */ val links = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t)).collect
         val t4 = System.nanoTime
 
         val t1_to_t2 = (t2 - t1) * 1000 / 1e9d

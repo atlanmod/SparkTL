@@ -1,9 +1,8 @@
 package org.atlanmod.transformation.parallel
 
 import org.apache.spark.SparkContext
-import org.apache.spark.rdd.RDD
-import org.atlanmod.tl.engine.{Apply, Instantiate}
 import org.atlanmod.tl.engine.Utils.allTuples
+import org.atlanmod.tl.engine.{Apply, Instantiate}
 import org.atlanmod.tl.model.{Metamodel, Model, Transformation}
 import org.atlanmod.transformation.ExperimentalTransformationEngine
 
@@ -15,11 +14,11 @@ object TransformationEngineImpl extends ExperimentalTransformationEngine{
                                                                               sc: SparkContext)
     : (Double, List[Double]) = {
         val t1 = System.nanoTime
-        val tuples : RDD[List[SME]] = sc.parallelize(allTuples(tr, sm))
+        val tuples = sc.parallelize(allTuples(tr, sm))
         val t2 = System.nanoTime
-        /* Instantiate */ val elements : RDD[TME] = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t))
+        /* Instantiate */ val elements = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t)).collect
         val t3 = System.nanoTime
-        /* Apply */ val links : RDD[TML] = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t))
+        /* Apply */ val links = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t)).collect
         val t4 = System.nanoTime
 
         val t1_to_t2 = (t2 - t1) * 1000 / 1e9d

@@ -9,8 +9,8 @@ import org.atlanmod.util.{FileUtil, TimeUtil}
 
 object Class2Relational{
 
-    final val NTESTS = 30
-    final val NCORE = 1
+    final val NTESTS = 10
+    final val NCORE = 4
 
     type SME = DynamicElement
     type SML = DynamicLink
@@ -104,10 +104,12 @@ object Class2Relational{
     }
 
     def get_sizes() : List[(Int, Int)] = {
-        get_sizes_raw()
+//        get_sizes_raw()
+        List((50,20), (100, 20))
     }
 
-    def get_cores()  : List[Int] = List(0, 1, 2, 3, 4, 5, 6, 7, 8)
+
+//    def get_cores()  : List[Int] = List(0, 1, 2, 3, 4, 5, 6, 7, 8)
 
     def conduct_time_experiments() : List[String] = {
         FileUtil.create_if_not_exits(GLOBAL_DIR_RES_NAME)
@@ -121,62 +123,65 @@ object Class2Relational{
         val sizes = get_sizes()
         val ntests = NTESTS
         val methods = get_tests()
-        val ncores = get_cores()
+        val ncore = NCORE
 
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
         val transformation = org.atlanmod.transformation.dynamic.Class2Relational.transformation()
 
-        for(ncore <- ncores) {
-            // -------------------------------------------------------------------------------------------------
-            // Gobal setup for transformation
-            // -------------------------------------------------------------------------------------------------
-            val sc = SparkUtil.context(ncore)
+        // -------------------------------------------------------------------------------------------------
+        // Gobal setup for transformation
+        // -------------------------------------------------------------------------------------------------
+        val sc = SparkUtil.context(ncore)
 
-            // -------------------------------------------------------------------------------------------------
-            // Header for data file (CSV)
-            // -------------------------------------------------------------------------------------------------
-            val header = "fullname,par or seq,ncore,technique,total size,classes,attributes,combo,global time," +
-              "step1 time,step2 time,step3 time\n"
+        // -------------------------------------------------------------------------------------------------
+        // Header for data file (CSV)
+        // -------------------------------------------------------------------------------------------------
+        val header = "fullname,par or seq,ncore,technique,total size,classes,attributes,combo,global time," +
+          "step1 time,step2 time,step3 time\n"
 
-            // -------------------------------------------------------------------------------------------------
-            // Create data file (CSV): one per size
-            // -------------------------------------------------------------------------------------------------
-            try {
-                for (size <- sizes) {
-                    val total_size = size_model(size)
-                    var local_content = header
-                    val model = dynamic_simple_model(size._1, size._2)
-                    for (method <- methods) {
-                        val par_seq = method._1
-                        val name_test = method._2
-                        val foo_test = method._3
-                        if (ncore == 0 || !par_seq.equals("seq")) {
-                            try {
-                                val list_of_times: List[(Double, List[Double])] = run_tests(foo_test, transformation, model, metamodel, sc, ntests)
-                                println("[DONE] (" + size._1 + "." + size._2 + ") with " + par_seq + "." + name_test + " on " + ncore + " cores")
-                                for (result <- list_of_times) {
-                                    val a_line = List(par_seq + "." + name_test, par_seq, ncore, name_test, total_size, size._1, size._2, "\"" + size._1 + "_" + size._2 + "\"", result._1,
-                                        if (result._2.size < 1) "0" else result._2.head,
-                                        if (result._2.size < 2) "0" else result._2(1),
-                                        if (result._2.size < 3) "0" else result._2(2))
-                                      .mkString(",")
-                                    local_content += a_line + "\n"
-                                }
-                            } catch {
-                                case _: Exception => throw new RuntimeException("Stopped for " + par_seq + "." +
-                                  name_test + "(" + size._1 + "." + size._2 + ") with "+ ncore + " cores\n")
+
+        // -------------------------------------------------------------------------------------------------
+        // Create data file (CSV): one per size
+        // -------------------------------------------------------------------------------------------------
+        try {
+            for (size <- sizes) {
+                val total_size = size_model(size)
+                var local_content = header
+                val model = dynamic_simple_model(size._1, size._2)
+                for (method <- methods) {
+                    val par_seq = method._1
+                    val name_test = method._2
+                    val foo_test = method._3
+
+                    try {
+                        if ((ncore == 0 && par_seq.equals("seq")) || (ncore != 0 && par_seq.equals("par"))){
+                            val list_of_times: List[(Double, List[Double])] = run_tests(foo_test, transformation, model, metamodel, sc, ntests)
+                            println("[DONE] (" + size._1 + "." + size._2 + ") with " + par_seq + "." + name_test + " on " + ncore + " cores")
+                            for (result <- list_of_times) {
+                                val a_line = List(par_seq + "." + name_test, par_seq, ncore, name_test, total_size, size._1, size._2, "\"" + size._1 + "_" + size._2 + "\"", result._1,
+                                    if (result._2.size < 1) "0" else result._2.head,
+                                    if (result._2.size < 2) "0" else result._2(1),
+                                    if (result._2.size < 3) "0" else result._2(2))
+                                  .mkString(",")
+                                local_content += a_line + "\n"
                             }
                         }
+
+
+                    } catch {
+                        case _: Exception => throw new RuntimeException("Stopped for " + par_seq + "." +
+                          name_test + "(" + size._1 + "." + size._2 + ") with "+ ncore + " cores\n")
                     }
-                    val filename_local = DIR_RES_NAME + "/" + FILE_RES_NAME + "_" + TimeUtil.strLocalTime + "_" + size + "_" + FILE_RES_DATA_EXT
-                    filenames = filename_local :: filenames
-                    FileUtil.write_content(filename_local, local_content)
                 }
-            } catch {
-                case e: RuntimeException => println(e.getMessage)
+                val filename_local = DIR_RES_NAME + "/" + FILE_RES_NAME + "_" + TimeUtil.strLocalTime + "_" + size + "_" + ncore + "." + FILE_RES_DATA_EXT
+                filenames = filename_local :: filenames
+                FileUtil.write_content(filename_local, local_content)
             }
-            sc.stop()
+        } catch {
+            case e: RuntimeException => println(e.getMessage)
         }
+        sc.stop()
+
         filenames
     }
 
@@ -196,7 +201,7 @@ object Class2Relational{
         // Merge resulting files into a dataframe
         var nresult = 1
         for(filename <- filenames) {
-            analyse_file_content += "result" + nresult +" <- read.csv(file =" + filename +", colClasses = "+header_types+")\n"
+            analyse_file_content += "result" + nresult +" <- read.csv(file =\"" + filename +"\", colClasses = "+header_types+")\n"
             nresult += 1
         }
         analyse_file_content += "results <- rbind("
