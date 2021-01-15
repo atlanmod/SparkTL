@@ -12,7 +12,7 @@ object Resolve {
         val tl = tls.find(tl =>
             tl.getSourcePattern.equals(sp) &&
               tl.getIterator == iter &&
-              tl.getName == name
+              tl.getName.equals(name)
         )
         tl match {
             case Some(tl2) => tmm.toModelClass(t, tl2.getTargetElement)

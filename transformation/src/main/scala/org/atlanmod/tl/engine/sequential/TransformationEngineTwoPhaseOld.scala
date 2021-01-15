@@ -1,12 +1,13 @@
 package org.atlanmod.tl.engine.sequential
 
 import org.apache.spark.SparkContext
+import org.atlanmod.tl.engine.Utils.allTuples
 import org.atlanmod.tl.engine.{Apply, Trace, TransformationEngine}
 import org.atlanmod.tl.model.{Metamodel, Model, TraceLink, Transformation}
 
 import scala.reflect.ClassTag
 
-object TransformationEngineTwoPhase extends TransformationEngine {
+object TransformationEngineTwoPhaseOld extends TransformationEngine {
 
     private def instantiateTraces[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                 sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
@@ -15,14 +16,11 @@ object TransformationEngineTwoPhase extends TransformationEngine {
         (tls.map(tl => tl.getTargetElement), tls)
     }
 
-    def allSourcePatterns[SME, TME](tls: List[TraceLink[SME, TME]]) : List[List[SME]] =
-        tls.map(tl => tl.getSourcePattern)
-
     private def applyTraces[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
                                                           sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                           tls: List[TraceLink[SME, TME]])
     : List[TML] =
-        allSourcePatterns(tls).flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls))
+        allTuples(tr, sm).flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls))
 
     override def execute[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                            sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],

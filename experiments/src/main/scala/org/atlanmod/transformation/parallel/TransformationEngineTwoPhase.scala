@@ -1,7 +1,6 @@
 package org.atlanmod.transformation.parallel
 
 import org.apache.spark.SparkContext
-import org.atlanmod.tl.engine.Utils.allTuples
 import org.atlanmod.tl.engine.{Apply, Trace}
 import org.atlanmod.tl.model.{Metamodel, Model, TraceLink, Transformation}
 import org.atlanmod.transformation.ExperimentalTransformationEngine
@@ -18,11 +17,14 @@ object TransformationEngineTwoPhase extends ExperimentalTransformationEngine{
         (para_tls.map(tl => tl.getTargetElement).collect().toList, tls)
     }
 
+    def allSourcePatterns[SME, TME](tls: List[TraceLink[SME, TME]]) : List[List[SME]] =
+        tls.map(tl => tl.getSourcePattern)
+
     private def applyTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                               sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                               tls: List[TraceLink[SME, TME]], sc: SparkContext)
     : List[TML] = {
-        sc.parallelize(allTuples(tr, sm)).flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls)).collect().toList
+        sc.parallelize(allSourcePatterns(tls)).flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls)).collect().toList
     }
 
     override def execute[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],

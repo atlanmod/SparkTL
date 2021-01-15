@@ -5,7 +5,7 @@ import org.atlanmod.util.{C2RUtil, CSVUtil, FileUtil, TimeUtil}
 
 object Main {
 
-    final val NTEST = 30
+    final val NTEST = 10
     final val NCORE = 0
 
     final val GLOBAL_DIR_RES_NAME = "c2r_results"
@@ -21,7 +21,8 @@ object Main {
     }
 
     def sizes(): List[(Int, Int)] = {
-        List((5,5), (10,5), (10, 20), (20, 20), (50, 50))
+        //        List((5,5), (10,5), (10, 20), (20, 20), (50, 50))
+        List((20, 20), (100, 50), (100, 100))
     }
 
 
@@ -32,12 +33,16 @@ object Main {
         C2RUtil.running_test_csv(methods, transformation, metamodel, times, ncore, size._1, size._2)
     }
 
+    def getcores(): List[Int] = {
+        List(0)
+    }
+
     def main(args: Array[String]) : Unit = {
         init()
         val header = "fullname,par or seq,ncore,technique,total size,classes,attributes,combo,global time," +
           "step1 time,step2 time,step3 time"
         var filenames : List[String] = List()
-        for (ncore <- List(0, 1, 2, 4, 6, 8)){
+        for (ncore <- getcores()){
             for (size <- sizes()){
                 val res_csv_lines = run_experiment(size, NTEST, ncore)
                 println(res_csv_lines.mkString("\n"))
@@ -50,5 +55,6 @@ object Main {
         val filename_rmd = DIR_RES_NAME + "/result" + ".rmd"
         FileUtil.write_content(filename_rmd, C2RUtil.make_rmd_content(filenames))
     }
+
 
 }
