@@ -2,10 +2,68 @@ package org.atlanmod.tl.util
 
 object ListUtils {
 
-    def optionToList[A](o: Option[A]) : List[A] =
+    private def option_map[A, B](f: A => B, o: Option[A]) : Option[B]  = {
+        o match {
+            case Some(a) =>Some(f(a))
+            case None => None
+        }
+    }
+
+    def listToListList[A](l: List[A]): List[List[A]] = {
+        l.map(e => List(e))
+    }
+
+    def hasLength[A](l: List[A], n: Int): Boolean = {
+        l.length == n
+    }
+
+    def optionToList[A](o: Option[A]) : List[A] = {
         o match {
             case Some(a) => List(a)
             case None => List()
         }
+    }
+
+    def optionListToList[A](o: Option[List[A]]) : List[A] = {
+        o match {
+            case Some(a) => a
+            case None => List()
+        }
+    }
+
+    def optionList2List[A](l: List[Option[A]]) : List[A] = {
+        l.flatMap(v => optionToList(v))
+    }
+
+    def singleton[A](a: A) : List[A] = {
+        List(a)
+    }
+
+    def maybeSingleton[A](a: Option[A]): Option[List[A]] = {
+        option_map((v: A) => singleton(v), a)
+    }
+
+    def singletons[A](l: List[A]) : List[List[A]] = {
+        listToListList(l)
+    }
+
+    def maybeSingletons[A](a: Option[List[A]]): Option[List[List[A]]] = {
+        option_map((v: List[A]) => singletons(v), a)
+    }
+
+    def mapWithIndex[A, B](f: (Int, A) => B, n: Int, l: List[A]): List[B] = {
+        l match {
+            case List() => List()
+            case a :: t => f(n, a) :: mapWithIndex(f, n+1, t)
+        }
+    }
+
+    def zipWith[A, B, C](f: (A, B) => C, la: List[A], lb: List[B]) : List[C] = {
+        (la, lb) match {
+            case (ea::eas, eb::ebs) => f(ea, eb) :: zipWith(f, eas, ebs)
+            case (List(), _) => List()
+            case (_, List()) => List()
+        }
+    }
 
 }

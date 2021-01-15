@@ -8,35 +8,46 @@ public class DynamicElement implements Serializable {
 
     private final String type;
     private final Map<String, Object> properties;
+    private final Map<String, Object> references;
 
     public DynamicElement(String classname){
         this.type = classname;
         properties = new HashMap<>();
+        references = new HashMap<>();
     }
     public DynamicElement(String namespace, String classname){
         this.type = namespace + ":" + classname;
         properties = new HashMap<>();
+        references = new HashMap<>();
     }
 
     public DynamicElement(DynamicElement element){
         this.type = element.getType();
         this.properties = element.getProperties();
+        this.references = element.getReferences();
     }
 
-    public DynamicElement(DynamicElement element, Map<String, Object> properties){
+    public DynamicElement(DynamicElement element, Map<String, Object> properties, Map<String, Object> references){
         this.type = element.getType();
         this.properties = properties;
+        this.references= references;
     }
 
     public  Map<String, Object> getProperties() {
         return this.properties;
     }
 
-    public Object eGet(String name){
-        return properties.get(name);
+    public  Map<String, Object> getReferences() {
+        return this.references;
     }
 
-    public void eSet(String name, Object value){ properties.putIfAbsent(name, value); }
+    public Object eGetProperty(String name){ return properties.get(name); }
+
+    public void eSetProperty(String name, Object value){ properties.putIfAbsent(name, value); }
+
+    public Object eGetReference(String name){ return references.get(name); }
+
+    public void eSetReference(String name, Object value){ references.putIfAbsent(name, value); }
 
     public String getType(){
         return this.type;

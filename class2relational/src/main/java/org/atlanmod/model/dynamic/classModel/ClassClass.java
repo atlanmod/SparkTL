@@ -1,27 +1,45 @@
 package org.atlanmod.model.dynamic.classModel;
+import scala.collection.JavaConverters;
+import scala.jdk.CollectionConverters.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClassClass extends ClassElement {
 
     public ClassClass(String id, String name){
         super(ClassMetamodel.CLASS);
-        super.eSet("id", id);
-        super.eSet("name", name);
+        super.eSetProperty("id", id);
+        super.eSetProperty("name", name);
     }
 
-    public String getId(){
-        return (String) super.eGet("id");
+    public String getId(){ return (String) super.eGetProperty("id"); }
+
+    public String getName(){ return (String) super.eGetProperty("name"); }
+
+    public List<ClassAttribute> getAttributes(){ return ((List<ClassAttribute>) super.eGetReference("attributes")); }
+
+    public void addAttributes(List<ClassAttribute> attributes){
+        super.eSetReference("attributes", new ArrayList<ClassAttribute>());
+        ((List<ClassAttribute>) super.eGetReference("attributes")).addAll(attributes) ;
     }
 
-    public String getName(){
-        return (String) super.eGet("name");
+    public void addAttributes(scala.collection.immutable.List<ClassAttribute> attributes){
+        super.eSetReference("attributes", new ArrayList<ClassAttribute>());
+        ((List<ClassAttribute>) super.eGetReference("attributes")).addAll(JavaConverters.seqAsJavaList(attributes)) ;
+    }
+
+    public void addAttribute(ClassAttribute attribute){
+        super.eSetReference("attributes", new ArrayList<ClassAttribute>());
+        ((List<ClassAttribute>) super.eGetReference("attributes")).add(attribute) ;
     }
 
     public void setId(String id){
-        super.eSet("id", id);
+        super.eSetProperty("id", id);
     }
 
     public void setName(String name){
-        super.eSet("name", name);
+        super.eSetProperty("name", name);
     }
 
     @Override

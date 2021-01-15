@@ -2,7 +2,7 @@ package org.atlanmod.tl.util
 
 import org.apache.spark.{SparkConf, SparkContext}
 
-object SparkUtil {
+object SparkUtils {
 
     def context(ncore: Int = 0): SparkContext ={
         val config = new SparkConf()

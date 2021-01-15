@@ -5,7 +5,7 @@ import org.atlanmod.util.{C2RUtil, CSVUtil, FileUtil, TimeUtil}
 
 object Main {
 
-    final val NTEST = 3
+    final val NTEST = 30
     final val NCORE = 0
 
     final val GLOBAL_DIR_RES_NAME = "c2r_results"
@@ -21,8 +21,9 @@ object Main {
     }
 
     def sizes(): List[(Int, Int)] = {
-        List((10,5), (10, 20), (20, 20))
+        List((5,5), (10,5), (10, 20), (20, 20), (50, 50))
     }
+
 
     def run_experiment (size: (Int, Int), times: Int, ncore: Int) : List[String] = {
         val methods = C2RUtil.get_methods()
@@ -36,15 +37,17 @@ object Main {
         val header = "fullname,par or seq,ncore,technique,total size,classes,attributes,combo,global time," +
           "step1 time,step2 time,step3 time"
         var filenames : List[String] = List()
-        for (size <- sizes){
-            val res_csv_lines = run_experiment(size, NTEST, NCORE)
-            println(res_csv_lines.mkString("\n"))
-            val filename = size._1 + "_" + size._2 + "_" + NCORE + ".csv"
-            val filename_csv = DIR_RES_NAME + "/" + filename
-            CSVUtil.writeCSV(filename_csv, header, res_csv_lines)
-            filenames = filename :: filenames
+        for (ncore <- List(0, 1, 2, 4, 6, 8)){
+            for (size <- sizes()){
+                val res_csv_lines = run_experiment(size, NTEST, ncore)
+                println(res_csv_lines.mkString("\n"))
+                val filename = size._1 + "_" + size._2 + "_" + ncore + ".csv"
+                val filename_csv = DIR_RES_NAME + "/" + filename
+                CSVUtil.writeCSV(filename_csv, header, res_csv_lines)
+                filenames = filename :: filenames
+            }
         }
-        val filename_rmd = DIR_RES_NAME + "/result_" + NCORE + ".rmd"
+        val filename_rmd = DIR_RES_NAME + "/result" + ".rmd"
         FileUtil.write_content(filename_rmd, C2RUtil.make_rmd_content(filenames))
     }
 

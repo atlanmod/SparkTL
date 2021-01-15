@@ -1,20 +1,14 @@
 package org.atlanmod.transformation.dynamic
 
-import org.atlanmod.model.dynamic.classModel.{ClassAttribute, ClassClass, ClassMetamodel}
-import org.atlanmod.model.dynamic.relationalModel._
-import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
-import org.atlanmod.tl.engine.Resolve
+import org.atlanmod.model.dynamic.classModel.{ClassAttribute, ClassClass, ClassMetamodel, ClassToAttributes}
+import org.atlanmod.model.dynamic.relationalModel.{ColumnToTable, RelationalColumn, RelationalTable, TableToColumns}
+import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink}
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
-import org.atlanmod.tl.util.ListUtils
 
-import scala.collection.JavaConverters
-
-object Class2Relational {
+object Class2RelationalOld {
 
     def transformation(): Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
-        val rmm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
-
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
             List(
                 new RuleImpl(
@@ -35,20 +29,14 @@ object Class2Relational {
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, c, t) => {
-                                        val attrs = JavaConverters.asScalaBuffer(
-                                            c.head.asInstanceOf[ClassClass].getAttributes()).toList
-                                        val cols = Resolve.resolveAll(tls, sm, rmm, "col",
-                                            RelationalMetamodel.COLUMN , ListUtils.singletons(attrs))
-
-                                        cols match {
-                                            case Some(lcols) =>
-                                                Some(new TableToColumns(
-                                                    t.asInstanceOf[RelationalTable],
-                                                    lcols.asInstanceOf[List[RelationalColumn]])
-                                                )
-                                            case None => None
-                                        }
-
+                                        val attrs =
+                                            sm.allModelLinks.filter(cl => cl.getType.equals(ClassMetamodel.CLASS_ATTRIBUTES)
+                                              && cl.getSource.equals(c.head)).head.getTarget
+                                        val cols = tls
+                                          .filter(tl => attrs.contains(tl.getSourcePattern.head))
+                                          .map(tl => tl.getTargetElement)
+                                        Some(new TableToColumns(t.asInstanceOf[RelationalTable],
+                                            cols.asInstanceOf[List[RelationalColumn]]))
                                     }
                                 )
                             )
@@ -72,18 +60,13 @@ object Class2Relational {
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, a, c) => {
-                                        val cl = a.head.asInstanceOf[ClassAttribute].getClass_
-                                        val tb = Resolve.resolve(tls, sm, rmm, "tab",
-                                            RelationalMetamodel.TABLE, List(cl))
-                                        tb match {
-                                            case Some(table) =>
-                                                Some(new ColumnToTable(
-                                                    c.asInstanceOf[RelationalColumn],
-                                                    table.asInstanceOf[RelationalTable])
-                                                )
-                                            case None => None
-                                        }
-
+                                        val class_ = // get class of a
+                                            sm.allModelLinks.filter(cl => cl.isInstanceOf[ClassToAttributes]
+                                              && cl.getTarget.contains(a.head)).head.getSource.asInstanceOf[ClassClass]
+                                        val tb =
+                                            tls.filter(tl => tl.getSourcePattern.contains(class_))
+                                              .map(tl => tl.getTargetElement).head.asInstanceOf[RelationalTable]
+                                        Some(new ColumnToTable(c.asInstanceOf[RelationalColumn], tb))
                                     }
                                 )
                             )

@@ -3,25 +3,25 @@ package org.atlanmod.model.dynamic.relationalModel;
 public class RelationalColumn extends RelationalElement {
 
     public RelationalColumn(String id, String name){
-        super(RelationalModel.COLUMN);
-        super.eSet("id", id);
-        super.eSet("name", name);
+        super(RelationalMetamodel.COLUMN);
+        super.eSetProperty("id", id);
+        super.eSetProperty("name", name);
     }
 
     public String getId(){
-        return (String) super.eGet("id");
+        return (String) super.eGetProperty("id");
     }
 
     public void setId(String id){
-        super.eSet("id", id);
+        super.eSetProperty("id", id);
     }
 
     public String getName(){
-        return (String) super.eGet("name");
+        return (String) super.eGetProperty("name");
     }
 
     public void setName(String name){
-        super.eSet("name", name);
+        super.eSetProperty("name", name);
     }
 
     @Override

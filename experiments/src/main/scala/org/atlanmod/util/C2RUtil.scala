@@ -4,7 +4,7 @@ import org.apache.spark.SparkContext
 import org.atlanmod.model.dynamic.classModel._
 import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.model.{Model, Transformation}
-import org.atlanmod.tl.util.SparkUtil
+import org.atlanmod.tl.util.SparkUtils
 
 import scala.collection.mutable
 
@@ -95,7 +95,7 @@ object C2RUtil {
     def running_test(methods: List[(String, String, transformation_function)], tr: transformation_type, mm: source_metamodel,
                      times: Int, ncore: Int, nclass: Int, nattribute: Int) : List[ResultC2R] = {
         var res : List[ResultC2R] = List()
-        val sc = if (ncore != 0) SparkUtil.context(ncore) else null
+        val sc = if (ncore != 0) SparkUtils.context(ncore) else null
         val sm = dynamic_simple_model(nclass, nattribute)
 
         val methods_to_apply = methods.filter(m => m._1 == (if (ncore == 0) "seq" else "par"))
@@ -112,6 +112,8 @@ object C2RUtil {
                 }
             }
         }
+
+        if (ncore != 0) sc.stop()
         res
     }
 

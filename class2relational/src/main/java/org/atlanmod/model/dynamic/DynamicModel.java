@@ -82,7 +82,11 @@ public class DynamicModel implements Model<DynamicElement, DynamicLink> {
             for(EAttribute attribute : obj_class.getEAllAttributes()){
                 attributes_of_e.put(attribute.getName(), obj.eGet(attribute));
             }
-            elements.add(new DynamicElement(e, attributes_of_e));
+            Map<String, Object> references_of_e = new HashMap<>();
+            for(EReference reference: obj_class.getEAllReferences()){
+                references_of_e.put(reference.getName(), obj.eGet(reference));
+            }
+            elements.add(new DynamicElement(e, attributes_of_e, references_of_e));
 
             // Match a EObject to the created DynamicElement
             eObj_to_element.put(obj, e);
