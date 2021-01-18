@@ -5,7 +5,8 @@ import org.atlanmod.model.dynamic.relationalModel._
 import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.engine.Resolve
 import org.atlanmod.tl.model.Transformation
-import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
+import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl}
+import org.atlanmod.tl.model.impl.{RuleImpl, TransformationImpl}
 import org.atlanmod.tl.util.ListUtils
 
 import scala.collection.JavaConverters

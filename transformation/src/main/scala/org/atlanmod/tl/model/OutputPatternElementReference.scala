@@ -9,8 +9,7 @@ trait OutputPatternElementReference[SME, SML, TME, TML]  extends Serializable  {
 
     // Type definitions
     type SM = Model[SME, SML]
-    type TL = TraceLink[SME, TME]
 
     // Accessors
-    def getLinkExpr: (List[TL], Int, SM, List[SME], TME) => Option[TML]
+    def getLinkExpr: (TraceLinks[SME, TME], Int, SM, List[SME], TME) => Option[TML]
 }

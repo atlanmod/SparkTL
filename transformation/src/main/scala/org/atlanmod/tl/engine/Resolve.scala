@@ -1,27 +1,22 @@
 package org.atlanmod.tl.engine
 
-import org.atlanmod.tl.model.{Metamodel, Model, TraceLink}
+import org.atlanmod.tl.model.{Metamodel, Model, TraceLinks}
 import org.atlanmod.tl.util.ListUtils
 
 object Resolve {
 
-    private def resolveIter[SME, SML, TME, TML, TMC, TMR](tls: List[TraceLink[SME, TME]],
+    private def resolveIter[SME, SML, TME, TML, TMC, TMR](tls: TraceLinks[SME, TME],
                                                   sm: Model[SME, SML], tmm: Metamodel[TME, TML, TMC, TMR],
                                                   name: String, t: TMC, sp: List[SME], iter: Int)
     : Option[TME] = {
-        val tl = tls.find(tl =>
-            tl.getSourcePattern.equals(sp) &&
-              tl.getIterator == iter &&
-              tl.getName.equals(name)
-        )
-        tl match {
+        tls.find(sp)(tl => tl.getIterator == iter && tl.getName.equals(name)) match {
             case Some(tl2) => tmm.toModelClass(t, tl2.getTargetElement)
             case None => None
         }
     }
 
 
-    def resolveAllIter[SME, SML, TME, TML, TMC, TMR](tls: List[TraceLink[SME, TME]],
+    def resolveAllIter[SME, SML, TME, TML, TMC, TMR](tls: TraceLinks[SME, TME],
                                                      sm: Model[SME, SML], tmm: Metamodel[TME, TML, TMC, TMR],
                                                      name: String, t: TMC, sps: List[List[SME]], iter: Int)
     : Option[List[TME]] =
@@ -29,18 +24,18 @@ object Resolve {
 
     // ----------------------------------------------------------------------------------------------------
 
-    def resolve[SME, SML, TME, TML, TMC, TMR](tls : List[TraceLink[SME, TME]],
+    def resolve[SME, SML, TME, TML, TMC, TMR](tls : TraceLinks[SME, TME],
                                               sm: Model[SME, SML], tmm: Metamodel[TME, TML, TMC, TMR],
                                               name: String, t: TMC, sp: List[SME])
     : Option[TME] = resolveIter(tls, sm, tmm, name, t, sp, 0)
 
-    def resolveAll[SME, SML, TME, TML, TMC, TMR](tls : List[TraceLink[SME, TME]],
+    def resolveAll[SME, SML, TME, TML, TMC, TMR](tls : TraceLinks[SME, TME],
                                                  sm: Model[SME, SML], tmm: Metamodel[TME, TML, TMC, TMR],
                                                  name: String, t: TMC, sps: List[List[SME]])
     : Option[List[TME]] = resolveAllIter(tls, sm, tmm, name, t, sps, 0)
 
 
-    def maybeResolve[SME, SML, TME, TML, TMC, TMR](tls : List[TraceLink[SME, TME]],
+    def maybeResolve[SME, SML, TME, TML, TMC, TMR](tls : TraceLinks[SME, TME],
                                                       sm: Model[SME, SML], tmm: Metamodel[TME, TML, TMC, TMR],
                                                       name: String, t: TMC, sp: Option[List[SME]])
     : Option[TME] =
@@ -49,7 +44,7 @@ object Resolve {
             case None => None
         }
 
-    def maybeResolveAll[SME, SML, TME, TML, TMC, TMR](tls : List[TraceLink[SME, TME]],
+    def maybeResolveAll[SME, SML, TME, TML, TMC, TMR](tls : TraceLinks[SME, TME],
                                                       sm: Model[SME, SML], tmm: Metamodel[TME, TML, TMC, TMR],
                                                       name: String, t: TMC, sp: Option[List[List[SME]]])
     : Option[List[TME]] =

@@ -2,7 +2,7 @@ package org.atlanmod.transformation.parallel
 
 import org.apache.spark.SparkContext
 import org.atlanmod.tl.engine.{Apply, Trace}
-import org.atlanmod.tl.model.{Metamodel, Model, TraceLink, Transformation}
+import org.atlanmod.tl.model.{Metamodel, Model, TraceLinks, Transformation}
 import org.atlanmod.transformation.ExperimentalTransformationEngine
 
 import scala.reflect.ClassTag
@@ -11,18 +11,17 @@ object TransformationEngineTwoPhase extends ExperimentalTransformationEngine{
     private def instantiateTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                                     sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                                     sc: SparkContext)
-    : (List[TME], List[TraceLink[SME, TME]]) = {
+    : (List[TME], TraceLinks[SME, TME]) = {
         val tls = Trace.trace(tr, sm, mm)
-        val para_tls = sc.parallelize(tls)
-        (para_tls.map(tl => tl.getTargetElement).collect().toList, tls)
+        (tls.getTargetElements, tls)
     }
 
-    def allSourcePatterns[SME, TME](tls: List[TraceLink[SME, TME]]) : List[List[SME]] =
-        tls.map(tl => tl.getSourcePattern)
+    def allSourcePatterns[SME, TME](tls: TraceLinks[SME, TME]) : List[List[SME]] =
+        tls.getSourcePatterns
 
     private def applyTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                               sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-                                                                              tls: List[TraceLink[SME, TME]], sc: SparkContext)
+                                                                              tls: TraceLinks[SME, TME], sc: SparkContext)
     : List[TML] = {
         sc.parallelize(allSourcePatterns(tls)).flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls)).collect().toList
     }

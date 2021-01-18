@@ -1,6 +1,6 @@
 package org.atlanmod.tl.engine
 
-import org.atlanmod.tl.model.{Model, OutputPatternElement, OutputPatternElementReference, Rule, TraceLink}
+import org.atlanmod.tl.model.{Model, OutputPatternElement, OutputPatternElementReference, Rule, TraceLinks}
 
 object Eval {
 
@@ -24,7 +24,7 @@ object Eval {
 
 
     def evalOutputPatternLinkExpr[SME, SML, TME, TML](sm: Model[SME, SML], sp: List[SME], oe: TME, iter: Int,
-                                  tr: List[TraceLink[SME, TME]], o: OutputPatternElementReference[SME, SML, TME, TML])
+                                  tr: TraceLinks[SME, TME], o: OutputPatternElementReference[SME, SML, TME, TML])
     : Option[TML]= {
         try {
             o.getLinkExpr(tr, iter, sm, sp, oe)

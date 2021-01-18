@@ -2,9 +2,9 @@ package org.atlanmod.tl.engine
 
 import org.atlanmod.tl.engine.Eval.evalIteratorExpr
 import org.atlanmod.tl.engine.Instantiate.{instantiateElementOnPattern, matchPattern}
-import org.atlanmod.tl.engine.Utils.allTuples
-import org.atlanmod.tl.model.impl.TraceLinkImpl
-import org.atlanmod.tl.model.{Metamodel, Model, OutputPatternElement, Rule, TraceLink, Transformation}
+import org.atlanmod.tl.engine.Utils.{allTuples, allTuplesByRule}
+import org.atlanmod.tl.model.impl.{TraceLinkImpl, TraceLinksList, TraceLinksMap}
+import org.atlanmod.tl.model._
 import org.atlanmod.tl.util.ArithUtils.indexes
 import org.atlanmod.tl.util.ListUtils.optionToList
 
@@ -40,7 +40,19 @@ object Trace {
 
     def trace[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
                                             sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
-    : List[TraceLink[SME, TME]] =
-      allTuples(tr, sm).flatMap(tuple => tracePattern(tr, sm, mm, tuple))
+    : TraceLinks[SME, TME] = {
+        new TraceLinksList(allTuples(tr, sm).flatMap(tuple => tracePattern(tr, sm, mm, tuple)))
+    }
+
+    def traceHM[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
+                                              sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
+    : TraceLinks[SME, TME] = {
+        val tls_map = new TraceLinksMap[SME, TME]()
+        allTuplesByRule(tr, sm, mm).foreach(tuple => tls_map.put(tuple, tracePattern(tr, sm, mm, tuple)))
+        tls_map
+    }
+
+//
+//    new TraceLinksList(allTuples(tr, sm).flatMap(tuple => tracePattern(tr, sm, mm, tuple)))
 
 }

@@ -43,7 +43,7 @@ object C2RUtil {
 //                ("seq", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
 //                ("par", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
                 ("seq", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
-                ("seq", "twophase_old", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhaseOld.execute(tr, m, mm, sc)),
+                ("seq", "twophaseHM", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhaseHM.execute(tr, m, mm, sc))
 //                ("par", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
             )
         res
