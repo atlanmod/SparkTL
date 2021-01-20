@@ -20,6 +20,19 @@ class TraceLinksMap[SME, TME](map: mutable.Map[List[SME], List[TraceLink[SME, TM
 
     override def getSourcePatterns: List[List[SME]] = map.keys.toList
 
+    def keys() : Iterable[List[SME]] = {
+        map.keys
+    }
+
+    def get(key: List[SME]) : Option[List[TraceLink[SME, TME]]] = {
+        map.get(key)
+    }
+
+
+    def map(key: List[SME]): mutable.Map[List[SME], List[TraceLink[SME, TME]]] = {
+        map
+    }
+
     def put(key: List[SME], value: TraceLink[SME, TME]): Unit = {
         map.get(key) match {
             case Some(tls) => map.put(key, value :: tls)
@@ -33,5 +46,4 @@ class TraceLinksMap[SME, TME](map: mutable.Map[List[SME], List[TraceLink[SME, TM
             case None => map.put(key, value)
         }
     }
-
 }

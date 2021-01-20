@@ -6,7 +6,7 @@ import org.atlanmod.tl.model.{Metamodel, Model, TraceLinks, Transformation}
 
 import scala.reflect.ClassTag
 
-object TransformationEngineTwoPhase extends TransformationEngine {
+object TransformationEngineTwoPhaseHM extends TransformationEngine {
     /*
      *  SME : SourceModelElement
      *  SML : SourceModelLink
@@ -20,7 +20,7 @@ object TransformationEngineTwoPhase extends TransformationEngine {
                                                                 sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                 sc: SparkContext)
     : (List[TME], TraceLinks[SME, TME]) = {
-        val tls : TraceLinks[SME, TME] = Trace.trace(tr, sm, mm)
+        val tls : TraceLinks[SME, TME] = Trace.traceHM(tr, sm, mm)
         (tls.getTargetElements , tls)
     }
 

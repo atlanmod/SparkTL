@@ -6,7 +6,7 @@ import org.atlanmod.tl.model.{Metamodel, Model, TraceLinks, Transformation}
 
 import scala.reflect.ClassTag
 
-object TransformationEngineTwoPhase extends TransformationEngine {
+object TransformationEngineTwoPhaseMorePara1 extends TransformationEngine {
     /*
      *  SME : SourceModelElement
      *  SML : SourceModelLink
@@ -16,11 +16,15 @@ object TransformationEngineTwoPhase extends TransformationEngine {
      *  TMC : TargetModelClass
      */
 
+    /*
+    In this version, Trace.traceParallel replaces Trace.trace
+    By using this method instead, the list of tuples that are used to create the TraceLinks is parallelized into a RDD
+     */
     private def instantiateTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                 sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                 sc: SparkContext)
     : (List[TME], TraceLinks[SME, TME]) = {
-        val tls : TraceLinks[SME, TME] = Trace.trace(tr, sm, mm)
+        val tls : TraceLinks[SME, TME] = Trace.trace(tr, sm, mm, sc)
         (tls.getTargetElements , tls)
     }
 

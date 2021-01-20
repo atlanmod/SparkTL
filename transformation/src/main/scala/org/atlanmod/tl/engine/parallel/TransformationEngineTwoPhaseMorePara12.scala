@@ -2,11 +2,11 @@ package org.atlanmod.tl.engine.parallel
 
 import org.apache.spark.SparkContext
 import org.atlanmod.tl.engine.{Apply, Trace, TransformationEngine}
-import org.atlanmod.tl.model.{Metamodel, Model, TraceLinks, Transformation}
+import org.atlanmod.tl.model.{Metamodel, Model, ParallelTraceLinks, TraceLinks, Transformation}
 
 import scala.reflect.ClassTag
 
-object TransformationEngineTwoPhase extends TransformationEngine {
+object TransformationEngineTwoPhaseMorePara12 extends TransformationEngine {
     /*
      *  SME : SourceModelElement
      *  SML : SourceModelLink
@@ -16,11 +16,14 @@ object TransformationEngineTwoPhase extends TransformationEngine {
      *  TMC : TargetModelClass
      */
 
+    /*
+    In this version, the TraceLinks is distributed
+     */
     private def instantiateTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                 sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                 sc: SparkContext)
     : (List[TME], TraceLinks[SME, TME]) = {
-        val tls : TraceLinks[SME, TME] = Trace.trace(tr, sm, mm)
+        val tls : ParallelTraceLinks[SME, TME] = Trace.trace_par_bis(tr, sm, mm, sc)
         (tls.getTargetElements , tls)
     }
 

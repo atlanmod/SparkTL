@@ -2,11 +2,11 @@ package org.atlanmod.tl.engine.parallel
 
 import org.apache.spark.SparkContext
 import org.atlanmod.tl.engine.{Apply, Trace, TransformationEngine}
-import org.atlanmod.tl.model.{Metamodel, Model, TraceLinks, Transformation}
+import org.atlanmod.tl.model.{Metamodel, Model, ParallelTraceLinks, TraceLinks, Transformation}
 
 import scala.reflect.ClassTag
 
-object TransformationEngineTwoPhase extends TransformationEngine {
+object TransformationEngineTwoPhaseMorePara3 extends TransformationEngine {
     /*
      *  SME : SourceModelElement
      *  SML : SourceModelLink
@@ -16,11 +16,14 @@ object TransformationEngineTwoPhase extends TransformationEngine {
      *  TMC : TargetModelClass
      */
 
+    /*
+  In this version, the TraceLinks is distributed
+   */
     private def instantiateTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                 sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                 sc: SparkContext)
     : (List[TME], TraceLinks[SME, TME]) = {
-        val tls : TraceLinks[SME, TME] = Trace.trace(tr, sm, mm)
+        val tls : ParallelTraceLinks[SME, TME] = Trace.trace_par(tr, sm, mm, sc)
         (tls.getTargetElements , tls)
     }
 
@@ -28,11 +31,14 @@ object TransformationEngineTwoPhase extends TransformationEngine {
     def allSourcePatterns[SME, TME](tls: TraceLinks[SME, TME]) : List[List[SME]] =
         tls.getSourcePatterns
 
+    /*
+    In this version, the list of SourcePatterns is not parallelized !
+     */
     private def applyTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                           sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                           tls: TraceLinks[SME, TME], sc: SparkContext)
     : List[TML] = {
-        sc.parallelize(allSourcePatterns(tls)).flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls)).collect().toList
+        allSourcePatterns(tls).flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls))
     }
 
     override def execute[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
