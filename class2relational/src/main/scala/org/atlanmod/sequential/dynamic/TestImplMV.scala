@@ -7,7 +7,7 @@ import org.atlanmod.transformation.dynamic.Class2RelationalMV
 object TestImplMV {
 
     def main(args: Array[String]): Unit = {
-        val model = Util.dynamic_simple_model(1, 2)
+        val model = Util.dynamic_simple_model(1, 1)
         print(model)
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
         val transformation = Class2RelationalMV.transformation()
