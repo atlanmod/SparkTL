@@ -39,16 +39,16 @@ object Class2Relational {
                                         val attrs = JavaConverters.asScalaBuffer(
                                             c.head.asInstanceOf[ClassClass].getAttributes()).toList
 
-//                                        None
                                         val cols = Resolve.resolveAll(tls, sm, rmm, "col",
                                             RelationalMetamodel.COLUMN , ListUtils.singletons(attrs))
 
                                         cols match {
                                             case Some(lcols) =>
-                                                Some(new TableToColumns(
-                                                    t.asInstanceOf[RelationalTable],
-                                                    lcols.asInstanceOf[List[RelationalColumn]])
-                                                )
+                                                lcols.asInstanceOf[List[RelationalColumn]] match {
+                                                    case columns if !columns.isEmpty =>
+                                                        Some(new TableToColumns(t.asInstanceOf[RelationalTable], columns))
+                                                    case _ => None
+                                                }
                                             case None => None
                                         }
 
@@ -76,8 +76,6 @@ object Class2Relational {
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, a, c) => {
                                         val cl = a.head.asInstanceOf[ClassAttribute].getClass_
-
-//                                        None
                                         val tb = Resolve.resolve(tls, sm, rmm, "tab",
                                             RelationalMetamodel.TABLE, List(cl))
                                         tb match {

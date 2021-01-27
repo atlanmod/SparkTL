@@ -7,7 +7,7 @@ import scala.reflect.ClassTag
 
 trait TransformationEngine {
 
-    def execute[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
+    def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                   sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                   sc: SparkContext)
     : Model[TME, TML]

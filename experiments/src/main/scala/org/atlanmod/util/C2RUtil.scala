@@ -42,9 +42,20 @@ object C2RUtil {
 //                ("par", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineImpl.execute(tr, m, mm, sc)),
 //                ("seq", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
 //                ("par", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
-                ("seq", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
-                ("seq", "twophaseHM", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhaseHM.execute(tr, m, mm, sc))
-//                ("par", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
+//                ("seq", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
+//                ("seq", "twophaseHM", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhaseHM.execute(tr, m, mm, sc))
+                ("par", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
+                ("par", "twophaseHM", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHM.execute(tr, m, mm, sc)),
+                ("par", "twophaseHM1", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHMMorePara1.execute(tr, m, mm, sc)),
+                ("par", "twophaseHM2", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHMMorePara2.execute(tr, m, mm, sc)),
+                ("par", "twophaseHM3", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHMMorePara3.execute(tr, m, mm, sc)),
+                ("par", "twophaseHM12", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHMMorePara12.execute(tr, m, mm, sc)),
+                ("par", "twophaseHM123", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHMMorePara123.execute(tr, m, mm, sc)),
+                ("par", "twophase1", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseMorePara1.execute(tr, m, mm, sc)),
+                ("par", "twophase2", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseMorePara2.execute(tr, m, mm, sc)),
+                ("par", "twophase3", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseMorePara3.execute(tr, m, mm, sc)),
+                ("par", "twophase12", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseMorePara12.execute(tr, m, mm, sc)),
+                ("par", "twophase123", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseMorePara123.execute(tr, m, mm, sc)),
             )
         res
     }

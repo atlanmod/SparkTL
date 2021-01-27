@@ -7,13 +7,15 @@ public class ClassAttribute extends ClassElement {
         super.eSetProperty("id", id);
         super.eSetProperty("name", name);
         super.eSetProperty("derived", false);
+        super.eSetProperty("multivalued", false);
     }
 
-    public ClassAttribute(String id, String name, Boolean derived){
+    public ClassAttribute(String id, String name, Boolean derived, Boolean multivalued){
         super(ClassMetamodel.ATTRIBUTE);
         super.eSetProperty("id", id);
         super.eSetProperty("name", name);
         super.eSetProperty("derived", derived);
+        super.eSetProperty("multivalued", multivalued);
     }
 
     public String getId(){
@@ -38,6 +40,14 @@ public class ClassAttribute extends ClassElement {
 
     public void setDerived(Boolean derived){
         super.eSetProperty("derived", derived);
+    }
+
+    public Boolean isMultivalued(){
+        return (Boolean) super.eGetProperty("multivalued");
+    }
+
+    public void setMultivalued(Boolean multivalued){
+        super.eSetProperty("multivalued", multivalued);
     }
 
     public ClassClass getClass_(){

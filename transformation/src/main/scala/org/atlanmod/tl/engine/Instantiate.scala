@@ -10,7 +10,7 @@ import scala.annotation.tailrec
 object Instantiate {
 
     @tailrec
-    private def checkTypes[SME, SML, SMC, SMR](ses: List[SME], scs: List[SMC], mm: Metamodel[SME, SML, SMC, SMR])
+    def checkTypes[SME, SML, SMC, SMR](ses: List[SME], scs: List[SMC], mm: Metamodel[SME, SML, SMC, SMR])
     : Boolean =
         (ses, scs) match {
             case (se::ses2, sc::scs2) =>
@@ -23,7 +23,7 @@ object Instantiate {
         }
 
 
-    private def matchRuleOnPattern[SME, SML, SMC, SMR, TME, TML](r: Rule[SME, SML, SMC, TME, TML],
+    def matchRuleOnPattern[SME, SML, SMC, SMR, TME, TML](r: Rule[SME, SML, SMC, TME, TML],
                                                                  sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                  sp: List[SME])
     : Boolean =

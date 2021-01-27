@@ -4,10 +4,12 @@ import org.apache.spark.SparkContext
 import org.atlanmod.tl.engine.Eval.evalIteratorExpr
 import org.atlanmod.tl.engine.Instantiate.{instantiateElementOnPattern, matchPattern}
 import org.atlanmod.tl.engine.Utils.{allTuples, allTuplesByRule}
-import org.atlanmod.tl.model.impl.{TraceLinkImpl, TraceLinksList, TraceLinksListPar, TraceLinksMap}
 import org.atlanmod.tl.model._
+import org.atlanmod.tl.model.impl._
 import org.atlanmod.tl.util.ArithUtils.indexes
 import org.atlanmod.tl.util.ListUtils.optionToList
+
+import scala.reflect.ClassTag
 
 object Trace {
 
@@ -32,7 +34,7 @@ object Trace {
         indexes(evalIteratorExpr(r, sm, sp)).flatMap(i => traceIterationOnPattern(r, sm, sp, i))
 
 
-    private def tracePattern[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
+    def tracePattern[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
                                                            sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                            sp: List[SME])
     : List[TraceLink[SME, TME]] =
@@ -42,28 +44,28 @@ object Trace {
     def trace[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
                                             sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
     : TraceLinks[SME, TME] = {
-        new TraceLinksList(allTuples(tr, sm).flatMap(tuple => tracePattern(tr, sm, mm, tuple)))
+        val tuples = allTuples(tr, sm)
+        new TraceLinksList(tuples.flatMap(tuple => tracePattern(tr, sm, mm, tuple)))
     }
 
     def trace[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
                                                 mm: Metamodel[SME, SML, SMC, SMR], sc: SparkContext)
-    : TraceLinks[SME, TME] = {
-        new TraceLinksList(sc.parallelize(allTuples(tr, sm)).flatMap(tuple => tracePattern(tr, sm, mm, tuple)).collect().toList)
-    }
+    : TraceLinks[SME, TME] =
+        new TraceLinksList(sc.parallelize(allTuplesByRule(tr, sm, mm)).flatMap(tuple => tracePattern(tr, sm, mm, tuple)).collect().toList)
 
-    def trace_par[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
+    def trace_par[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
                                             mm: Metamodel[SME, SML, SMC, SMR], sc: SparkContext)
     : ParallelTraceLinks[SME, TME] = {
         new TraceLinksListPar(
-            allTuples(tr, sm).flatMap(tuple => tracePattern(tr, sm, mm, tuple)), sc
+            allTuplesByRule(tr, sm, mm).flatMap(tuple => tracePattern(tr, sm, mm, tuple)), sc
         )
     }
 
-    def trace_par_bis[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
+    def trace_par_bis[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
                                                 mm: Metamodel[SME, SML, SMC, SMR], sc: SparkContext)
     : ParallelTraceLinks[SME, TME] = {
         new TraceLinksListPar(
-            sc.parallelize(allTuples(tr, sm)).flatMap(tuple => tracePattern(tr, sm, mm, tuple)).collect().toList, sc
+            sc.parallelize(allTuplesByRule(tr, sm, mm)).flatMap(tuple => tracePattern(tr, sm, mm, tuple)).collect().toList, sc
         )
     }
 
@@ -83,16 +85,39 @@ object Trace {
         tls_map
     }
 
-
-    def traceHM_par[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
+    def traceHM_par[SME, SML, SMC, SMR, TME: ClassTag, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
                                                 mm: Metamodel[SME, SML, SMC, SMR], sc: SparkContext)
     : ParallelTraceLinks[SME, TME] = {
-        new TraceLinksMapPar(allTuples(tr, sm).flatMap(tuple => tracePattern(tr, sm, mm, tuple)), sc)
+        val tls_map = new TraceLinksMap[SME, TME]()
+        allTuplesByRule(tr, sm, mm).foreach(tuple => tls_map.put(tuple, tracePattern(tr, sm, mm, tuple)))
+        new TraceLinksMapPar[SME, TME](tls_map, sc)
     }
 
-    def traceHM_par_bis[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
+    def traceHM_par_bis[SME, SML, SMC, SMR, TME: ClassTag, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
                                                     mm: Metamodel[SME, SML, SMC, SMR], sc: SparkContext)
     : ParallelTraceLinks[SME, TME] = {
-        new TraceLinksMapPar(allTuples(tr, sm).flatMap(tuple => tracePattern(tr, sm, mm, tuple)), sc)
+        val tls_map = new TraceLinksMap[SME, TME]()
+        sc.parallelize(allTuplesByRule(tr, sm, mm)).foreach(tuple => tls_map.put(tuple, tracePattern(tr, sm, mm, tuple)))
+        new TraceLinksMapPar[SME, TME](tls_map, sc)
     }
+
+
+
+//
+//
+//    def trace_par[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
+//                                                                    mm: Metamodel[SME, SML, SMC, SMR], sc: SparkContext)
+//    : ParallelTraceLinks[SME, TME] = {
+//        new TraceLinksMapPar(
+//            allTuples(tr, sm).flatMap(tuple => tracePattern(tr, sm, mm, tuple)), sc
+//        )
+//    }
+//
+//    def trace_par_bis[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
+//                                                                        mm: Metamodel[SME, SML, SMC, SMR], sc: SparkContext)
+//    : ParallelTraceLinks[SME, TME] = {
+//        new TraceLinksListPar(
+//            sc.parallelize(allTuples(tr, sm)).flatMap(tuple => tracePattern(tr, sm, mm, tuple)).collect().toList, sc
+//        )
+//    }
 }

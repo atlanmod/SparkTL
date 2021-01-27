@@ -1,41 +1,25 @@
 package org.atlanmod.tl.model.impl
 
-import org.apache.spark.api.java.{JavaPairRDD, JavaSparkContext}
+import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
 import org.atlanmod.tl.model.{ParallelTraceLinks, TraceLink}
 
-import scala.collection.{JavaConverters, mutable}
+import scala.reflect.ClassTag
 
-class TraceLinksMapPar[SME, TME] (tls: java.util.List[(List[SME], List[TraceLink[SME, TME]])], jsc: JavaSparkContext) extends ParallelTraceLinks[SME, TME] {
+class TraceLinksMapPar[SME, TME: ClassTag] (tls: TraceLinksMap[SME, TME], sc: SparkContext) extends ParallelTraceLinks[SME, TME] {
 
-    def this(tl: List[(List[SME], List[TraceLink[SME, TME]])], jsc: JavaSparkContext) = {
-        // TODO
-        this(JavaConverters.seqAsJavaList(tl), jsc)
-    }
+    val rdd : RDD[(List[SME], List[TraceLink[SME, TME]])] = sc.parallelize(tls.map().toSeq)
 
-    val rdd : JavaPairRDD[List[SME], List[TraceLink[SME, TME]]] = jsc.parallelizePairs(tls)
+    override def find(sp: List[SME])(p: TraceLink[SME, TME] => Boolean): Option[TraceLink[SME, TME]] =
+        try {
+            val filtered = rdd.filter(tl => tl._1.equals(sp))
+            filtered.first()._2.find(p)
+        } catch {
+            case _: Exception => None
+        }
 
-    override def find(sp: List[SME])(p: TraceLink[SME, TME] => Boolean): Option[TraceLink[SME, TME]] = ???
-        // TODO
+    override def getTargetElements: List[TME] = rdd.flatMap(tl => tl._2.map(t => t.getTargetElement)).collect.toList
 
-    override def getTargetElements: List[TME] = ???
-    // TODO
+    override def getSourcePatterns: List[List[SME]] = rdd.map(tl => tl._1).collect.toList
 
-    override def getSourcePatterns: List[List[SME]] = ???
-    // TODO
-
-    def keys() : Iterable[List[SME]] = ???
-    // TODO
-
-    def get(key: List[SME]) : Option[List[TraceLink[SME, TME]]] = ???
-    // TODO
-
-
-    def map(key: List[SME]): mutable.Map[List[SME], List[TraceLink[SME, TME]]] = ???
-    // TODO
-
-    def put(key: List[SME], value: TraceLink[SME, TME]): Unit = ???
-    // TODO
-
-    def put(key: List[SME], value: List[TraceLink[SME, TME]]): Unit = ???
-    // TODO
 }

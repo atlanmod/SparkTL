@@ -1,12 +1,13 @@
-package org.atlanmod.tl.engine.parallel
+package org.atlanmod.transformation.parallel
 
 import org.apache.spark.SparkContext
-import org.atlanmod.tl.engine.{Apply, Trace, TransformationEngine}
+import org.atlanmod.tl.engine.{Apply, Trace}
 import org.atlanmod.tl.model.{Metamodel, Model, TraceLinks, Transformation}
+import org.atlanmod.transformation.ExperimentalTransformationEngine
 
 import scala.reflect.ClassTag
 
-object TransformationEngineTwoPhaseHM extends TransformationEngine {
+object TransformationEngineTwoPhaseHM extends ExperimentalTransformationEngine {
     /*
      *  SME : SourceModelElement
      *  SML : SourceModelLink
@@ -35,19 +36,23 @@ object TransformationEngineTwoPhaseHM extends TransformationEngine {
         sc.parallelize(allSourcePatterns(tls)).flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls)).collect().toList
     }
 
-    override def execute[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
-                                                                           sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-                                                                           sc: SparkContext)
-    : Model[TME, TML] = {
+    override def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
+                                                                                     sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
+                                                                                     sc: SparkContext)
+    : (Double, List[Double]) = {
+        val t1 = System.nanoTime
         val elements_and_tls = instantiateTraces(tr, sm, mm, sc)
+        val t2 = System.nanoTime
         val elements = elements_and_tls._1
         val tls = elements_and_tls._2
         val links = applyTraces(tr, sm, mm, tls, sc)
-        class tupleTModel(elements: List[TME], links: List[TML]) extends Model[TME, TML] {
-            override def allModelElements: List[TME] = elements
-            override def allModelLinks: List[TML] = links
-        }
-        new tupleTModel(elements, links)
+        val t3 = System.nanoTime
+
+        val t1_to_t2 = (t2 - t1) * 1000 / 1e9d
+        val t2_to_t3 = (t3 - t2) * 1000 / 1e9d
+        val t1_to_t3 = (t3 - t1) * 1000 / 1e9d
+
+        (t1_to_t3, List(t1_to_t2, t2_to_t3))
     }
 
 }

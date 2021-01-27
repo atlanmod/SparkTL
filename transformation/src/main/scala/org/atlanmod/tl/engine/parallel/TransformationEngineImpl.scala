@@ -18,7 +18,7 @@ object TransformationEngineImpl extends TransformationEngine {
      *  TMC : TargetModelClass
      */
 
-    override def execute[SME, SML, SMC, SMR, TME : ClassTag , TML : ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
+    override def execute[SME: ClassTag, SML, SMC, SMR, TME : ClassTag , TML : ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                               sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                               sc: SparkContext)
     : Model[TME, TML] = {

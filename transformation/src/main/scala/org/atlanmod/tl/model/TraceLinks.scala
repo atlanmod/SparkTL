@@ -1,6 +1,6 @@
 package org.atlanmod.tl.model
 
-trait TraceLinks[SME, TME] {
+trait TraceLinks[SME, TME] extends Serializable {
 
     def getSourcePatterns: List[List[SME]]
 

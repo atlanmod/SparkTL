@@ -4,7 +4,9 @@ import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.atlanmod.tl.model.{ParallelTraceLinks, TraceLink}
 
-class TraceLinksListPar[SME, TME](tls: List[TraceLink[SME, TME]], sc: SparkContext) extends ParallelTraceLinks[SME, TME] {
+import scala.reflect.ClassTag
+
+class TraceLinksListPar[SME: ClassTag, TME: ClassTag](tls: List[TraceLink[SME, TME]], sc: SparkContext) extends ParallelTraceLinks[SME, TME] {
 
     val rdd : RDD[TraceLink[SME, TME]] = sc.parallelize(tls)
 

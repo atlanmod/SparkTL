@@ -29,7 +29,7 @@ class TraceLinksMap[SME, TME](map: mutable.Map[List[SME], List[TraceLink[SME, TM
     }
 
 
-    def map(key: List[SME]): mutable.Map[List[SME], List[TraceLink[SME, TME]]] = {
+    def map(): mutable.Map[List[SME], List[TraceLink[SME, TME]]] = {
         map
     }
 
