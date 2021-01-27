@@ -13,7 +13,7 @@ object TestByRule {
         val model = Util.dynamic_simple_model(500000)
         print("a")
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
-        val transformation = Class2Relational.transformation()
+        val transformation = Class2Relational.class2relational()
         val sc = SparkUtils.context()
         val res = org.atlanmod.tl.engine.parallel.TransformationEngineByRule.execute(transformation, model, metamodel, sc)
         println("----------------------------------")

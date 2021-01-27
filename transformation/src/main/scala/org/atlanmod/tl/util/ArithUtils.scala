@@ -2,7 +2,11 @@ package org.atlanmod.tl.util
 
 object ArithUtils {
 
-    def indexes(length: Int): List[Int] =
-        length-1 to 0 by -1 toList
+    def indexes(length: Int): List[Int] = {
+        length match {
+            case 0 => List()
+            case n => (n - 1) :: indexes(n - 1)
+        }
+    }
 
 }

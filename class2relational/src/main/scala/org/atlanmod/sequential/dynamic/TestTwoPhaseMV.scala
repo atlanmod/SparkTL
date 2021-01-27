@@ -3,7 +3,7 @@ package org.atlanmod.sequential.dynamic
 import org.atlanmod.Util
 import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
 import org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhase
-import org.atlanmod.transformation.dynamic.Class2RelationalMV
+import org.atlanmod.transformation.dynamic.{Class2Relational}
 
 object TestTwoPhaseMV {
 
@@ -11,7 +11,7 @@ object TestTwoPhaseMV {
         val model = Util.dynamic_simple_model(1, 1)
         print(model)
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
-        val transformation = Class2RelationalMV.transformation()
+        val transformation = Class2Relational.class2relationalMV()
         val res = TransformationEngineTwoPhase.execute(transformation, model, metamodel)
         println("----------------------------------")
         println("RESULT")

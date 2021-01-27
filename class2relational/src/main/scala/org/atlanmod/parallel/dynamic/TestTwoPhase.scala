@@ -10,7 +10,7 @@ object TestTwoPhase {
     def main(args: Array[String]): Unit = {
         val model = Util.dynamic_simple_model(1, 2)
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
-        val transformation = Class2Relational.transformation()
+        val transformation = Class2Relational.class2relational()
         val sc = SparkUtils.context()
         val res = org.atlanmod.tl.engine.parallel.TransformationEngineTwoPhase.execute(transformation, model, metamodel, sc)
         println("----------------------------------")

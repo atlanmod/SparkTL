@@ -10,7 +10,7 @@ object TestImpl {
         val model = Util.dynamic_simple_model(1, 2)
         print(model)
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
-        val transformation = Class2Relational.transformation()
+        val transformation = Class2Relational.class2relational()
         val res = org.atlanmod.tl.engine.sequential.TransformationEngineImpl.execute(transformation, model, metamodel)
         println("----------------------------------")
         println("RESULT")

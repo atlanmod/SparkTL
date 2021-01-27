@@ -66,7 +66,7 @@ object Util {
         val ntests = 30
         var total_vector = ""
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
-        val transformation = Class2Relational.transformation()
+        val transformation = Class2Relational.class2relational()
         val sc = SparkUtils.context()
 
         val tests:
