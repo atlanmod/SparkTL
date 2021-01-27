@@ -6,7 +6,7 @@ import org.atlanmod.util.{C2RUtil, CSVUtil, FileUtil, TimeUtil}
 object Main {
 
     final val NTEST = 10
-    final val NCORE = 0
+    final val NCORE = 4
 
     final val GLOBAL_DIR_RES_NAME = "c2r_results"
     final val DIR_RES_NAME = GLOBAL_DIR_RES_NAME + "/" + TimeUtil.strLocalTime
@@ -21,20 +21,19 @@ object Main {
     }
 
     def sizes(): List[(Int, Int)] = {
-//                List((5,5), (10,5), (10, 20), (20, 20), (50, 50))
-        List((20, 4), (50, 10), (100, 20), (150, 30), (200, 40), (250, 50), (300, 60), (400, 80), (500, 100))
+        List((1000, 100))
     }
 
 
     def run_experiment (size: (Int, Int), times: Int, ncore: Int) : List[String] = {
         val methods = C2RUtil.get_methods()
-        val transformation = org.atlanmod.transformation.dynamic.Class2Relational.transformation()
+        val transformation = org.atlanmod.transformation.dynamic.Class2Relational.class2relational()
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
         C2RUtil.running_test_csv(methods, transformation, metamodel, times, ncore, size._1, size._2)
     }
 
     def getcores(): List[Int] = {
-        List(0)
+        List(2)
     }
 
     def main(args: Array[String]) : Unit = {
