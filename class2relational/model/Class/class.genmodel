@@ -8,7 +8,7 @@
     operationReflection="true" importOrganizing="true">
   <foreignModel>class.ecore</foreignModel>
   <testsDirectory xsi:nil="true"/>
-  <genPackages prefix="Class" basePackage="org.atlanmod" disposableProviderFactory="true"
+  <genPackages prefix="Class" basePackage="atlanmod" disposableProviderFactory="true"
       ecorePackage="class.ecore#/">
     <genClasses ecoreClass="class.ecore#//Class">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute class.ecore#//Class/id"/>

@@ -1,6 +1,6 @@
 package org.atlanmod.model.dynamic.classModel;
 
-import org.atlanmod.model.dynamic.DynamicMetamodel;
+import org.atlanmod.model.DynamicMetamodel;
 
 public class ClassMetamodel extends DynamicMetamodel<ClassElement, ClassLink> {
     public static String CLASS = "Class";

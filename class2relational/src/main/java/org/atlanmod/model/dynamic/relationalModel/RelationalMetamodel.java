@@ -1,6 +1,6 @@
 package org.atlanmod.model.dynamic.relationalModel;
 
-import org.atlanmod.model.dynamic.DynamicMetamodel;
+import org.atlanmod.model.DynamicMetamodel;
 
 public class RelationalMetamodel extends DynamicMetamodel<RelationalTable, RelationalLink> {
     public static String TABLE = "Table";

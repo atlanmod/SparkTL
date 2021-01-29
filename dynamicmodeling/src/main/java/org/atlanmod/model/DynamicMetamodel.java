@@ -1,4 +1,4 @@
-package org.atlanmod.model.dynamic;
+package org.atlanmod.model;
 
 import org.atlanmod.tl.model.Metamodel;
 import scala.Option;

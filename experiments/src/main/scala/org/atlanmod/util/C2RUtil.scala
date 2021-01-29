@@ -1,8 +1,8 @@
 package org.atlanmod.util
 
+import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.apache.spark.SparkContext
 import org.atlanmod.model.dynamic.classModel._
-import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.model.{Model, Transformation}
 import org.atlanmod.tl.util.SparkUtils
 
@@ -38,12 +38,12 @@ object C2RUtil {
     def get_methods(): List[(String, String, transformation_function)] = {
         val res : List[(String, String, transformation_function)] =
             List(
-//                ("seq", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineImpl.execute(tr, m, mm, sc)),
-//                ("par", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineImpl.execute(tr, m, mm, sc)),
-//                ("seq", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
-//                ("par", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
-//                ("seq", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
-//                ("seq", "twophaseHM", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhaseHM.execute(tr, m, mm, sc))
+//                ("seq", "simple", (tr, m, mm, sc) =>  atlanmod.transformation.sequential.TransformationEngineImpl.execute(tr, m, mm, sc)),
+//                ("par", "simple", (tr, m, mm, sc) =>  atlanmod.transformation.parallel.TransformationEngineImpl.execute(tr, m, mm, sc)),
+//                ("seq", "byrule", (tr, m, mm, sc) =>  atlanmod.transformation.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
+//                ("par", "byrule", (tr, m, mm, sc) =>  atlanmod.transformation.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
+//                ("seq", "twophase", (tr, m, mm, sc) =>  atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
+//                ("seq", "twophaseHM", (tr, m, mm, sc) =>  atlanmod.transformation.sequential.TransformationEngineTwoPhaseHM.execute(tr, m, mm, sc))
                 ("par", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
                 ("par", "twophaseHM", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHM.execute(tr, m, mm, sc)),
                 ("par", "twophaseHM1", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHMMorePara1.execute(tr, m, mm, sc)),
@@ -97,6 +97,7 @@ object C2RUtil {
 
     def apply_transformations_methods(methods: List[(String, String, transformation_function)], tr: transformation_type,
                               sm: source_model, mm: source_metamodel, sc: SparkContext, times: Int)
+    : mutable.HashMap[(String, String), List[(Double, List[Double])]]
     = {
         val res = new mutable.HashMap[(String, String), List[(Double, List[Double])]]
         for(method <- methods)

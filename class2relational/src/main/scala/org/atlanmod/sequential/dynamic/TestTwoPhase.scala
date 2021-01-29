@@ -1,7 +1,7 @@
 package org.atlanmod.sequential.dynamic
 
 import org.atlanmod.Util
-import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
+import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
 import org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhase
 import org.atlanmod.transformation.dynamic.Class2Relational
 

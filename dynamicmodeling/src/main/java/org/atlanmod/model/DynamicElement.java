@@ -1,4 +1,4 @@
-package org.atlanmod.model.dynamic;
+package org.atlanmod.model;
 
 import java.io.Serializable;
 import java.util.HashMap;

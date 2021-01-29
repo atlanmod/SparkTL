@@ -1,6 +1,6 @@
 package org.atlanmod.model.dynamic.relationalModel;
 
-import org.atlanmod.model.dynamic.DynamicElement;
+import org.atlanmod.model.DynamicElement;
 
 public abstract class RelationalElement extends DynamicElement {
 

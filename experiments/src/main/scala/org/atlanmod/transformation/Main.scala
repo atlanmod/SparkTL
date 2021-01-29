@@ -1,11 +1,11 @@
 package org.atlanmod.transformation
 
-import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
-import org.atlanmod.util.{C2RUtil, CSVUtil, FileUtil, TimeUtil}
+import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel}
+import org.atlanmod.util.{C2RUtil, FileUtil, TimeUtil}
 
 object Main {
 
-    final val NTEST = 10
+    final val NTEST = 1
     final val NCORE = 4
 
     final val GLOBAL_DIR_RES_NAME = "c2r_results"
@@ -21,7 +21,7 @@ object Main {
     }
 
     def sizes(): List[(Int, Int)] = {
-        List((1000, 100))
+        List((10, 10))
     }
 
 
@@ -47,12 +47,12 @@ object Main {
                 println(res_csv_lines.mkString("\n"))
                 val filename = size._1 + "_" + size._2 + "_" + ncore + ".csv"
                 val filename_csv = DIR_RES_NAME + "/" + filename
-                CSVUtil.writeCSV(filename_csv, header, res_csv_lines)
+//                CSVUtil.writeCSV(filename_csv, header, res_csv_lines)
                 filenames = filename :: filenames
             }
         }
         val filename_rmd = DIR_RES_NAME + "/result" + ".rmd"
-        FileUtil.write_content(filename_rmd, C2RUtil.make_rmd_content(filenames))
+//        FileUtil.write_content(filename_rmd, C2RUtil.make_rmd_content(filenames))
     }
 
 

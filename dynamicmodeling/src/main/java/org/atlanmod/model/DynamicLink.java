@@ -1,4 +1,4 @@
-package org.atlanmod.model.dynamic;
+package org.atlanmod.model;
 
 import scala.Serializable;
 import scala.collection.JavaConverters;

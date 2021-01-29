@@ -1,7 +1,7 @@
 package org.atlanmod.parallel.dynamic
 
 import org.atlanmod.Util
-import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
+import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
 import org.atlanmod.tl.util.SparkUtils
 import org.atlanmod.transformation.dynamic.Class2Relational
 

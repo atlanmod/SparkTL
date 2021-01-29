@@ -2,11 +2,10 @@ package org.atlanmod.transformation.dynamic
 
 import org.atlanmod.model.dynamic.classModel.{ClassAttribute, ClassClass, ClassMetamodel}
 import org.atlanmod.model.dynamic.relationalModel._
-import org.atlanmod.model.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
+import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.engine.Resolve
 import org.atlanmod.tl.model.Transformation
-import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl}
-import org.atlanmod.tl.model.impl.{RuleImpl, TransformationImpl}
+import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.atlanmod.tl.util.ListUtils
 
 import scala.collection.JavaConverters
@@ -37,7 +36,7 @@ object Class2Relational {
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, c, t) => {
                                         val attrs = JavaConverters.asScalaBuffer(
-                                            c.head.asInstanceOf[ClassClass].getAttributes()).toList
+                                            c.head.asInstanceOf[ClassClass].getAttributes).toList
 
                                         val cols = Resolve.resolveAll(tls, sm, rmm, "col",
                                             RelationalMetamodel.COLUMN , ListUtils.singletons(attrs))
@@ -45,7 +44,7 @@ object Class2Relational {
                                         cols match {
                                             case Some(lcols) =>
                                                 lcols.asInstanceOf[List[RelationalColumn]] match {
-                                                    case columns if !columns.isEmpty =>
+                                                    case columns if columns.nonEmpty =>
                                                         Some(new TableToColumns(t.asInstanceOf[RelationalTable], columns))
                                                     case _ => None
                                                 }
@@ -122,7 +121,7 @@ object Class2Relational {
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, c, t) => {
                                         val cl = c.head.asInstanceOf[ClassClass]
-                                        val attrs = JavaConverters.asScalaBuffer(cl.getAttributes()).toList
+                                        val attrs = JavaConverters.asScalaBuffer(cl.getAttributes).toList
                                         val cols = Resolve.resolveAll(tls, sm, rmm, "col",
                                             RelationalMetamodel.COLUMN , ListUtils.singletons(attrs))
                                         val key = Resolve.resolve(tls, sm, rmm, "key",

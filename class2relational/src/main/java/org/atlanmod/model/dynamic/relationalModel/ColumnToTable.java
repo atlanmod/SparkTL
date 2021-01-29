@@ -1,7 +1,6 @@
 package org.atlanmod.model.dynamic.relationalModel;
 
-import org.atlanmod.model.dynamic.DynamicElement;
-
+import org.atlanmod.model.DynamicElement;
 import java.util.ArrayList;
 import java.util.List;
 

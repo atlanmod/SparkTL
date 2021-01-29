@@ -1,7 +1,7 @@
 package org.atlanmod.model.dynamic.classModel;
 
-import org.atlanmod.model.dynamic.DynamicElement;
-import org.atlanmod.model.dynamic.DynamicLink;
+import org.atlanmod.model.DynamicElement;
+import org.atlanmod.model.DynamicLink;
 
 import java.util.List;
 

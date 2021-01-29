@@ -1,9 +1,8 @@
-package org.atlanmod.model.dynamic;
+package org.atlanmod.model;
 
 import org.atlanmod.EMFTool;
 import org.atlanmod.tl.model.Model;
 import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -117,12 +116,11 @@ public class DynamicModel implements Model<DynamicElement, DynamicLink> {
 
     @Override
     public String toString() {
-        StringBuilder str_builder = new StringBuilder("");
-        str_builder.append("elements (size="+ elements.size() +"):\n------------------------\n");
+        StringBuilder str_builder = new StringBuilder();
+        str_builder.append("elements (size=").append(elements.size()).append("):\n------------------------\n");
         for(DynamicElement element : elements)
-            str_builder.append(element.toString() + "\n");
-        str_builder.append("\n");
-        str_builder.append("links (size="+ links.size() +"):\n------------------------\n");
+            str_builder.append(element.toString()).append("\n");
+        str_builder.append("\n").append("links (size=").append(links.size()).append("):\n------------------------\n");
         for(DynamicLink link : links){
             str_builder.append(link.toString(0));
             str_builder.append("\n");

@@ -1,6 +1,6 @@
 package org.atlanmod.model.dynamic.classModel;
 
-import org.atlanmod.model.dynamic.DynamicElement;
+import org.atlanmod.model.DynamicElement;
 
 import java.util.ArrayList;
 import java.util.List;

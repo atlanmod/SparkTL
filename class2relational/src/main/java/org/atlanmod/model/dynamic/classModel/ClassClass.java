@@ -1,6 +1,5 @@
 package org.atlanmod.model.dynamic.classModel;
 import scala.collection.JavaConverters;
-import scala.jdk.CollectionConverters.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,18 +16,24 @@ public class ClassClass extends ClassElement {
 
     public String getName(){ return (String) super.eGetProperty("name"); }
 
-    public List<ClassAttribute> getAttributes(){ return ((List<ClassAttribute>) super.eGetReference("attributes")); }
+    @SuppressWarnings("unchecked")
+    public List<ClassAttribute> getAttributes(){
+        return ((List<ClassAttribute>) super.eGetReference("attributes"));
+    }
 
+    @SuppressWarnings("unchecked")
     public void addAttributes(List<ClassAttribute> attributes){
         super.eSetReference("attributes", new ArrayList<ClassAttribute>());
         ((List<ClassAttribute>) super.eGetReference("attributes")).addAll(attributes) ;
     }
 
+    @SuppressWarnings("unchecked")
     public void addAttributes(scala.collection.immutable.List<ClassAttribute> attributes){
         super.eSetReference("attributes", new ArrayList<ClassAttribute>());
         ((List<ClassAttribute>) super.eGetReference("attributes")).addAll(JavaConverters.seqAsJavaList(attributes)) ;
     }
 
+    @SuppressWarnings("unchecked")
     public void addAttribute(ClassAttribute attribute){
         super.eSetReference("attributes", new ArrayList<ClassAttribute>());
         ((List<ClassAttribute>) super.eGetReference("attributes")).add(attribute) ;
