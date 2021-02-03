@@ -6,7 +6,7 @@ import org.atlanmod.util.{C2RUtil, CSVUtil, FileUtil, TimeUtil}
 object Main {
 
     final val NTEST = 30
-    final val NCORE = 4
+    final val NCORE = 2
 
     final val GLOBAL_DIR_RES_NAME = "c2r_results"
     final val DIR_RES_NAME = GLOBAL_DIR_RES_NAME + "/" + TimeUtil.strLocalTime
@@ -40,7 +40,7 @@ object Main {
     }
 
     def main(args: Array[String]) : Unit = {
-        val ncore = if (args.length >= 1) args(0).toInt else 0
+        val ncore = if (args.length >= 1) args(0).toInt else NCORE
         init()
         val header = "fullname,par or seq,ncore,technique,total size,classes,attributes,multivalued,combo,global time," +
           "step1 time,step2 time,step3 time"
