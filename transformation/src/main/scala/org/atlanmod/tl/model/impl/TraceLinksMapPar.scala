@@ -8,7 +8,7 @@ import scala.reflect.ClassTag
 
 class TraceLinksMapPar[SME, TME: ClassTag] (tls: TraceLinksMap[SME, TME], sc: SparkContext) extends ParallelTraceLinks[SME, TME] {
 
-    val rdd : RDD[(List[SME], List[TraceLink[SME, TME]])] = sc.parallelize(tls.map().toSeq)
+    val rdd : RDD[(List[SME], List[TraceLink[SME, TME]])] = sc.parallelize(tls.getMap().toSeq)
 
     override def find(sp: List[SME])(p: TraceLink[SME, TME] => Boolean): Option[TraceLink[SME, TME]] =
         try {

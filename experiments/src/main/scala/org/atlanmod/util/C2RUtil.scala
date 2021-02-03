@@ -10,13 +10,14 @@ import scala.collection.mutable
 
 object C2RUtil {
 
-    private def size_model(size: (Int, Int)): Int = size._1 + size._1 * size._2
+    def size_model(size: (Int, Int, Int)): Int = size._1 + size._1 * size._2 + size._1 * size._3
 
-    class ResultC2R (par_seq: String, name_meth: String, ncore: Int, nclass: Int, nattribute: Int, time: (Double, List[Double])) {
+    class ResultC2R (par_seq: String, name_meth: String, ncore: Int, nclass: Int, nattribute: Int, nderived: Int, time: (Double, List[Double])) {
         def make_csv_line(): String = {
             (List(par_seq + "." + name_meth,
                 par_seq, ncore, name_meth,
-                size_model((nclass, nattribute)), nclass, nattribute, nclass + "_" + nattribute,
+                size_model((nclass, nattribute, nderived)), nclass, nattribute, nderived,
+                nclass + "_" + nattribute + "_" + nderived,
                 time._1) ++ time._2).mkString(",")
         }
     }
@@ -43,24 +44,27 @@ object C2RUtil {
 //                ("seq", "byrule", (tr, m, mm, sc) =>  atlanmod.transformation.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
 //                ("par", "byrule", (tr, m, mm, sc) =>  atlanmod.transformation.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
 //                ("seq", "twophase", (tr, m, mm, sc) =>  atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
-//                ("seq", "twophaseHM", (tr, m, mm, sc) =>  atlanmod.transformation.sequential.TransformationEngineTwoPhaseHM.execute(tr, m, mm, sc))
-                ("par", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
-                ("par", "twophaseHM", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHM.execute(tr, m, mm, sc)),
-                ("par", "twophaseHM1", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHMMorePara1.execute(tr, m, mm, sc)),
-                ("par", "twophaseHM2", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHMMorePara2.execute(tr, m, mm, sc)),
-                ("par", "twophaseHM3", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHMMorePara3.execute(tr, m, mm, sc)),
-                ("par", "twophaseHM12", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHMMorePara12.execute(tr, m, mm, sc)),
-                ("par", "twophaseHM123", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseHMMorePara123.execute(tr, m, mm, sc)),
-                ("par", "twophase1", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseMorePara1.execute(tr, m, mm, sc)),
-                ("par", "twophase2", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseMorePara2.execute(tr, m, mm, sc)),
-                ("par", "twophase3", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseMorePara3.execute(tr, m, mm, sc)),
-                ("par", "twophase12", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseMorePara12.execute(tr, m, mm, sc)),
-                ("par", "twophase123", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseMorePara123.execute(tr, m, mm, sc)),
+                ("par", "HM_allparallel", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_allparallel.execute(tr, m, mm, sc)),
+                ("seq", "HM_noparallelism", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_noparallelism.execute(tr, m, mm, sc)),
+                ("par", "HM_parallelsm", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp.execute(tr, m, mm, sc)),
+                ("par", "HM_parallelsp_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp_paralleltuples.execute(tr, m, mm, sc)),
+                ("par", "HM_paralleltrace", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltrace.execute(tr, m, mm, sc)),
+                ("par", "HM_paralleltrace_parallelsp", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp.execute(tr, m, mm, sc)),
+                ("par", "HM_paralleltrace_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltrace_paralleltuples.execute(tr, m, mm, sc)),
+                ("par", "HM_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltuples.execute(tr, m, mm, sc)),
+                ("par", "List_allparallel", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_allparallel.execute(tr, m, mm, sc)),
+                ("seq", "List_noparallelism", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_noparallelism.execute(tr, m, mm, sc)),
+                ("par", "List_parallelsm", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp.execute(tr, m, mm, sc)),
+                ("par", "List_parallelsp_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp_paralleltuples.execute(tr, m, mm, sc)),
+                ("par", "List_paralleltrace", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltrace.execute(tr, m, mm, sc)),
+                ("par", "List_paralleltrace_parallelsp", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp.execute(tr, m, mm, sc)),
+                ("par", "List_paralleltrace_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltrace_paralleltuples.execute(tr, m, mm, sc)),
+                ("par", "List_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltuples.execute(tr, m, mm, sc)),
             )
         res
     }
 
-    def dynamic_simple_model(nclass: Int = 1, nattribute: Int = 1): ClassModel = {
+    def dynamic_simple_model(nclass: Int = 1, nattribute: Int = 1, nattributemv: Int = 0): ClassModel = {
         var elements : List[ClassElement] = List()
         var links : List[ClassLink] = List()
         for(i <- 1 to nclass){
@@ -68,6 +72,12 @@ object C2RUtil {
             elements = cc :: elements
             var cc_attributes : List[ClassAttribute] = List()
             for (j <- 1 to nattribute) {
+                val ca = new ClassAttribute(i.toString + "." + j.toString, "")
+                elements = ca :: elements
+                links = new AttributeToClass(ca, cc) :: links
+                cc_attributes = ca :: cc_attributes
+            }
+            for (j <- (1 + nattribute) to (nattributemv + nattribute)) {
                 val ca = new ClassAttribute(i.toString + "." + j.toString, "")
                 elements = ca :: elements
                 links = new AttributeToClass(ca, cc) :: links
@@ -106,10 +116,10 @@ object C2RUtil {
     }
 
     def running_test(methods: List[(String, String, transformation_function)], tr: transformation_type, mm: source_metamodel,
-                     times: Int, ncore: Int, nclass: Int, nattribute: Int) : List[ResultC2R] = {
+                     times: Int, ncore: Int, nclass: Int, nattribute: Int, nderived: Int) : List[ResultC2R] = {
         var res : List[ResultC2R] = List()
         val sc = if (ncore != 0) SparkUtils.context(ncore) else null
-        val sm = dynamic_simple_model(nclass, nattribute)
+        val sm = dynamic_simple_model(nclass, nattribute, nderived)
 
         val methods_to_apply = methods.filter(m => m._1 == (if (ncore == 0) "seq" else "par"))
 
@@ -121,7 +131,7 @@ object C2RUtil {
             val name_method = method._2
             for (times <- times_for_methods.get(method)){
                 for (time <- times){
-                    res = new ResultC2R(par_seq, name_method, ncore, nclass, nattribute, time) :: res
+                    res = new ResultC2R(par_seq, name_method, ncore, nclass, nattribute, nderived, time) :: res
                 }
             }
         }
@@ -131,8 +141,8 @@ object C2RUtil {
     }
 
     def running_test_csv(methods: List[(String, String, transformation_function)], tr: transformation_type, mm: source_metamodel,
-                     times: Int, ncore: Int, nclass: Int, nattribute: Int) : List[String] = {
-        running_test(methods, tr, mm, times, ncore, nclass, nattribute).map(r => r.make_csv_line())
+                     times: Int, ncore: Int, nclass: Int, nattribute: Int, nderived: Int) : List[String] = {
+        running_test(methods, tr, mm, times, ncore, nclass, nattribute, nderived).map(r => r.make_csv_line())
     }
 
     def make_vector_results(csvfiles: List[String]): String = {

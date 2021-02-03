@@ -13,7 +13,7 @@ object Util {
             var cc_attributes : List[ClassAttribute] = List()
             for (j <- 1 to nattribute) {
                 val ca = new ClassAttribute(i.toString + "." + j.toString, "name"+ i.toString + "." + j.toString,
-                    true, true)
+                    true)
                 ca.setClass_(cc)
                 elements = ca :: elements
                 links = new AttributeToClass(ca, cc) :: links

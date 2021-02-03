@@ -1,11 +1,11 @@
 package org.atlanmod.transformation
 
 import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel}
-import org.atlanmod.util.{C2RUtil, FileUtil, TimeUtil}
+import org.atlanmod.util.{C2RUtil, CSVUtil, FileUtil, TimeUtil}
 
 object Main {
 
-    final val NTEST = 1
+    final val NTEST = 30
     final val NCORE = 4
 
     final val GLOBAL_DIR_RES_NAME = "c2r_results"
@@ -20,39 +20,47 @@ object Main {
         FileUtil.create_if_not_exits(DIR_RES_NAME)
     }
 
-    def sizes(): List[(Int, Int)] = {
-        List((10, 10))
+    def sizes(): List[(Int, Int, Int)] = {
+
+        List((10, 2, 1), (20, 4, 2), (30, 6, 3), (50, 10, 5), (100, 20, 10), (200, 40, 20), (300, 60, 30), (500, 100, 50),
+            (10, 2, 2), (20, 4, 4), (30, 6, 6), (50, 10, 10), (100, 20, 20), (200, 40, 40), (300, 60, 60), (500, 100, 100))
+          .sortBy(C2RUtil.size_model)
     }
 
 
-    def run_experiment (size: (Int, Int), times: Int, ncore: Int) : List[String] = {
+    def run_experiment (size: (Int, Int, Int), times: Int, ncore: Int) : List[String] = {
         val methods = C2RUtil.get_methods()
-        val transformation = org.atlanmod.transformation.dynamic.Class2Relational.class2relational()
+        val transformation = org.atlanmod.transformation.dynamic.Class2Relational.class2relationalMV()
         val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
-        C2RUtil.running_test_csv(methods, transformation, metamodel, times, ncore, size._1, size._2)
+        C2RUtil.running_test_csv(methods, transformation, metamodel, times, ncore, size._1, size._2, size._3)
     }
 
     def getcores(): List[Int] = {
-        List(2)
+        List(0, 1, 2, 4, 6, 8)
     }
 
     def main(args: Array[String]) : Unit = {
+        val ncore = if (args.length >= 1) args(0).toInt else 0
         init()
-        val header = "fullname,par or seq,ncore,technique,total size,classes,attributes,combo,global time," +
+        val header = "fullname,par or seq,ncore,technique,total size,classes,attributes,multivalued,combo,global time," +
           "step1 time,step2 time,step3 time"
         var filenames : List[String] = List()
-        for (ncore <- getcores()){
-            for (size <- sizes()){
+
+        try {
+            for (size <- sizes()) {
                 val res_csv_lines = run_experiment(size, NTEST, ncore)
                 println(res_csv_lines.mkString("\n"))
-                val filename = size._1 + "_" + size._2 + "_" + ncore + ".csv"
+                val filename = size._1 + "_" + size._2 + "_" + size._3 + "_" + ncore + ".csv"
                 val filename_csv = DIR_RES_NAME + "/" + filename
-//                CSVUtil.writeCSV(filename_csv, header, res_csv_lines)
+                CSVUtil.writeCSV(filename_csv, header, res_csv_lines)
                 filenames = filename :: filenames
             }
+        }catch {
+            case _: Exception =>
         }
+
         val filename_rmd = DIR_RES_NAME + "/result" + ".rmd"
-//        FileUtil.write_content(filename_rmd, C2RUtil.make_rmd_content(filenames))
+        FileUtil.write_content(filename_rmd, C2RUtil.make_rmd_content(filenames))
     }
 
 

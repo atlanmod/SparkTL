@@ -11,7 +11,7 @@ object TransformationEngineTwoPhaseHM extends ExperimentalTransformationEngine {
     private def instantiateTraces[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                 sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
     : (List[TME], TraceLinks[SME, TME]) = {
-        val tls = Trace.traceHM(tr, sm, mm)
+        val tls = Trace.trace_HM(tr, sm, mm)
         (tls.getTargetElements, tls)
     }
 

@@ -2,7 +2,6 @@ package org.atlanmod.tl.engine
 
 import org.atlanmod.tl.engine.Eval.{evalIteratorExpr, evalOutputPatternElementExpr, evalOutputPatternLinkExpr}
 import org.atlanmod.tl.engine.Instantiate.matchPattern
-import org.atlanmod.tl.engine.Trace.trace
 import org.atlanmod.tl.model._
 import org.atlanmod.tl.util.ArithUtils.indexes
 import org.atlanmod.tl.util.ListUtils.optionToList
@@ -14,7 +13,7 @@ object Apply{
                                                                       sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                       sp: List[SME], iter: Int, te: TME)
     : Option[TML] =
-        evalOutputPatternLinkExpr(sm, sp, te, iter, trace(tr, sm, mm), oper)
+        evalOutputPatternLinkExpr(sm, sp, te, iter, Trace.trace(tr, sm, mm), oper)
 
 
     private def applyElementOnPattern[SME, SML, SMC, SMR, TME, TML](ope: OutputPatternElement[SME, SML, TME, TML],
