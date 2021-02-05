@@ -178,3 +178,13 @@ object Class2Relational {
 
     }
 }
+
+// TODO
+//rule DataType2Type {
+//    from
+//    s : ClassDiagram!DataType
+//    to
+//    t : Relational!Type (
+//    name <- s.name
+//    )
+//}
