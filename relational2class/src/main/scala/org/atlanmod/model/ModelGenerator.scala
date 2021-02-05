@@ -1,6 +1,7 @@
 package org.atlanmod.model
 
-import org.atlanmod.model.classmodel.{AttributeToClass, AttributeToDatatype, ClassAttribute, ClassClass, ClassDatatype, ClassElement, ClassLink, ClassModel, ClassToAttributes}
+import org.atlanmod.model.classmodel._
+import org.atlanmod.model.relationalmodel.{RelationalElement, RelationalLink, RelationalModel}
 
 object ModelGenerator {
 
@@ -46,9 +47,12 @@ object ModelGenerator {
         new ClassModel(elements, links)
     }
 
-    def main(args: Array[String]): Unit = {
-        val model = getClassModelSample
-        print(model)
-    }
+    def getRelationalModelSample : RelationalModel = {
+        // table Family
+        val elements : List[RelationalElement] = List()
 
+        // TableToKey /0@col1
+        val links : List[RelationalLink] = List()
+        new RelationalModel(elements, links)
+    }
 }

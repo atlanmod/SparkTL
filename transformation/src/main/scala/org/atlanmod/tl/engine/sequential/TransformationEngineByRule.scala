@@ -4,25 +4,21 @@ import org.apache.spark.SparkContext
 import org.atlanmod.tl.engine.Utils.allTuplesByRule
 import org.atlanmod.tl.engine.{Apply, Instantiate, TransformationEngine}
 import org.atlanmod.tl.model.{Metamodel, Model, Transformation}
+import org.atlanmod.tl.util.ModelUtil
 
 import scala.reflect.ClassTag
 
 object TransformationEngineByRule extends TransformationEngine {
 
-    override def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
-                                                                           sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-                                                                           sc: SparkContext = null)
+    override def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
+    (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
+     sc: SparkContext = null,
+     makeModel: (List[TME], List[TML]) => Model[TME, TML] = (a, b) => ModelUtil.makeTupleModel[TME, TML](a, b))
     : Model[TME, TML] = {
-        val tuples = allTuplesByRule(tr, sm, mm)
+        val tuples = allTuplesByRule(tr, sm, mm).distinct
         /* Instantiate */ val elements = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t))
         /* Apply */ val links = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t))
-
-        class tupleTModel(elements: List[TME], links: List[TML]) extends Model[TME, TML] {
-            override def allModelElements: List[TME] = elements
-            override def allModelLinks: List[TML] = links
-        }
-
-        new tupleTModel(elements, links)
+        makeModel(elements, links)
     }
 
 }
