@@ -4,7 +4,7 @@ class ColumnToTable(source: RelationalColumn, target: RelationalTable)
   extends RelationalLink(RelationalMetamodel.COLUMN_TABLE, source, List(target)){
 
     override def toString: String =
-        "(" + source.getId() + ", " + super.getType + ", " + target.getId() + ")"
+        "(" + source.getId + ", " + getType + ", " + target.getId + ")"
 
     override def getSource: RelationalColumn = source
 

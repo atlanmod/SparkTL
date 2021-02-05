@@ -6,6 +6,7 @@ object RelationalMetamodel {
 
     final val TABLE = "Table"
     final val COLUMN = "Column"
+    final val TYPE = "Type"
     final val TABLE_COLUMNS = "columns"
     final val TABLE_KEY = "key"
     final val COLUMN_TABLE = "table"

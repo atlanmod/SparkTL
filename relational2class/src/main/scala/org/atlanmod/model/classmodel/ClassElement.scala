@@ -12,7 +12,15 @@ abstract class ClassElement(classname: String) extends DynamicElement(classname,
     override def equals(o: Any): Boolean = {
         o match {
             case obj: ClassElement =>
-                this.getType().equals(obj.getType()) && this.getId().equals(obj.getId())
+                this.getType.equals(obj.getType) && this.getId.equals(obj.getId)
+            case _ => false
+        }
+    }
+
+    override def weak_equals(o: Any): Boolean = {
+        o match {
+            case obj: ClassElement =>
+                this.getType.equals(obj.getType)
             case _ => false
         }
     }

@@ -1,6 +1,9 @@
 package org.atlanmod.model
 
-class DynamicLink(type_ : String, source: DynamicElement, target: List[DynamicElement]) extends Serializable {
+import org.atlanmod.tl.util.ListUtils
+
+abstract class DynamicLink(type_ : String, source: DynamicElement, target: List[DynamicElement])
+  extends Serializable with ListUtils.Weakable {
 
     def this(type_ : String, source: DynamicElement, target: DynamicElement) {
         this(type_, source, List(target))
@@ -15,6 +18,8 @@ class DynamicLink(type_ : String, source: DynamicElement, target: List[DynamicEl
     override def toString: String = {
         source.toString + "\n" + type_ + "\n" + target.toString + "\n"
     }
+
+    override def weak_equals(o: Any): Boolean
 
     override def equals(o: Any): Boolean = {
         o match {

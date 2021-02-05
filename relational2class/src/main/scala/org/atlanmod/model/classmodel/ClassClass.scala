@@ -1,6 +1,7 @@
 package org.atlanmod.model.classmodel
 
 import org.atlanmod.model.IdGenerator
+import org.atlanmod.tl.util.ListUtils
 
 class ClassClass extends ClassElement(ClassMetamodel.CLASS) {
 
@@ -38,6 +39,14 @@ class ClassClass extends ClassElement(ClassMetamodel.CLASS) {
     def setName(name: String): Unit = super.eSetProperty("name", name)
 
     override def toString: String =
-        super.getType() + "([" + getId + (if (getSuper.nonEmpty) " <: " + getSuper.mkString(",") else "") + "] " + getName + ")"
+        getType + "([" + getId + (if (getSuper.nonEmpty) " <: " + getSuper.mkString(",") else "") + "] " + getName + ")"
+
+    override def weak_equals(o: Any): Boolean = {
+        o match {
+            case obj: ClassClass =>
+                this.getName.equals(obj.getName) && ListUtils.eqList(this.getSuper, obj.getSuper)
+            case _ => false
+        }
+    }
 
 }

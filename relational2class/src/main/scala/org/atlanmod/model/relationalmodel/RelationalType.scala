@@ -1,8 +1,8 @@
-package org.atlanmod.model.classmodel
+package org.atlanmod.model.relationalmodel
 
 import org.atlanmod.model.IdGenerator
 
-class ClassDatatype extends ClassElement(ClassMetamodel.DATATYPE) {
+class RelationalType extends RelationalElement(RelationalMetamodel.TYPE){
 
     def this(name: String) {
         this()
@@ -25,7 +25,7 @@ class ClassDatatype extends ClassElement(ClassMetamodel.DATATYPE) {
 
     override def weak_equals(o: Any): Boolean = {
         o match {
-            case obj: ClassDatatype => this.getName.equals(obj.getName)
+            case obj: RelationalType => this.getName.equals(obj.getName)
             case _ => false
         }
     }

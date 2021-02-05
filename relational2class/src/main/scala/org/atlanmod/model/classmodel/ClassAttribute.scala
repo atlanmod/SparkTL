@@ -33,13 +33,20 @@ class ClassAttribute extends ClassElement(ClassMetamodel.ATTRIBUTE) {
     }
 
     override def getId: String = super.eGetProperty("id").asInstanceOf[String]
-    override def getType: String = ClassMetamodel.ATTRIBUTE
     def getName: String = super.eGetProperty("name").asInstanceOf[String]
     def setName(name: String): Unit = super.eSetProperty("name", name)
     def isMultivalued: Boolean = super.eGetProperty("multivalued").asInstanceOf[Boolean]
     def setMultivalued(multi: Boolean): Unit = super.eSetProperty("multivalued", multi)
 
     override def toString: String =
-        getType() + "([" + getId() + "] " + getName + (if(isMultivalued) "multivalued)" else ")")
+        getType + "([" + getId + "] " + getName + (if(isMultivalued) "multivalued)" else ")")
+
+    override def weak_equals(o: Any): Boolean = {
+        o match {
+            case obj: ClassAttribute =>
+                this.getName.equals(obj.getName) && this.isMultivalued.equals(obj.isMultivalued)
+            case _ => false
+        }
+    }
 
 }

@@ -4,7 +4,7 @@ class AttributeToClass(source: ClassAttribute, target: ClassClass)
   extends ClassLink(ClassMetamodel.ATTRIBUTE_CLASS, source, List(target)) {
 
     override def toString: String =
-        "(" + source.getId() + ", " + super.getType + ", " + getTargetClass.getId() + ")"
+        "(" + source.getId + ", " + getType + ", " + getTargetClass.getId + ")"
 
     override def getSource: ClassAttribute = source
 

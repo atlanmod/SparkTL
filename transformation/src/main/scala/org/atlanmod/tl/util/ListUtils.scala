@@ -2,6 +2,27 @@ package org.atlanmod.tl.util
 
 object ListUtils {
 
+    trait Weakable {
+        def weak_equals(o: Any) : Boolean
+    }
+
+    def weak_eqList[A <: Weakable, B <: Weakable](lA: List[A], lB: List[B]): Boolean = {
+        for(a <- lA)
+            if (!(lB.count(v => v.weak_equals(a)) == lA.count(v => v.weak_equals(a)))) return false
+        for(b <- lB)
+            if (!(lB.count(v => v.weak_equals(b)) == lA.count(v => v.weak_equals(b)))) return false
+        true
+    }
+
+    def eqList[A, B](lA: List[A], lB: List[B]): Boolean = {
+        for(a <- lA)
+            if (!(lB.count(v => v.equals(a)) == lA.count(v => v.equals(a)))) return false
+        for(b <- lB)
+            if (!(lB.count(v => v.equals(b)) == lA.count(v => v.equals(b)))) return false
+        true
+    }
+
+
     private def option_map[A, B](f: A => B, o: Option[A]) : Option[B]  = {
         o match {
             case Some(a) =>Some(f(a))

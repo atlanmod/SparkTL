@@ -1,10 +1,12 @@
 package org.atlanmod.model
 
+import org.atlanmod.tl.util.ListUtils
+
 import scala.collection.mutable
 
-class DynamicElement(classname: String,
+abstract class DynamicElement(classname: String,
                      properties : scala.collection.mutable.Map[String, Any] = mutable.HashMap())
-  extends Serializable {
+  extends Serializable with ListUtils.Weakable {
 
 //    def this(element: DynamicElement, properties: scala.collection.mutable.Map[String, Any] = null) {
 //        this(element.getType, if (properties == null) element.getProperties else properties)
@@ -33,6 +35,8 @@ class DynamicElement(classname: String,
             case _ => false
         }
     }
+
+    override def weak_equals(o: Any): Boolean
 
     override def toString: String = {
         var res = ""

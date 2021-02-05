@@ -21,7 +21,14 @@ class RelationalTable extends RelationalElement(RelationalMetamodel.TABLE) {
     def setName(name: String): Unit = super.eSetProperty("name", name)
 
     override def toString: String =
-            super.getType + "([" + getId() + "] " + getName + ")"
+            super.getType + "([" + getId + "] " + getName + ")"
+
+    override def weak_equals(o: Any): Boolean = {
+        o match {
+            case col: RelationalTable => col.getName.equals(this.getName)
+            case _ => false
+        }
+    }
 
 }
 

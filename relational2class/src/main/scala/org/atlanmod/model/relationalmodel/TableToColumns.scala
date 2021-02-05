@@ -10,6 +10,6 @@ class TableToColumns (source: RelationalTable, target: List[RelationalColumn])
     override def getTarget: List[RelationalColumn] = target
 
     override def toString: String =
-        "(" + source.getId() + ", " + super.getType + ", " + target.map(a => a.getId()).mkString("[", ", ", "]") + ")"
+        "(" + source.getId + ", " + getType + ", " + target.map(a => a.getId).mkString("[", ", ", "]") + ")"
 
 }
