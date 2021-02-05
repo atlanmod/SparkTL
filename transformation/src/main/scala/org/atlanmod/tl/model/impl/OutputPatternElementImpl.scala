@@ -5,7 +5,7 @@ import org.atlanmod.tl.model.{Model, OutputPatternElement, OutputPatternElementR
 class OutputPatternElementImpl[SME, SML, TME, TML]
     (name: String,
      elementExpr: (Int, Model[SME, SML], List[SME]) => Option[TME],
-     outputElemRefs: List[OutputPatternElementReference[SME, SML, TME, TML]])
+     outputElemRefs: List[OutputPatternElementReference[SME, SML, TME, TML]] = List())
   extends OutputPatternElement[SME, SML, TME, TML] {
     /*
      *  SME : SourceModelElement

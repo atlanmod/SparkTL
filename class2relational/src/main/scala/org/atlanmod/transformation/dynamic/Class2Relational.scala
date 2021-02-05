@@ -59,7 +59,7 @@ object Class2Relational {
                 new RuleImpl(
                     name = "Attribute2Column",
                     types = List(ClassMetamodel.ATTRIBUTE),
-                    from = (_, l) => Some(!l.head.asInstanceOf[ClassAttribute].isDerived),
+                    from = (_, l) => Some(!l.head.asInstanceOf[ClassAttribute].isMultivalued),
                     itExpr = (_, _) => Some(1), // No where clause
                     to = List(
                         new OutputPatternElementImpl(

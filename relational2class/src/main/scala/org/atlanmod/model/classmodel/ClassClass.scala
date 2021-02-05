@@ -1,0 +1,43 @@
+package org.atlanmod.model.classmodel
+
+import org.atlanmod.model.IdGenerator
+
+class ClassClass extends ClassElement(ClassMetamodel.CLASS) {
+
+    def this(name: String) {
+        this()
+        super.eSetProperty("id", IdGenerator.id())
+        super.eSetProperty("name", name)
+        super.eSetProperty("super", List(): List[String])
+    }
+
+    def this(id:String, name: String) {
+        this()
+        super.eSetProperty("id", id)
+        super.eSetProperty("name", name)
+        super.eSetProperty("super", List(): List[String])
+    }
+
+    def this(name: String, super_ : List[String]) = {
+        this()
+        super.eSetProperty("id", IdGenerator.id())
+        super.eSetProperty("name", name)
+        super.eSetProperty("super", super_)
+    }
+
+    def this(id:String,name: String, super_ : List[String]) = {
+        this()
+        super.eSetProperty("id", id)
+        super.eSetProperty("name", name)
+        super.eSetProperty("super", super_)
+    }
+
+    override def getId: String = super.eGetProperty("id").asInstanceOf[String]
+    def getName: String = super.eGetProperty("name").asInstanceOf[String]
+    def getSuper: List[String] = super.eGetProperty("super").asInstanceOf[List[String]]
+    def setName(name: String): Unit = super.eSetProperty("name", name)
+
+    override def toString: String =
+        super.getType() + "([" + getId + (if (getSuper.nonEmpty) " <: " + getSuper.mkString(",") else "") + "] " + getName + ")"
+
+}

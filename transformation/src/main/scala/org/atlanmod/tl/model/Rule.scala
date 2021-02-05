@@ -24,6 +24,6 @@ trait Rule[SME, SML, SMC, TME, TML]  extends Serializable {
 
     def getOutputPatternElements: List[OutputPatternElement[SME, SML, TME, TML]]
 
-    def findOutputPatternElemen(name: String): Option[OutputPatternElement[SME, SML, TME, TML]]
+    def findOutputPatternElement(name: String): Option[OutputPatternElement[SME, SML, TME, TML]]
 
 }

@@ -2,6 +2,11 @@ package org.atlanmod.tl.model.impl
 
 import org.atlanmod.tl.model.{Model, OutputPatternElement, Rule}
 
+object Util {
+    def default_from[SME, SML]: (Model[SME, SML], List[SME]) => Option[Boolean] = (_, _) => Some(true)
+    def default_itExpr[SME, SML]: (Model[SME, SML], List[SME]) => Option[Int] = (_, _) => Some(1)
+}
+
 class RuleImpl[SME, SML, SMC, TME, TML](name: String,
                                    types: List[SMC],
                                    from: (Model[SME, SML], List[SME]) => Option[Boolean],
@@ -16,6 +21,15 @@ class RuleImpl[SME, SML, SMC, TME, TML](name: String,
      *  TML : TargetModelLink
      */
 
+    def this(name: String, types: List[SMC], to: List[OutputPatternElement[SME, SML, TME, TML]]){
+        this(name, types, Util.default_from[SME, SML], Util.default_itExpr[SME, SML], to)
+    }
+
+    def this(name: String, types: List[SMC], from: (Model[SME, SML], List[SME]) => Option[Boolean],
+             to: List[OutputPatternElement[SME, SML, TME, TML]]){
+        this(name, types, from, Util.default_itExpr[SME, SML], to)
+    }
+
     // Accessors
     def getName: String = name
     def getGuardExpr: (SM, List[SME]) => Option[Boolean] = from
@@ -23,6 +37,7 @@ class RuleImpl[SME, SML, SMC, TME, TML](name: String,
     def getIteratorExpr: (SM, List[SME]) => Option[Int] = itExpr
     def getOutputPatternElements: List[OutputPatternElement[SME, SML, TME, TML]] = to
 
-    def findOutputPatternElemen(name: String): Option[OutputPatternElement[SME, SML, TME, TML]] =
+    override def findOutputPatternElement(name: String): Option[OutputPatternElement[SME, SML, TME, TML]] =
         to.find(ope => ope.getName == name)
+
 }

@@ -2,7 +2,7 @@ package org.atlanmod.util
 
 import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.apache.spark.SparkContext
-import org.atlanmod.model.dynamic.classModel._
+import org.atlanmod.model.classmodel.ClassModel
 import org.atlanmod.tl.model.{Model, Transformation}
 import org.atlanmod.tl.util.SparkUtils
 
@@ -64,30 +64,30 @@ object C2RUtil {
         res
     }
 
-    def dynamic_simple_model(nclass: Int = 1, nattribute: Int = 1, nattributemv: Int = 0): ClassModel = {
-        var elements : List[ClassElement] = List()
-        var links : List[ClassLink] = List()
-        for(i <- 1 to nclass){
-            val cc = new ClassClass(i.toString, "")
-            elements = cc :: elements
-            var cc_attributes : List[ClassAttribute] = List()
-            for (j <- 1 to nattribute) {
-                val ca = new ClassAttribute(i.toString + "." + j.toString, "")
-                elements = ca :: elements
-                links = new AttributeToClass(ca, cc) :: links
-                cc_attributes = ca :: cc_attributes
-            }
-            for (j <- (1 + nattribute) to (nattributemv + nattribute)) {
-                val ca = new ClassAttribute(i.toString + "." + j.toString, "")
-                elements = ca :: elements
-                links = new AttributeToClass(ca, cc) :: links
-                cc_attributes = ca :: cc_attributes
-            }
-            links = new ClassToAttributes(cc, cc_attributes) :: links
-
-        }
-        new ClassModel(elements, links)
-    }
+//    def dynamic_simple_model(nclass: Int = 1, nattribute: Int = 1, nattributemv: Int = 0): ClassModel = {
+//        var elements : List[ClassElement] = List()
+//        var links : List[ClassLink] = List()
+//        for(i <- 1 to nclass){
+//            val cc = new ClassClass(i.toString, "")
+//            elements = cc :: elements
+//            var cc_attributes : List[ClassAttribute] = List()
+//            for (j <- 1 to nattribute) {
+//                val ca = new ClassAttribute(i.toString + "." + j.toString, "")
+//                elements = ca :: elements
+//                links = new AttributeToClass(ca, cc) :: links
+//                cc_attributes = ca :: cc_attributes
+//            }
+//            for (j <- (1 + nattribute) to (nattributemv + nattribute)) {
+//                val ca = new ClassAttribute(i.toString + "." + j.toString, "")
+//                elements = ca :: elements
+//                links = new AttributeToClass(ca, cc) :: links
+//                cc_attributes = ca :: cc_attributes
+//            }
+//            links = new ClassToAttributes(cc, cc_attributes) :: links
+//
+//        }
+//        new ClassModel(elements, links)
+//    }
 
     def apply_transformation(tr_foo: transformation_function, tr: transformation_type,
                              sm: source_model, mm: source_metamodel, sc: SparkContext): (Double, List[Double]) = {
@@ -115,35 +115,35 @@ object C2RUtil {
         res
     }
 
-    def running_test(methods: List[(String, String, transformation_function)], tr: transformation_type, mm: source_metamodel,
-                     times: Int, ncore: Int, nclass: Int, nattribute: Int, nderived: Int) : List[ResultC2R] = {
-        var res : List[ResultC2R] = List()
-        val sc = if (ncore != 0) SparkUtils.context(ncore) else null
-        val sm = dynamic_simple_model(nclass, nattribute, nderived)
+//    def running_test(methods: List[(String, String, transformation_function)], tr: transformation_type, mm: source_metamodel,
+//                     times: Int, ncore: Int, nclass: Int, nattribute: Int, nderived: Int) : List[ResultC2R] = {
+//        var res : List[ResultC2R] = List()
+//        val sc = if (ncore != 0) SparkUtils.context(ncore) else null
+//        val sm = dynamic_simple_model(nclass, nattribute, nderived)
+//
+//        val methods_to_apply = methods.filter(m => m._1 == (if (ncore == 0) "seq" else "par"))
+//
+//        val times_for_methods : mutable.HashMap[(String, String), List[(Double, List[Double])]] =
+//            apply_transformations_methods(methods_to_apply, tr, sm, mm, sc, times)
+//
+//        for (method <- times_for_methods.keySet) {
+//            val par_seq = method._1
+//            val name_method = method._2
+//            for (times <- times_for_methods.get(method)){
+//                for (time <- times){
+//                    res = new ResultC2R(par_seq, name_method, ncore, nclass, nattribute, nderived, time) :: res
+//                }
+//            }
+//        }
+//
+//        if (ncore != 0) sc.stop()
+//        res
+//    }
 
-        val methods_to_apply = methods.filter(m => m._1 == (if (ncore == 0) "seq" else "par"))
-
-        val times_for_methods : mutable.HashMap[(String, String), List[(Double, List[Double])]] =
-            apply_transformations_methods(methods_to_apply, tr, sm, mm, sc, times)
-
-        for (method <- times_for_methods.keySet) {
-            val par_seq = method._1
-            val name_method = method._2
-            for (times <- times_for_methods.get(method)){
-                for (time <- times){
-                    res = new ResultC2R(par_seq, name_method, ncore, nclass, nattribute, nderived, time) :: res
-                }
-            }
-        }
-
-        if (ncore != 0) sc.stop()
-        res
-    }
-
-    def running_test_csv(methods: List[(String, String, transformation_function)], tr: transformation_type, mm: source_metamodel,
-                     times: Int, ncore: Int, nclass: Int, nattribute: Int, nderived: Int) : List[String] = {
-        running_test(methods, tr, mm, times, ncore, nclass, nattribute, nderived).map(r => r.make_csv_line())
-    }
+//    def running_test_csv(methods: List[(String, String, transformation_function)], tr: transformation_type, mm: source_metamodel,
+//                     times: Int, ncore: Int, nclass: Int, nattribute: Int, nderived: Int) : List[String] = {
+//        running_test(methods, tr, mm, times, ncore, nclass, nattribute, nderived).map(r => r.make_csv_line())
+//    }
 
     def make_vector_results(csvfiles: List[String]): String = {
         csvfiles.map(f => "read.csv(file=\""+f+"\", colClasses = colTypes)").mkString(",")

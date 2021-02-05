@@ -1,0 +1,17 @@
+package org.atlanmod.model.relationalmodel
+
+import org.atlanmod.model.DynamicElement
+import scala.collection.mutable
+
+abstract class RelationalElement (classname: String) extends DynamicElement(classname, mutable.HashMap()) {
+    def getId: String
+
+    override def getType: String = classname
+
+    override def equals(o: Any): Boolean = {
+        o match {
+            case obj: RelationalElement => this.getType().equals(obj.getType()) && this.getId().equals(obj.getId())
+            case _ => false
+        }
+    }
+}

@@ -1,7 +1,6 @@
 package org.atlanmod.transformation
 
-import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel}
-import org.atlanmod.util.{C2RUtil, CSVUtil, FileUtil, TimeUtil}
+import org.atlanmod.util.{C2RUtil, FileUtil, TimeUtil}
 
 object Main {
 
@@ -27,41 +26,46 @@ object Main {
           .sortBy(C2RUtil.size_model)
     }
 
-
-    def run_experiment (size: (Int, Int, Int), times: Int, ncore: Int) : List[String] = {
-        val methods = C2RUtil.get_methods()
-        val transformation = org.atlanmod.transformation.dynamic.Class2Relational.class2relationalMV()
-        val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
-        C2RUtil.running_test_csv(methods, transformation, metamodel, times, ncore, size._1, size._2, size._3)
+    def main(args: Array[String]): Unit = {
+        print("")
     }
 
-    def getcores(): List[Int] = {
-        List(0, 1, 2, 4, 6, 8)
-    }
+// TODO: rehabilitate the code for experiments
 
-    def main(args: Array[String]) : Unit = {
-        val ncore = if (args.length >= 1) args(0).toInt else NCORE
-        init()
-        val header = "fullname,par or seq,ncore,technique,total size,classes,attributes,multivalued,combo,global time," +
-          "step1 time,step2 time,step3 time"
-        var filenames : List[String] = List()
-
-        try {
-            for (size <- sizes()) {
-                val res_csv_lines = run_experiment(size, NTEST, ncore)
-                println(res_csv_lines.mkString("\n"))
-                val filename = size._1 + "_" + size._2 + "_" + size._3 + "_" + ncore + ".csv"
-                val filename_csv = DIR_RES_NAME + "/" + filename
-                CSVUtil.writeCSV(filename_csv, header, res_csv_lines)
-                filenames = filename :: filenames
-            }
-        }catch {
-            case _: Exception =>
-        }
-
-        val filename_rmd = DIR_RES_NAME + "/result" + ".rmd"
-        FileUtil.write_content(filename_rmd, C2RUtil.make_rmd_content(filenames))
-    }
+//    def run_experiment (size: (Int, Int, Int), times: Int, ncore: Int) : List[String] = {
+//        val methods = C2RUtil.get_methods()
+//        val transformation = org.atlanmod.transformation.dynamic.Class2Relational.class2relationalMV()
+//        val metamodel = new DynamicMetamodel[DynamicElement, DynamicLink]()
+//        C2RUtil.running_test_csv(methods, transformation, metamodel, times, ncore, size._1, size._2, size._3)
+//    }
+//
+//    def getcores(): List[Int] = {
+//        List(0, 1, 2, 4, 6, 8)
+//    }
+//
+//    def main(args: Array[String]) : Unit = {
+//        val ncore = if (args.length >= 1) args(0).toInt else NCORE
+//        init()
+//        val header = "fullname,par or seq,ncore,technique,total size,classes,attributes,multivalued,combo,global time," +
+//          "step1 time,step2 time,step3 time"
+//        var filenames : List[String] = List()
+//
+//        try {
+//            for (size <- sizes()) {
+//                val res_csv_lines = run_experiment(size, NTEST, ncore)
+//                println(res_csv_lines.mkString("\n"))
+//                val filename = size._1 + "_" + size._2 + "_" + size._3 + "_" + ncore + ".csv"
+//                val filename_csv = DIR_RES_NAME + "/" + filename
+//                CSVUtil.writeCSV(filename_csv, header, res_csv_lines)
+//                filenames = filename :: filenames
+//            }
+//        }catch {
+//            case _: Exception =>
+//        }
+//
+//        val filename_rmd = DIR_RES_NAME + "/result" + ".rmd"
+//        FileUtil.write_content(filename_rmd, C2RUtil.make_rmd_content(filenames))
+//    }
 
 
 }
