@@ -2,8 +2,8 @@ package org.atlanmod.transformation.dynamic
 
 import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.model.Transformation
-import org.atlanmod.model.classmodel.{ClassAttribute, ClassClass, ClassMetamodel, ClassModel}
-import org.atlanmod.model.relationalmodel.{RelationalColumn, RelationalMetamodel, RelationalTable, TableToColumns, TableToKeys}
+import org.atlanmod.model.classmodel.{ClassAttribute, ClassClass, ClassDatatype, ClassMetamodel, ClassModel}
+import org.atlanmod.model.relationalmodel.{RelationalColumn, RelationalMetamodel, RelationalTable, RelationalType, TableToColumns, TableToKeys}
 import org.atlanmod.tl.engine.Resolve
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.atlanmod.tl.util.ListUtils
@@ -173,18 +173,22 @@ object Class2Relational {
                         ), // col target
                     )
                 ), // MVAttribute2Column
+                new RuleImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
+                    name = "DataType2Type",
+                    types = List(ClassMetamodel.DATATYPE),
+                    to = List(
+                        new OutputPatternElementImpl(
+                            name = "type",
+                            elementExpr = (_, _, l) =>
+                                if (l.isEmpty) None
+                                else {
+                                    val datatype = l.head.asInstanceOf[ClassDatatype]
+                                    Some(new RelationalType(datatype.getName))
+                                }
+                        )
+                    )
+                ) // DataType2Type
             )
         )
-
     }
 }
-
-// TODO
-//rule DataType2Type {
-//    from
-//    s : ClassDiagram!DataType
-//    to
-//    t : Relational!Type (
-//    name <- s.name
-//    )
-//}
