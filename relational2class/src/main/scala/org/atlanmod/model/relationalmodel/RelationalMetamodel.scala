@@ -36,4 +36,21 @@ object RelationalMetamodel {
 
     def getTableColumns(table: RelationalTable, model: RelationalModel): Option[List[RelationalColumn]] =
         getTableColumnsOnLinks(table, model.allModelLinks)
+
+    @tailrec
+    private def isKeyOfOnLinks(column: RelationalColumn, links: List[RelationalLink]) : Boolean = {
+        links match {
+            case (h: TableToKeys) :: l2 =>
+                if (h.getTarget.contains(column)) true
+                else isKeyOfOnLinks(column, l2)
+            case _ :: l2 => isKeyOfOnLinks(column, l2)
+            case List() => false
+        }
+    }
+
+    def isKeyOf(c: RelationalColumn, model: RelationalModel): Boolean  =
+        isKeyOfOnLinks(c, model.allModelLinks)
+
+    def isNotKeyOf(c: RelationalColumn, model: RelationalModel): Boolean  =
+        !isKeyOf(c, model)
 }
