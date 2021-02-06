@@ -37,15 +37,15 @@ object Trace {
     def tracePattern[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
                                                            sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                            sp: List[SME])
-    : List[TraceLink[SME, TME]] =
+    : List[TraceLink[SME, TME]] = {
         matchPattern(tr, sm, mm, sp).flatMap(r => traceRuleOnPattern(r, sm, sp))
+    }
 
 
     def trace[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
                                             sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
     : TraceLinks[SME, TME] = {
-        val tuples = allTuples(tr, sm)
-        new TraceLinksList(tuples.flatMap(tuple => tracePattern(tr, sm, mm, tuple)))
+        new TraceLinksList(allTuples(tr, sm).flatMap(tuple => tracePattern(tr, sm, mm, tuple)))
     }
 
     def trace_paralleltuples[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],

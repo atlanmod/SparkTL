@@ -4,9 +4,11 @@ import org.atlanmod.model.IdGenerator
 
 class RelationalType extends RelationalElement(RelationalMetamodel.TYPE){
 
+    @deprecated("Having a random ID can turn inconsistent the output of a transformation")
     def this(name: String) {
         this()
-        super.eSetProperty("id", IdGenerator.id())
+        val id: String = IdGenerator.id()
+        super.eSetProperty("id", id)
         super.eSetProperty("name", name)
     }
 

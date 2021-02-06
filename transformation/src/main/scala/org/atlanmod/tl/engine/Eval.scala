@@ -19,8 +19,10 @@ object Eval {
 
     def evalOutputPatternElementExpr[SME, SML, TME, TML](sm: Model[SME, SML], sp: List[SME], iter: Int,
                                                               o: OutputPatternElement[SME, SML, TME, TML])
-    : Option[TME] =
-        o.getElementExpr(iter, sm, sp)
+    : Option[TME] = {
+        val res = o.getElementExpr(iter, sm, sp)
+        res
+    }
 
 
     def evalOutputPatternLinkExpr[SME, SML, TME, TML](sm: Model[SME, SML], sp: List[SME], oe: TME, iter: Int,

@@ -71,7 +71,10 @@ object Class2Relational {
                             name = "key",
                             elementExpr = (_, _, l) =>
                                 if (l.isEmpty) None
-                                else Some(new RelationalColumn("Id"))
+                                else {
+                                    val _class = l.head.asInstanceOf[ClassClass]
+                                    Some(new RelationalColumn(_class.getId + "Id", "Id"))
+                                }
                         ) // key
                     )
                 ), // Class2Table
@@ -105,7 +108,7 @@ object Class2Relational {
                                   val attribute = l.head.asInstanceOf[ClassAttribute]
                                   ClassMetamodel.getAttributeType(attribute, sm.asInstanceOf[ClassModel]) match {
                                       case Some(owner) =>
-                                          Some(new RelationalTable(owner.getName + "_" + attribute.getName))
+                                          Some(new RelationalTable(attribute.getId + "pivot", owner.getName + "_" + attribute.getName))
                                       case _ => None
                                   }
                               },
@@ -155,8 +158,8 @@ object Class2Relational {
                             elementExpr = (_, _, l) =>
                               if (l.isEmpty) None
                               else {
-                                  l.head.asInstanceOf[ClassAttribute]
-                                  Some(new RelationalColumn("Id"))
+                                  val att = l.head.asInstanceOf[ClassAttribute]
+                                  Some(new RelationalColumn(att.getId + "psrc",  "Id"))
                               }
                         ), // col source
                         new OutputPatternElementImpl(
@@ -166,7 +169,8 @@ object Class2Relational {
                                 else {
                                     val att = l.head.asInstanceOf[ClassAttribute]
                                     ClassMetamodel.getAttributeDatatype(att, sm.asInstanceOf[ClassModel]) match {
-                                        case Some(datatype) => Some(new RelationalColumn(datatype.getName))
+                                        case Some(datatype) =>
+                                            Some(new RelationalColumn(att.getId + "ptrg", datatype.getName))
                                         case _ => None
                                     }
                                 }
@@ -183,7 +187,7 @@ object Class2Relational {
                                 if (l.isEmpty) None
                                 else {
                                     val datatype = l.head.asInstanceOf[ClassDatatype]
-                                    Some(new RelationalType(datatype.getName))
+                                    Some(new RelationalType(datatype.getId, datatype.getName))
                                 }
                         )
                     )

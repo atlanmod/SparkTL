@@ -16,9 +16,11 @@ object ListUtils {
 
     def eqList[A, B](lA: List[A], lB: List[B]): Boolean = {
         for(a <- lA)
-            if (!(lB.count(v => v.equals(a)) == lA.count(v => v.equals(a)))) return false
+            if (!(lB.count(v => v.equals(a)) == lA.count(v => v.equals(a))))
+                return false
         for(b <- lB)
-            if (!(lB.count(v => v.equals(b)) == lA.count(v => v.equals(b)))) return false
+            if (!(lB.count(v => v.equals(b)) == lA.count(v => v.equals(b))))
+                return false
         true
     }
 

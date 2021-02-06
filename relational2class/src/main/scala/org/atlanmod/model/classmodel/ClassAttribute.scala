@@ -4,16 +4,20 @@ import org.atlanmod.model.IdGenerator
 
 class ClassAttribute extends ClassElement(ClassMetamodel.ATTRIBUTE) {
 
+    @deprecated("Having a random ID can turn inconsistent the output of a transformation")
     def this(name: String){
         this()
-        super.eSetProperty("id", IdGenerator.id())
+        val id: String = IdGenerator.id()
+        super.eSetProperty("id", id)
         super.eSetProperty("name", name)
         super.eSetProperty("multivalued", false)
     }
 
+    @deprecated("Having a random ID can turn inconsistent the output of a transformation")
     def this(name: String, multi: Boolean){
         this()
-        super.eSetProperty("id", IdGenerator.id())
+        val id: String = IdGenerator.id()
+        super.eSetProperty("id", id)
         super.eSetProperty("name", name)
         super.eSetProperty("multivalued", multi)
     }

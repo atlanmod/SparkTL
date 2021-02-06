@@ -1,12 +1,26 @@
 package org.atlanmod.transformation.dynamic
 
-import org.atlanmod.model.ModelGenerator.getClassModelSample
+import org.atlanmod.model.ModelGenerator.{getClassModelSample, getRelationalModelSample}
 import org.atlanmod.model.classmodel.ClassMetamodel
 import org.atlanmod.model.relationalmodel.{RelationalElement, RelationalLink, RelationalModel}
 import org.atlanmod.model.{DynamicElement, DynamicLink}
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestTransformationSeq extends AnyFunSuite {
+
+    test("simple equals to the right result") {
+        val model = getClassModelSample
+        val metamodel = ClassMetamodel.metamodel
+        val transformation = Class2Relational.class2relational()
+        val result = org.atlanmod.tl.engine.sequential.TransformationEngineImpl.execute(transformation, model, metamodel,
+            makeModel = (e: List[DynamicElement], l: List[DynamicLink])
+            => new RelationalModel(e.asInstanceOf[List[RelationalElement]], l.asInstanceOf[List[RelationalLink]]))
+          .asInstanceOf[RelationalModel]
+        val expected = getRelationalModelSample
+        println(result+ "\n")
+        println(expected)
+        assert(result.equals(expected))
+    }
 
     test("simple equals to byrule") {
         val model = getClassModelSample
@@ -20,7 +34,7 @@ class TestTransformationSeq extends AnyFunSuite {
             makeModel = (e: List[DynamicElement], l: List[DynamicLink])
             => new RelationalModel(e.asInstanceOf[List[RelationalElement]], l.asInstanceOf[List[RelationalLink]]))
           .asInstanceOf[RelationalModel]
-        assert(result_simple.weak_equals(result_byrule))
+        assert(result_simple.equals(result_byrule))
     }
 
     test("simple equals to twophase") {
@@ -35,7 +49,7 @@ class TestTransformationSeq extends AnyFunSuite {
             makeModel = (e: List[DynamicElement], l: List[DynamicLink])
             => new RelationalModel(e.asInstanceOf[List[RelationalElement]], l.asInstanceOf[List[RelationalLink]]))
           .asInstanceOf[RelationalModel]
-        assert(result_simple.weak_equals(result_twophase))
+        assert(result_simple.equals(result_twophase))
     }
 
     test("simple equals to twophaseHM") {
@@ -50,7 +64,7 @@ class TestTransformationSeq extends AnyFunSuite {
             makeModel = (e: List[DynamicElement], l: List[DynamicLink])
             => new RelationalModel(e.asInstanceOf[List[RelationalElement]], l.asInstanceOf[List[RelationalLink]]))
           .asInstanceOf[RelationalModel]
-        assert(result_simple.weak_equals(result_twophase))
+        assert(result_simple.equals(result_twophase))
     }
 
 }

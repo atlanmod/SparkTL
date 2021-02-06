@@ -5,9 +5,11 @@ import org.atlanmod.tl.util.ListUtils
 
 class ClassClass extends ClassElement(ClassMetamodel.CLASS) {
 
+    @deprecated("Having a random ID can turn inconsistent the output of a transformation")
     def this(name: String) {
         this()
-        super.eSetProperty("id", IdGenerator.id())
+        val id: String = IdGenerator.id()
+        super.eSetProperty("id", id)
         super.eSetProperty("name", name)
         super.eSetProperty("super", List(): List[String])
     }
@@ -19,9 +21,11 @@ class ClassClass extends ClassElement(ClassMetamodel.CLASS) {
         super.eSetProperty("super", List(): List[String])
     }
 
+    @deprecated("Having a random ID can turn inconsistent the output of a transformation")
     def this(name: String, super_ : List[String]) = {
         this()
-        super.eSetProperty("id", IdGenerator.id())
+        val id: String = IdGenerator.id()
+        super.eSetProperty("id", id)
         super.eSetProperty("name", name)
         super.eSetProperty("super", super_)
     }
