@@ -1,6 +1,6 @@
 package org.atlanmod.model.classmodel
 
-class AttributeToDatatype(source: ClassAttribute, target: ClassDatatype)
+class AttributeToType(source: ClassAttribute, target: ClassTypable)
   extends ClassLink(ClassMetamodel.ATTRIBUTE_TYPE, source, List(target)) {
 
     override def toString: String =
@@ -8,10 +8,8 @@ class AttributeToDatatype(source: ClassAttribute, target: ClassDatatype)
 
     override def getSource: ClassAttribute = source
 
-    def getTargetDatatype: ClassDatatype = target
+    override def getTarget: List[ClassTypable] = List(target)
 
-    override def getTarget: List[ClassDatatype] = List(target)
-
-    def getTargetClass: ClassDatatype = target
+    def getTargetType: ClassTypable = target
 
 }

@@ -68,7 +68,7 @@ object Class2RelationalSimple {
                                     (tls, _, sm, a, c) =>
                                         {
                                             val attribute = a.head.asInstanceOf[ClassAttribute]
-                                            ClassMetamodel.getAttributeType(attribute, sm.asInstanceOf[ClassModel]) match {
+                                            ClassMetamodel.getAttributeOwner(attribute, sm.asInstanceOf[ClassModel]) match {
                                                 case Some(class_) =>
                                                     Resolve.resolve(tls, sm, rmm, "tab", RelationalMetamodel.TABLE, List(class_)) match {
                                                         case Some(table) =>

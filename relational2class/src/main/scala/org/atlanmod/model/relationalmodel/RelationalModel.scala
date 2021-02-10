@@ -12,7 +12,7 @@ class RelationalModel(elements: List[RelationalElement] = List(), links: List[Re
     override def equals(obj: Any): Boolean =
         obj match {
             case model: RelationalModel =>
-                ListUtils.eqList(this.allModelLinks, model.allModelLinks) &&
+                ListUtils.eqList(this.allModelLinks, model.allModelLinks) &
                   ListUtils.eqList(this.allModelElements, model.allModelElements)
             case _ => false
         }

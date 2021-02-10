@@ -10,19 +10,20 @@ object RelationalMetamodel {
     final val TABLE_COLUMNS = "columns"
     final val TABLE_KEY = "key"
     final val COLUMN_TABLE = "table"
+    final val COLUMN_TYPE = "type"
 
     @tailrec
-    private def getColumnReferenceOnLinks(c: RelationalColumn, l: List[RelationalLink]): Option[RelationalTable] =
+    private def getColumnOwnerOnLinks(c: RelationalColumn, l: List[RelationalLink]): Option[RelationalTable] =
         l match {
             case (h: ColumnToTable) :: l2 =>
                 if (h.getSource.equals(c)) Some(h.getTargetTable)
-                else getColumnReferenceOnLinks(c, l2)
-            case _ :: l2 => getColumnReferenceOnLinks(c, l2)
+                else getColumnOwnerOnLinks(c, l2)
+            case _ :: l2 => getColumnOwnerOnLinks(c, l2)
             case List() => None
         }
 
-    def getColumnReference(c: RelationalColumn, model: RelationalModel): Option[RelationalTable] =
-        getColumnReferenceOnLinks(c, model.allModelLinks)
+    def getColumnOwner(c: RelationalColumn, model: RelationalModel): Option[RelationalTable] =
+        getColumnOwnerOnLinks(c, model.allModelLinks)
 
     @tailrec
     private def getTableColumnsOnLinks(t: RelationalTable, l: List[RelationalLink]): Option[List[RelationalColumn]] =
@@ -53,4 +54,17 @@ object RelationalMetamodel {
 
     def isNotKeyOf(c: RelationalColumn, model: RelationalModel): Boolean  =
         !isKeyOf(c, model)
+
+    @tailrec
+    private def getColumnTypeOnLinks(column: RelationalColumn, links: List[RelationalLink]): Option[RelationalTypable] =
+        links match {
+            case (h: ColumnToType) :: l2 =>
+                if (h.getSource.equals(column)) Some(h.getTargetType)
+                else getColumnTypeOnLinks(column, l2)
+            case _ :: l2 => getColumnTypeOnLinks(column, l2)
+            case _ => None
+        }
+
+    def getColumnType(column: RelationalColumn, model: RelationalModel): Option[RelationalTypable]  =
+        getColumnTypeOnLinks(column, model.allModelLinks)
 }

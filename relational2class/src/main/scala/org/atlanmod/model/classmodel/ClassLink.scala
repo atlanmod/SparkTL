@@ -8,7 +8,8 @@ abstract class ClassLink(type_ : String, source: ClassElement, target: List[Clas
 
     override def equals(o: Any): Boolean = {
         o match {
-            case obj: ClassLink => obj.getType.equals(type_) & obj.getSource.equals(source) & obj.getTarget.equals(target)
+            case obj: ClassLink => type_.equals(obj.getType) & source.equals(obj.getSource) &
+              ListUtils.eqList(obj.getTarget, target)
             case _ => false
         }
     }
@@ -16,8 +17,8 @@ abstract class ClassLink(type_ : String, source: ClassElement, target: List[Clas
     override def weak_equals(o: Any): Boolean = {
         o match {
             case obj: ClassLink =>
-                obj.getSource.weak_equals(source) &&
-                  obj.getType.equals(type_) &&
+                source.weak_equals(obj.getSource) &&
+                  type_.equals(obj.getType) &&
                   ListUtils.weak_eqList(obj.getTarget, target)
             case _ => false
         }

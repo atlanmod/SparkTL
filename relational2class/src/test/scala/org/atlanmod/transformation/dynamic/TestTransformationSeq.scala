@@ -1,6 +1,6 @@
 package org.atlanmod.transformation.dynamic
 
-import org.atlanmod.model.ModelGenerator.{getClassModelSample, getRelationalModelSample}
+import org.atlanmod.model.ModelSamples.{getClassModelSample, getRelationalModelSample}
 import org.atlanmod.model.classmodel.ClassMetamodel
 import org.atlanmod.model.relationalmodel.{RelationalElement, RelationalLink, RelationalModel}
 import org.atlanmod.model.{DynamicElement, DynamicLink}
@@ -12,13 +12,11 @@ class TestTransformationSeq extends AnyFunSuite {
         val model = getClassModelSample
         val metamodel = ClassMetamodel.metamodel
         val transformation = Class2Relational.class2relational()
-        val result = org.atlanmod.tl.engine.sequential.TransformationEngineImpl.execute(transformation, model, metamodel,
+        val result = org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhase.execute(transformation, model, metamodel,
             makeModel = (e: List[DynamicElement], l: List[DynamicLink])
             => new RelationalModel(e.asInstanceOf[List[RelationalElement]], l.asInstanceOf[List[RelationalLink]]))
           .asInstanceOf[RelationalModel]
         val expected = getRelationalModelSample
-        println(result+ "\n")
-        println(expected)
         assert(result.equals(expected))
     }
 

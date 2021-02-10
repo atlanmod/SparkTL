@@ -4,7 +4,7 @@ import org.atlanmod.model.IdGenerator
 
 class ClassAttribute extends ClassElement(ClassMetamodel.ATTRIBUTE) {
 
-    @deprecated("Having a random ID can turn inconsistent the output of a transformation")
+    @deprecated("Having a random ID can turn inconsistent the output of a transformation", "1.0.1")
     def this(name: String){
         this()
         val id: String = IdGenerator.id()
@@ -13,7 +13,7 @@ class ClassAttribute extends ClassElement(ClassMetamodel.ATTRIBUTE) {
         super.eSetProperty("multivalued", false)
     }
 
-    @deprecated("Having a random ID can turn inconsistent the output of a transformation")
+    @deprecated("Having a random ID can turn inconsistent the output of a transformation", "1.0.1")
     def this(name: String, multi: Boolean){
         this()
         val id: String = IdGenerator.id()

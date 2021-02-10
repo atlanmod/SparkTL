@@ -19,29 +19,11 @@ object ClassMetamodel {
     = new DynamicMetamodel[DynamicElement, DynamicLink]()
 
     @tailrec
-    private def getAttributeDatatypeOnLinks(attr: ClassAttribute, l: List[ClassLink]): Option[ClassDatatype] = {
+    private def getAttributeTypeOnLinks(attr: ClassAttribute, l: List[ClassLink]): Option[ClassTypable] = {
         l match {
-            case (h: AttributeToDatatype) :: l2 =>
+            case (h: AttributeToType) :: l2 =>
                 if (h.getSource.equals(attr)){
-                    Some(h.getTargetClass)
-                } else {
-                    getAttributeDatatypeOnLinks(attr, l2)
-                }
-            case _ :: l2 => getAttributeDatatypeOnLinks(attr, l2)
-            case List() => None
-        }
-    }
-
-    def getAttributeDatatype(attribute: ClassAttribute, model: ClassModel): Option[ClassDatatype] = {
-        getAttributeDatatypeOnLinks(attribute, model.allModelLinks)
-    }
-
-    @tailrec
-    private def getAttributeTypeOnLinks(attr: ClassAttribute, l: List[ClassLink]): Option[ClassClass] = {
-        l match {
-            case (h: AttributeToClass) :: l2 =>
-                if (h.getSource.equals(attr)){
-                    Some(h.getTargetClass)
+                    Some(h.getTargetType)
                 } else {
                     getAttributeTypeOnLinks(attr, l2)
                 }
@@ -50,8 +32,26 @@ object ClassMetamodel {
         }
     }
 
-    def getAttributeType(attribute: ClassAttribute, model: ClassModel): Option[ClassClass] = {
+    def getAttributeType(attribute: ClassAttribute, model: ClassModel): Option[ClassTypable] = {
         getAttributeTypeOnLinks(attribute, model.allModelLinks)
+    }
+
+    @tailrec
+    private def getAttributeOwnerOnLinks(attr: ClassAttribute, l: List[ClassLink]): Option[ClassClass] = {
+        l match {
+            case (h: AttributeToClass) :: l2 =>
+                if (h.getSource.equals(attr)){
+                    Some(h.getTargetClass)
+                } else {
+                    getAttributeOwnerOnLinks(attr, l2)
+                }
+            case _ :: l2 => getAttributeOwnerOnLinks(attr, l2)
+            case List() => None
+        }
+    }
+
+    def getAttributeOwner(attribute: ClassAttribute, model: ClassModel): Option[ClassClass] = {
+        getAttributeOwnerOnLinks(attribute, model.allModelLinks)
     }
 
     @tailrec
@@ -71,4 +71,17 @@ object ClassMetamodel {
     def getClassAttributes(cl: ClassClass, model: ClassModel): Option[List[ClassAttribute]] = {
         getClassAttributesOnLinks(cl, model.allModelLinks)
     }
+
+//    def getIdTypeonElements(elements: List[ClassElement]): Option[ClassDatatype] = {
+//        elements match {
+//            case (h: ClassDatatype) :: l2 if h.isId => Some(h)
+//            case _ :: l2 => getIdTypeonElements(l2)
+//            case List() => None
+//        }
+//    }
+//
+//    def getIdType(model: ClassModel): Option[ClassDatatype] = {
+//        getIdTypeonElements(model.allModelElements)
+//    }
+
 }
