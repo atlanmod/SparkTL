@@ -1,0 +1,65 @@
+-- @atlcompiler atl2006
+-- @path Relational=/ClassDiagram2Relational/Relational.ecore
+-- @path ClassDiagram=/ClassDiagram2Relational/ClassDiagram.ecore
+
+module Relational2ClassDiagram;
+create OUT : ClassDiagram from IN : Relational;
+
+rule Type2DataType {
+	from 
+		s: Relational!Type
+	to
+		t: ClassDiagram!DataType (
+			name <- s.name
+		)
+}
+
+-- exo1
+-- rule Table2Class {
+--	from
+--		s: Relational!Table
+--	to
+--		t: ClassDiagram!Class (
+--			name <- s.name,
+--			isAbstract <- false,
+--			attr <- s.col
+--		)
+--}
+
+rule Table2Class {
+	from
+		s: Relational!Table (s.name.indexOf('_')=-1)
+	to
+		t: ClassDiagram!Class (
+			name <- s.name,
+			isAbstract <- false,
+			attr <- s.col
+		)
+}
+
+rule Column2Attribute {
+	from 
+		s: Relational!Column (s.keyOf.oclIsUndefined())
+	to
+		t: ClassDiagram!Attribute (
+			name <- s.name,
+			multiValued <- false,
+			type <- s.type
+		)
+}
+
+rule Multivalued {
+	from
+		s1: Relational!Table,
+		s2: Relational!Table 
+			(s2.name.indexOf('_')<>-1 and s2.name.startsWith(s1.name))
+	to
+		t: ClassDiagram!Attribute (
+			name <- s2.name.substring(s2.name.indexOf('_')+2, s2.name.size()),
+			owner <- s1,
+			multiValued <- true
+		)
+}
+
+
+ 

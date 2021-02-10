@@ -1,0 +1,38 @@
+<DataType name="String"/>
+<DataType name="Integer"/>
+<Class name="Family">
+  <attr name="name" multiValued="false" type="String"/>
+  <attr name="members" multiValued="true" type="Person"/>
+</Class>
+<Class name="Person">
+  <attr name="firstName" multiValued="false" type="String"/>
+  <attr name="closestFriend" multiValued="false" type="Person"/>
+  <attr name="emailAddresses" multiValued="true" type="String"/>
+</Class>
+
+
+  
+<Type @String name="String"/>
+<Type @Integer name="Integer"/>
+<Table name="Family" key="@FamilyId">
+  <col name="name" type="@String"/>
+  <col @FamilyId name="Id"/>
+</Table>
+<Table @Person name="Person" key="@PersonId">
+  <col name="firstName" type="@String"/>
+  <col name="closestFriend" type="@Person"/>
+  <col @PersonId name="Id"/>
+</Table>
+<Table name="Family_members" key="@Family_members_Id @Family_members_Type">
+  <col @Family_members_Id  name="Id"/>
+  <col @Family_members_Type name="Person" type="@Person"/>
+</Table>
+<Table name="Person_emailAddresses" key="@Person_emailAddresses_Id @Person_emailAddresses_Type">
+  <col @Person_emailAddresses_Id name="Id" />
+  <col @Person_emailAddresses_Type name="String" type="@String"/>
+</Table>
+
+
+
+
+
