@@ -1,18 +1,22 @@
 package org.atlanmod.transformation.dynamic
 
+import org.apache.spark.SparkContext
 import org.atlanmod.model.ModelSamples.{getClassModelSample, getRelationalModelSample}
 import org.atlanmod.model.classmodel.ClassMetamodel
 import org.atlanmod.model.relationalmodel.{RelationalElement, RelationalLink, RelationalModel}
 import org.atlanmod.model.{DynamicElement, DynamicLink}
+import org.atlanmod.tl.util.SparkUtils
 import org.scalatest.funsuite.AnyFunSuite
 
-class TestTransformationSeq extends AnyFunSuite {
+class TestClass2RelationalPar extends AnyFunSuite {
+
+    val sc: SparkContext = SparkUtils.context(2)
 
     test("simple equals to the right result") {
         val model = getClassModelSample
         val metamodel = ClassMetamodel.metamodel
         val transformation = Class2Relational.class2relational()
-        val result = org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhase.execute(transformation, model, metamodel,
+        val result = org.atlanmod.tl.engine.parallel.TransformationEngineTwoPhase.execute(transformation, model, metamodel, sc,
             makeModel = (e: List[DynamicElement], l: List[DynamicLink])
             => new RelationalModel(e.asInstanceOf[List[RelationalElement]], l.asInstanceOf[List[RelationalLink]]))
           .asInstanceOf[RelationalModel]
@@ -24,11 +28,11 @@ class TestTransformationSeq extends AnyFunSuite {
         val model = getClassModelSample
         val metamodel = ClassMetamodel.metamodel
         val transformation = Class2Relational.class2relational()
-        val result_simple = org.atlanmod.tl.engine.sequential.TransformationEngineImpl.execute(transformation, model, metamodel,
+        val result_simple = org.atlanmod.tl.engine.parallel.TransformationEngineImpl.execute(transformation, model, metamodel, sc,
             makeModel = (e: List[DynamicElement], l: List[DynamicLink])
             => new RelationalModel(e.asInstanceOf[List[RelationalElement]], l.asInstanceOf[List[RelationalLink]]))
           .asInstanceOf[RelationalModel]
-        val result_byrule = org.atlanmod.tl.engine.sequential.TransformationEngineByRule.execute(transformation, model, metamodel,
+        val result_byrule = org.atlanmod.tl.engine.parallel.TransformationEngineByRule.execute(transformation, model, metamodel, sc,
             makeModel = (e: List[DynamicElement], l: List[DynamicLink])
             => new RelationalModel(e.asInstanceOf[List[RelationalElement]], l.asInstanceOf[List[RelationalLink]]))
           .asInstanceOf[RelationalModel]
@@ -39,26 +43,11 @@ class TestTransformationSeq extends AnyFunSuite {
         val model = getClassModelSample
         val metamodel = ClassMetamodel.metamodel
         val transformation = Class2Relational.class2relational()
-        val result_simple = org.atlanmod.tl.engine.sequential.TransformationEngineImpl.execute(transformation, model, metamodel,
+        val result_simple = org.atlanmod.tl.engine.parallel.TransformationEngineImpl.execute(transformation, model, metamodel, sc,
             makeModel = (e: List[DynamicElement], l: List[DynamicLink])
             => new RelationalModel(e.asInstanceOf[List[RelationalElement]], l.asInstanceOf[List[RelationalLink]]))
           .asInstanceOf[RelationalModel]
-        val result_twophase = org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhase.execute(transformation, model, metamodel,
-            makeModel = (e: List[DynamicElement], l: List[DynamicLink])
-            => new RelationalModel(e.asInstanceOf[List[RelationalElement]], l.asInstanceOf[List[RelationalLink]]))
-          .asInstanceOf[RelationalModel]
-        assert(result_simple.equals(result_twophase))
-    }
-
-    test("simple equals to twophaseHM") {
-        val model = getClassModelSample
-        val metamodel = ClassMetamodel.metamodel
-        val transformation = Class2Relational.class2relational()
-        val result_simple = org.atlanmod.tl.engine.sequential.TransformationEngineImpl.execute(transformation, model, metamodel,
-            makeModel = (e: List[DynamicElement], l: List[DynamicLink])
-            => new RelationalModel(e.asInstanceOf[List[RelationalElement]], l.asInstanceOf[List[RelationalLink]]))
-          .asInstanceOf[RelationalModel]
-        val result_twophase = org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhaseHM.execute(transformation, model, metamodel,
+        val result_twophase = org.atlanmod.tl.engine.parallel.TransformationEngineTwoPhase.execute(transformation, model, metamodel, sc,
             makeModel = (e: List[DynamicElement], l: List[DynamicLink])
             => new RelationalModel(e.asInstanceOf[List[RelationalElement]], l.asInstanceOf[List[RelationalLink]]))
           .asInstanceOf[RelationalModel]

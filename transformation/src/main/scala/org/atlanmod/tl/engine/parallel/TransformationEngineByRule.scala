@@ -16,7 +16,7 @@ object TransformationEngineByRule extends TransformationEngine {
      sc: SparkContext = null,
      makeModel: (List[TME], List[TML]) => Model[TME, TML] = (a, b) => ModelUtil.makeTupleModel[TME, TML](a, b))
     : Model[TME, TML] = {
-        val tuples : RDD[List[SME]] = sc.parallelize(allTuplesByRule(tr, sm, mm))
+        val tuples : RDD[List[SME]] = sc.parallelize(allTuplesByRule(tr, sm, mm).distinct)
         /* Instantiate */ val elements : RDD[TME] = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t))
         /* Apply */ val links : RDD[TML] = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t))
 
