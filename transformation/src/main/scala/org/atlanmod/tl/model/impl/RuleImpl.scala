@@ -38,6 +38,6 @@ class RuleImpl[SME, SML, SMC, TME, TML](name: String,
     def getOutputPatternElements: List[OutputPatternElement[SME, SML, TME, TML]] = to
 
     override def findOutputPatternElement(name: String): Option[OutputPatternElement[SME, SML, TME, TML]] =
-        to.find(ope => ope.getName == name)
+        to.find(ope => ope.getName.equals(name))
 
 }

@@ -9,7 +9,7 @@ object Resolve {
                                                   sm: Model[SME, SML], tmm: Metamodel[TME, TML, TMC, TMR],
                                                   name: String, t: TMC, sp: List[SME], iter: Int)
     : Option[TME] = {
-        tls.find(sp)(tl => tl.getIterator == iter && tl.getName.equals(name)) match {
+        tls.find(sp)(tl => tl.getIterator.equals(iter) && tl.getName.equals(name)) match {
             case Some(tl2) => tmm.toModelClass(t, tl2.getTargetElement)
             case None => None
         }

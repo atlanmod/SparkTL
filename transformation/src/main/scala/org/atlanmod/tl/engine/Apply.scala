@@ -17,7 +17,7 @@ object Apply{
     }
 
 
-    private def applyElementOnPattern[SME, SML, SMC, SMR, TME, TML](ope: OutputPatternElement[SME, SML, TME, TML],
+    def applyElementOnPattern[SME, SML, SMC, SMR, TME, TML](ope: OutputPatternElement[SME, SML, TME, TML],
                                                                     tr: Transformation[SME, SML, SMC, TME, TML],
                                                                     sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                     sp: List[SME], iter: Int)
@@ -56,7 +56,7 @@ object Apply{
         matchPattern(tr, sm, mm, sp).flatMap(r => applyRuleOnPattern(r, tr, sm, mm, sp))
 
 
-    private def applyReferenceOnPatternTraces[SME, SML, SMC, SMR, TME, TML](oper: OutputPatternElementReference[SME, SML, TME, TML],
+    def applyReferenceOnPatternTraces[SME, SML, SMC, SMR, TME, TML](oper: OutputPatternElementReference[SME, SML, TME, TML],
                                                                            tr: Transformation[SME, SML, SMC, TME, TML],
                                                                            sm: Model[SME, SML],
                                                                            sp: List[SME], iter: Int, te: TME,
@@ -65,7 +65,7 @@ object Apply{
         evalOutputPatternLinkExpr(sm, sp, te, iter, tls, oper)
     }
 
-    private def applyElementOnPatternTraces[SME, SML, SMC, SMR, TME, TML](ope: OutputPatternElement[SME, SML, TME, TML],
+    def applyElementOnPatternTraces[SME, SML, SMC, SMR, TME, TML](ope: OutputPatternElement[SME, SML, TME, TML],
                                                                           tr: Transformation[SME, SML, SMC, TME, TML],
                                                                           sm: Model[SME, SML],
                                                                           sp: List[SME], iter: Int,

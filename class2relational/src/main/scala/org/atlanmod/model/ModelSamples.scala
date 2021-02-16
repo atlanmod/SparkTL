@@ -5,6 +5,21 @@ import org.atlanmod.model.relationalmodel._
 
 object ModelSamples {
 
+    def getClassModelSingle: ClassModel = {
+        val c1 = new ClassClass("0","class1")
+        val sv = new ClassAttribute("1","sv", false)
+        val mv = new ClassAttribute("2","mv", true)
+        val t = new ClassDatatype("int", "int")
+        val elements = List(c1, sv, mv, t)
+        val c1_attributes = new ClassToAttributes(c1, List(sv, mv))
+        val sv_owner = new AttributeToClass(sv, c1)
+        val mv_owner = new AttributeToClass(mv, c1)
+        val sv_type = new AttributeToType(sv, t)
+        val mv_type = new AttributeToType(mv, t)
+        val links = List(c1_attributes, sv_owner, sv_type, mv_owner, mv_type)
+        new ClassModel(elements, links)
+    }
+
     def getClassModelDummy : ClassModel = {
         val family = new ClassClass("0","Family")
         val family_name = new ClassAttribute("1","name", false)

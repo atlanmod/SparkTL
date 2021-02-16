@@ -52,10 +52,10 @@ rule Multivalued {
 	from
 		s1: Relational!Table,
 		s2: Relational!Table 
-			(s2.name.indexOf('_')<>-1 and s2.name.startsWith(s1.name))
+			(s2.name.indexOf('_')<>-1 and s1 <> s2 and s2.name.startsWith(s1.name))
 	to
 		t: ClassDiagram!Attribute (
-			name <- s2.name.substring(s2.name.indexOf('_')+2, s2.name.size()),
+			name <- s2.name.substring(s2.name.indexOf('_')+1, s2.name.size()),
 			owner <- s1,
 			multiValued <- true
 		)
