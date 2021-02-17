@@ -10,8 +10,8 @@ import scala.collection.mutable
 object Main_Class2Relational {
 
     final val NTEST = 10
-    final val NCORE = 0
-    final val MAX_PATTERNS = 10
+    final val NCORE = 2
+    final val MAX_PATTERNS = 1
 
     final val GLOBAL_DIR_RES_NAME = "c2r_results"
     final val DIR_RES_NAME = GLOBAL_DIR_RES_NAME + "/" + TimeUtil.strLocalTime
@@ -30,6 +30,7 @@ object Main_Class2Relational {
                      times: Int, ncore: Int, patterns: Int): List[String] = {
         // create model
         val model = C2RUtil.get_model_from_n_patterns(patterns)
+        print("size: "+ model.allModelElements.size+ " elements, " + model.allModelLinks.size + "links"+ "; ")
         // execution + get the results (computation time)
         val results: mutable.HashMap[(String, String), List[(Double, List[Double])]]=
             TransformationUtil.apply(methods, transformation, model, metamodel, times, ncore)
@@ -65,6 +66,7 @@ object Main_Class2Relational {
     }
 
     def run_experiment_sizes_csv_files(sizes: List[Int], times: Int, ncore: Int): List[String] = {
+        println("NCORE = " + ncore)
         val methods = TransformationUtil.get_methods()
         val transformation = org.atlanmod.transformation.dynamic.Class2Relational.class2relational()
         val metamodel = ClassMetamodel.metamodel

@@ -35,6 +35,9 @@ object TransformationUtil {
     type transformation_function = (transformation_type, source_model, source_metamodel, SparkContext) => (Double, List[Double])
 
     def get_methods(): List[(String, String, transformation_function)] = {
+        // We excluded:
+        //        ("par", "List_paralleltrace", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltrace.execute(tr, m, mm, sc)),
+        //        ("par", "HM_paralleltrace", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltrace.execute(tr, m, mm, sc))
         val res : List[(String, String, transformation_function)] =
             List(
                 ("seq", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineImpl.execute(tr, m, mm, sc)),
@@ -46,7 +49,6 @@ object TransformationUtil {
                 ("seq", "HM_noparallelism", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_noparallelism.execute(tr, m, mm, sc)),
                 ("par", "HM_parallelsm", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp.execute(tr, m, mm, sc)),
                 ("par", "HM_parallelsp_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp_paralleltuples.execute(tr, m, mm, sc)),
-                ("par", "HM_paralleltrace", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltrace.execute(tr, m, mm, sc)),
                 ("par", "HM_paralleltrace_parallelsp", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp.execute(tr, m, mm, sc)),
                 ("par", "HM_paralleltrace_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltrace_paralleltuples.execute(tr, m, mm, sc)),
                 ("par", "HM_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltuples.execute(tr, m, mm, sc)),
@@ -54,7 +56,6 @@ object TransformationUtil {
                 ("seq", "List_noparallelism", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_noparallelism.execute(tr, m, mm, sc)),
                 ("par", "List_parallelsm", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp.execute(tr, m, mm, sc)),
                 ("par", "List_parallelsp_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp_paralleltuples.execute(tr, m, mm, sc)),
-                ("par", "List_paralleltrace", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltrace.execute(tr, m, mm, sc)),
                 ("par", "List_paralleltrace_parallelsp", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp.execute(tr, m, mm, sc)),
                 ("par", "List_paralleltrace_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltrace_paralleltuples.execute(tr, m, mm, sc)),
                 ("par", "List_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltuples.execute(tr, m, mm, sc)),
@@ -72,8 +73,11 @@ object TransformationUtil {
     : List[(Double, List[Double])] = {
         var res: List[(Double, List[Double])] = List()
         for(_ <- 1 to times) {
-            res = apply_transformation(tr_foo, tr, sm, mm, sc) :: res
+            val time = apply_transformation(tr_foo, tr, sm, mm, sc)
+            print(time._1 + "ms, ")
+            res = time :: res
         }
+        println("")
         res.reverse
     }
 
@@ -84,11 +88,13 @@ object TransformationUtil {
         val sc = if (ncore != 0) SparkUtils.context(ncore) else null
         val res = new mutable.HashMap[(String, String), List[(Double, List[Double])]]
         for(method <- methods){
-            if((ncore == 0 & method._1.equals("seq")) | (ncore != 0 & method._1.equals("par")))
+            if((ncore == 0 & method._1.equals("seq")) | (ncore != 0 & method._1.equals("par"))) {
+                print("Method: "+ (method._1, method._2)+ " => ")
                 res.put(
                     (method._1, method._2),
                     apply_transformations(method._3, transformation, model, metamodel, sc, times)
                 )
+            }
         }
         if (ncore != 0) sc.stop()
         res
