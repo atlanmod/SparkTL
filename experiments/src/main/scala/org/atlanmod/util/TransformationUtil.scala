@@ -1,8 +1,7 @@
 package org.atlanmod.util
 
 import org.apache.spark.SparkContext
-import org.atlanmod.model.classmodel.ClassModel
-import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel}
+import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
 import org.atlanmod.tl.model.{Model, Transformation}
 import org.atlanmod.tl.util.SparkUtils
 
@@ -28,7 +27,7 @@ object TransformationUtil {
     type TML = DynamicLink
 
     type transformation_type = Transformation[SME, SML, SMC, TME, TML]
-    type source_model = ClassModel
+    type source_model = DynamicModel
     type source_metamodel = DynamicMetamodel[DynamicElement, DynamicLink]
     type target_model = Model[DynamicElement, DynamicLink]
 
