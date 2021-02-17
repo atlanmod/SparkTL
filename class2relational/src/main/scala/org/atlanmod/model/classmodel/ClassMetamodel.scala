@@ -1,7 +1,6 @@
 package org.atlanmod.model.classmodel
 
 import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel}
-import org.atlanmod.tl.model.Metamodel
 
 import scala.annotation.tailrec
 
@@ -14,8 +13,7 @@ object ClassMetamodel {
     final val ATTRIBUTE_CLASS = "owner"
     final val ATTRIBUTE_TYPE = "type"
 
-    def metamodel
-    : Metamodel[DynamicElement, DynamicLink, String, String]
+    def metamodel : DynamicMetamodel[DynamicElement, DynamicLink]
     = new DynamicMetamodel[DynamicElement, DynamicLink]()
 
     @tailrec

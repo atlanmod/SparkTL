@@ -13,7 +13,7 @@ object List_noparallelism extends ExperimentalTransformationEngine{
                                                                                     sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                                     sc: SparkContext)
     : (List[TME], TraceLinks[SME, TME]) = {
-        val tls = Trace.trace_paralleltuples_parallel(tr, sm, mm, sc)
+        val tls = Trace.trace(tr, sm, mm)
         (tls.getTargetElements, tls)
     }
 
