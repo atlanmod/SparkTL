@@ -9,9 +9,9 @@ import scala.collection.mutable
 
 object Main_Class2Relational {
 
-    final val NTEST = 10
+    final val NTEST = 30
     final val NCORE = 2
-    final val MAX_PATTERNS = 1
+    final val SIZES = List(1, 10, 20, 50, 100, 500, 1000, 2000, 3500, 5000, 7500, 10000, 25000, 50000, 75000, 100000)
 
     final val GLOBAL_DIR_RES_NAME = "c2r_results"
     final val DIR_RES_NAME = GLOBAL_DIR_RES_NAME + "/" + TimeUtil.strLocalTime
@@ -87,9 +87,9 @@ object Main_Class2Relational {
     def main(args: Array[String]): Unit = {
         init()
         val ncore = if (args.length >= 1) args(0).toInt else NCORE
-        val max_patterns = if (args.length >= 2) args(1).toInt else MAX_PATTERNS
         val times = NTEST
-        val filenames = run_experiment_sizes_csv_files(sizes = (1 to max_patterns).toList, times, ncore)
+        val sizes = SIZES
+        val filenames = run_experiment_sizes_csv_files(sizes, times, ncore)
         val filename_rmd = DIR_RES_NAME + "/result" + ".rmd"
         FileUtil.write_content(filename_rmd, TransformationUtil.make_rmd_content(filenames))
     }
