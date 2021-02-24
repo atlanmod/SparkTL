@@ -12,7 +12,7 @@ import org.atlanmod.tl.util.ListUtils.optionToList
 import scala.reflect.ClassTag
 
 object Trace {
-
+    
     private def traceElementOnPattern[SME, SML, TME, TML](o: OutputPatternElement[SME, SML, TME, TML],
                                                           sm: Model[SME, SML], sp: List[SME], iter: Int)
     : Option[TraceLink[SME, TME]] =
@@ -45,7 +45,9 @@ object Trace {
     def trace[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
                                             sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
     : TraceLinks[SME, TME] = {
-        new TraceLinksList(allTuples(tr, sm).flatMap(tuple => tracePattern(tr, sm, mm, tuple)))
+//        Profiler.time{
+            new TraceLinksList(allTuples(tr, sm).flatMap(tuple => tracePattern(tr, sm, mm, tuple)))
+//        }
     }
 
     def trace_paralleltuples[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
@@ -73,7 +75,12 @@ object Trace {
                                                sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
     : TraceLinks[SME, TME] = {
         val tls_map = new TraceLinksMap[SME, TME]()
-        allTuples(tr, sm).foreach(tuple => tls_map.put(tuple, tracePattern(tr, sm, mm, tuple)))
+        // can be improved
+        val tuples = allTuples(tr, sm)
+
+//        Profiler.time{
+            tuples.foreach(tuple => tls_map.put(tuple, tracePattern(tr, sm, mm, tuple)))
+//        }
         tls_map
     }
 

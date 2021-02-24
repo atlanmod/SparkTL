@@ -39,25 +39,25 @@ object TransformationUtil {
         //        ("par", "HM_paralleltrace", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltrace.execute(tr, m, mm, sc))
         val res : List[(String, String, transformation_function)] =
             List(
-                ("seq", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineImpl.execute(tr, m, mm, sc)),
-                ("par", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineImpl.execute(tr, m, mm, sc)),
-                ("seq", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
-                ("par", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
-                ("seq", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
-                ("par", "HM_allparallel", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_allparallel.execute(tr, m, mm, sc)),
+//                ("seq", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineImpl.execute(tr, m, mm, sc)),
+//                ("par", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineImpl.execute(tr, m, mm, sc)),
+//                ("seq", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
+//                ("par", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
+//                ("seq", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
+//                ("par", "HM_allparallel", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_allparallel.execute(tr, m, mm, sc)),
                 ("seq", "HM_noparallelism", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_noparallelism.execute(tr, m, mm, sc)),
-                ("par", "HM_parallelsm", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp.execute(tr, m, mm, sc)),
-                ("par", "HM_parallelsp_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp_paralleltuples.execute(tr, m, mm, sc)),
-                ("par", "HM_paralleltrace_parallelsp", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp.execute(tr, m, mm, sc)),
-                ("par", "HM_paralleltrace_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltrace_paralleltuples.execute(tr, m, mm, sc)),
-                ("par", "HM_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltuples.execute(tr, m, mm, sc)),
-                ("par", "List_allparallel", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_allparallel.execute(tr, m, mm, sc)),
+//                ("par", "HM_parallelsm", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp.execute(tr, m, mm, sc)),
+//                ("par", "HM_parallelsp_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp_paralleltuples.execute(tr, m, mm, sc)),
+//                ("par", "HM_paralleltrace_parallelsp", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp.execute(tr, m, mm, sc)),
+//                ("par", "HM_paralleltrace_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltrace_paralleltuples.execute(tr, m, mm, sc)),
+//                ("par", "HM_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltuples.execute(tr, m, mm, sc)),
+//                ("par", "List_allparallel", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_allparallel.execute(tr, m, mm, sc)),
                 ("seq", "List_noparallelism", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_noparallelism.execute(tr, m, mm, sc)),
-                ("par", "List_parallelsm", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp.execute(tr, m, mm, sc)),
-                ("par", "List_parallelsp_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp_paralleltuples.execute(tr, m, mm, sc)),
-                ("par", "List_paralleltrace_parallelsp", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp.execute(tr, m, mm, sc)),
-                ("par", "List_paralleltrace_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltrace_paralleltuples.execute(tr, m, mm, sc)),
-                ("par", "List_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltuples.execute(tr, m, mm, sc)),
+//                ("par", "List_parallelsm", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp.execute(tr, m, mm, sc)),
+//                ("par", "List_parallelsp_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp_paralleltuples.execute(tr, m, mm, sc)),
+//                ("par", "List_paralleltrace_parallelsp", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp.execute(tr, m, mm, sc)),
+//                ("par", "List_paralleltrace_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltrace_paralleltuples.execute(tr, m, mm, sc)),
+//                ("par", "List_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltuples.execute(tr, m, mm, sc)),
             )
         res
     }
@@ -68,12 +68,13 @@ object TransformationUtil {
     }
 
     def apply_transformations(tr_foo: transformation_function, tr: transformation_type,
-                              sm: source_model, mm: source_metamodel, sc: SparkContext, times: Int)
+                              sm: source_model, mm: source_metamodel, sc: SparkContext, times: Int,
+                              print_screen: Boolean = false)
     : List[(Double, List[Double])] = {
         var res: List[(Double, List[Double])] = List()
         for(_ <- 1 to times) {
             val time = apply_transformation(tr_foo, tr, sm, mm, sc)
-            print(time._1 + "ms, ")
+            if (print_screen) print(time._1 + "ms, ")
             res = time :: res
         }
         println("")
@@ -82,16 +83,17 @@ object TransformationUtil {
 
     def apply(methods: List[(String, String, transformation_function)],
               transformation: Transformation[TME, SML, String, TME, SML], model: source_model,
-              metamodel: DynamicMetamodel[DynamicElement, DynamicLink], times: Int, ncore: Int)
+              metamodel: DynamicMetamodel[DynamicElement, DynamicLink], times: Int, ncore: Int,
+              print_screen: Boolean = false)
     : mutable.HashMap[(String, String), List[(Double, List[Double])]] = {
         val sc = if (ncore != 0) SparkUtils.context(ncore) else null
         val res = new mutable.HashMap[(String, String), List[(Double, List[Double])]]
         for(method <- methods){
             if((ncore == 0 & method._1.equals("seq")) | (ncore != 0 & method._1.equals("par"))) {
-                print("Method: "+ (method._1, method._2)+ " => ")
+                if(print_screen) print("Method: "+ (method._1, method._2)+ " => ")
                 res.put(
                     (method._1, method._2),
-                    apply_transformations(method._3, transformation, model, metamodel, sc, times)
+                    apply_transformations(method._3, transformation, model, metamodel, sc, times, print_screen)
                 )
             }
         }
@@ -128,7 +130,7 @@ object TransformationUtil {
           "mean_step1.time = mean(step1_time), \n" +
           "\tmean_step2.time = mean(step2_time), \n" +
           "\tmean_step3.time = mean(step3_time)) \n\n" +
-          "df <- df[order(df$total.size), ]\n" +
+          "df <- df[order(df$total_size), ]\n" +
           "```\n\n\n" +
           "# Scalability\n\n## Horizontal scalability\n\n" +
           "```{r}\n" +
@@ -139,7 +141,7 @@ object TransformationUtil {
           "  } else { \n  " +
           "\ttitle <- paste(\"Computation time per size with 3 different parallel approaches with \", toString(nc), \" cores\", sep=\"\")\n " +
           "  }\n\n  " +
-          "  ggplot(data = df.ncore, aes(x=total.size, y=mean_global_time, group=fullname, color=fullname)) +\n" +
+          "  ggplot(data = df.ncore, aes(x=total_size, y=mean_global_time, group=fullname, color=fullname)) +\n" +
           "  geom_line() + geom_point() +\n" +
           "  xlab(\"Size\") + ylab(\"Computation time (ms)\") + scale_color_discrete(name = \"Approach\") +\n" +
           "  ggtitle(title)\n}\n\n" +
@@ -171,7 +173,7 @@ object TransformationUtil {
           "  } else {\n    df.method.ncore <- subset(df.ncore, fullname == paste(\"par\", method, sep=\".\"))\n" +
           "    title <- paste(\"Computation time for each step with the \", method, \" approach on parallel (\", nc , \" cores)\" , sep=\"\")\n" +
           "  }\n \n" +
-          "  ggplot(data=df.method.ncore, aes(x=total.size)) +\n  geom_line(aes(y=mean_step1.time, color=\"step1\"))+\n" +
+          "  ggplot(data=df.method.ncore, aes(x=total_size)) +\n  geom_line(aes(y=mean_step1.time, color=\"step1\"))+\n" +
           "  geom_line(aes(y=mean_step2.time, color=\"step2\"))+\n  geom_line(aes(y=mean_step3.time, color=\"step3\"))+\n" +
           "  labs(x = \"Size\",  y = \"Computation time (ms)\", color = \"Legend\") + \n  scale_color_manual(values = colors) +\n" +
           "  ggtitle(title)\n}\n\nfor(core in unique(df$ncore)){\n  for(method in unique(df$technique)){\n" +

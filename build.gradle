@@ -11,9 +11,19 @@ allprojects {
     }
 }
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
+    }
+}
+
 subprojects {
     apply plugin: 'scala'
     apply plugin: 'java'
+    apply plugin: 'com.github.johnrengelman.shadow'
 
     java {
         sourceCompatibility = JavaVersion.VERSION_1_8

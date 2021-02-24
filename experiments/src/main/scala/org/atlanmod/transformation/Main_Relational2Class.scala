@@ -9,9 +9,11 @@ import scala.collection.mutable
 
 object Main_Relational2Class {
 
-    final val NTEST = 30
-    final val NCORE = 2
-    final val MAX_PATTERNS = 100000
+    final val DEFAULT_NTEST = 2
+    final val DEFAULT_NCORE = 0
+    final val DEFAULT_PRINT_FILE = false
+    final val DEFAULT_PRINT_SCREEN = false
+    final val DEFAULT_SIZES = List(10000)
 
     final val GLOBAL_DIR_RES_NAME = "c2r_results"
     final val DIR_RES_NAME = GLOBAL_DIR_RES_NAME + "/" + TimeUtil.strLocalTime
@@ -19,21 +21,27 @@ object Main_Relational2Class {
     final val FILE_RES_ANALYSE_EXT = "r"
     final val FILE_RES_NAME = "results"
 
+    var ncore: Int = DEFAULT_NCORE
+    var times: Int = DEFAULT_NTEST
+    var sizes: List[Int] = DEFAULT_SIZES
+    var print_file = DEFAULT_PRINT_FILE
+    var print_screen = DEFAULT_PRINT_SCREEN
+
     def init(): Unit = {
         FileUtil.create_if_not_exits(GLOBAL_DIR_RES_NAME)
         FileUtil.create_if_not_exits(DIR_RES_NAME)
     }
 
     def run_test_csv_lines(methods: List[(String, String, TransformationUtil.transformation_function)],
-                     transformation: Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink],
-                     metamodel: DynamicMetamodel[DynamicElement, DynamicLink],
-                     times: Int, ncore: Int, patterns: Int): List[String] = {
+                           transformation: Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink],
+                           metamodel: DynamicMetamodel[DynamicElement, DynamicLink],
+                           times: Int, ncore: Int, patterns: Int): List[String] = {
         // create model
-        val model = R2CUtil.get_model_from_n_patterns(patterns)
-        println("size: "+ model.allModelElements.size+ " elements, " + model.allModelLinks.size + "links"+ "; ")
+        val model = C2RUtil.get_model_from_n_patterns(patterns)
+        if(print_screen) println("size: "+ model.allModelElements.size+ " elements, " + model.allModelLinks.size + "links"+ "; ")
         // execution + get the results (computation time)
         val results: mutable.HashMap[(String, String), List[(Double, List[Double])]]=
-            TransformationUtil.apply(methods, transformation, model, metamodel, times, ncore)
+            TransformationUtil.apply(methods, transformation, model, metamodel, times, ncore, print_screen)
         var lines: List[String] = List()
         // for each method: treat of the lines
         for((parseq, method) <- results.keys) {
@@ -61,12 +69,10 @@ object Main_Relational2Class {
         }
         val header = "fullname,parseq,ncore,method,total_size,number_classes,number_attributes, " +
           "number_multivalued,combo,global_time,step1_time,step2_time,step3_time"
-        // return lines + head
         header :: lines
     }
 
     def run_experiment_sizes_csv_files(sizes: List[Int], times: Int, ncore: Int): List[String] = {
-        println("NCORE = " + ncore)
         val methods = TransformationUtil.get_methods()
         val transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class()
         val metamodel = ClassMetamodel.metamodel
@@ -75,7 +81,7 @@ object Main_Relational2Class {
             for (size <- sizes){
                 val lines = run_test_csv_lines(methods, transformation, metamodel, times, ncore, size)
                 val filename =  size.toString + "_" + ncore.toString + ".csv"
-                CSVUtil.writeCSV(DIR_RES_NAME + "/" + filename, lines)
+                if (print_file) CSVUtil.writeCSV(DIR_RES_NAME + "/" + filename, lines)
                 filenames = filename :: filenames
             }
         }catch{
@@ -84,14 +90,41 @@ object Main_Relational2Class {
         filenames
     }
 
+    def parseArgs(args: List[String]): Unit = {
+        args match {
+            case "--s" :: size :: args_ =>
+                sizes = List(size.toInt)
+                parseArgs(args_)
+            case "--size" :: size :: args_ =>
+                sizes = List(size.toInt)
+                parseArgs(args_)
+            case "--n" :: n :: args_ => {
+                times = n.toInt
+                parseArgs(args_)
+            }
+            case "--ntests" :: n :: args_ =>  {
+                times = n.toInt
+                parseArgs(args_)
+            }
+            case "-rfile" :: args_ =>{
+                print_file = true
+                parseArgs(args_)
+            }
+            case "-print" :: args_ =>{
+                print_screen = true
+                parseArgs(args_)
+            }
+            case _ :: args_ => parseArgs(args_)
+            case _ =>
+        }
+    }
+
     def main(args: Array[String]): Unit = {
+        parseArgs(args.toList)
         init()
-        val ncore = if (args.length >= 1) args(0).toInt else NCORE
-        val max_patterns = if (args.length >= 2) args(1).toInt else MAX_PATTERNS
-        val times = NTEST
-        val filenames = run_experiment_sizes_csv_files(sizes = (1 to max_patterns).toList, times, ncore)
+        val filenames = run_experiment_sizes_csv_files(sizes, times, ncore)
         val filename_rmd = DIR_RES_NAME + "/result" + ".rmd"
-        FileUtil.write_content(filename_rmd, TransformationUtil.make_rmd_content(filenames))
+        if(print_file) FileUtil.write_content(filename_rmd, TransformationUtil.make_rmd_content(filenames))
     }
 
 }
