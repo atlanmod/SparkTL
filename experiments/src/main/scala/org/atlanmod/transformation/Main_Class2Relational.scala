@@ -10,6 +10,7 @@ import scala.collection.mutable
 object Main_Class2Relational {
 
     final val DEFAULT_NTEST = 2
+    final val DEFAULT_SEQ = true
     final val DEFAULT_NCORE = 0
     final val DEFAULT_PRINT_FILE = false
     final val DEFAULT_PRINT_SCREEN = false
@@ -22,14 +23,15 @@ object Main_Class2Relational {
     final val FILE_RES_NAME = "results"
 
     var ncore: Int = DEFAULT_NCORE
+    var sequential: Boolean = DEFAULT_SEQ
     var times: Int = DEFAULT_NTEST
     var sizes: List[Int] = DEFAULT_SIZES
     var print_file = DEFAULT_PRINT_FILE
     var print_screen = DEFAULT_PRINT_SCREEN
 
     def init(): Unit = {
-        FileUtil.create_if_not_exits(GLOBAL_DIR_RES_NAME)
-        FileUtil.create_if_not_exits(DIR_RES_NAME)
+        if (print_file) FileUtil.create_if_not_exits(GLOBAL_DIR_RES_NAME)
+        if (print_file) FileUtil.create_if_not_exits(DIR_RES_NAME)
     }
 
     def run_test_csv_lines(methods: List[(String, String, TransformationUtil.transformation_function)],
@@ -92,6 +94,10 @@ object Main_Class2Relational {
 
     def parseArgs(args: List[String]): Unit = {
         args match {
+            case "--ncore" :: core :: args_ =>
+                sequential = core.toInt == 0
+                ncore = core.toInt
+                parseArgs(args_)
             case "--s" :: size :: args_ =>
                 sizes = List(size.toInt)
                 parseArgs(args_)

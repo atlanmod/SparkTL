@@ -10,6 +10,7 @@ import scala.collection.mutable
 object Main_Relational2Class {
 
     final val DEFAULT_NTEST = 2
+    final val DEFAULT_SEQ = true
     final val DEFAULT_NCORE = 0
     final val DEFAULT_PRINT_FILE = false
     final val DEFAULT_PRINT_SCREEN = false
@@ -22,10 +23,12 @@ object Main_Relational2Class {
     final val FILE_RES_NAME = "results"
 
     var ncore: Int = DEFAULT_NCORE
+    var sequential: Boolean = DEFAULT_SEQ
     var times: Int = DEFAULT_NTEST
     var sizes: List[Int] = DEFAULT_SIZES
     var print_file = DEFAULT_PRINT_FILE
     var print_screen = DEFAULT_PRINT_SCREEN
+
 
     def init(): Unit = {
         FileUtil.create_if_not_exits(GLOBAL_DIR_RES_NAME)
@@ -92,6 +95,10 @@ object Main_Relational2Class {
 
     def parseArgs(args: List[String]): Unit = {
         args match {
+            case "--ncore" :: core :: args_ =>
+                sequential = core.toInt == 0
+                ncore = core.toInt
+                parseArgs(args_)
             case "--s" :: size :: args_ =>
                 sizes = List(size.toInt)
                 parseArgs(args_)

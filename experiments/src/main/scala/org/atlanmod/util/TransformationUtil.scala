@@ -86,10 +86,11 @@ object TransformationUtil {
               metamodel: DynamicMetamodel[DynamicElement, DynamicLink], times: Int, ncore: Int,
               print_screen: Boolean = false)
     : mutable.HashMap[(String, String), List[(Double, List[Double])]] = {
-        val sc = if (ncore != 0) SparkUtils.context(ncore) else null
+        val sequential = ncore == 0
+        val sc = if (!sequential) SparkUtils.context() else null
         val res = new mutable.HashMap[(String, String), List[(Double, List[Double])]]
         for(method <- methods){
-            if((ncore == 0 & method._1.equals("seq")) | (ncore != 0 & method._1.equals("par"))) {
+            if((sequential & method._1.equals("seq")) | (!sequential & method._1.equals("par"))) {
                 if(print_screen) print("Method: "+ (method._1, method._2)+ " => ")
                 res.put(
                     (method._1, method._2),
@@ -97,7 +98,7 @@ object TransformationUtil {
                 )
             }
         }
-        if (ncore != 0) sc.stop()
+        if (!sequential) sc.stop()
         res
     }
 
