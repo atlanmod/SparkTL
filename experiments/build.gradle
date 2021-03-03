@@ -11,6 +11,7 @@ dependencies {
 
 //task JarC2R (type: jar){
     jar {
+        zip64 = true
         manifest {
             attributes "Main-Class": "org.atlanmod.transformation.Main_Class2Relational"
         }
@@ -23,6 +24,7 @@ dependencies {
 
 //task JarR2C (type: jar){
     jar {
+        zip64 = true
         manifest {
             attributes "Main-Class": "org.atlanmod.transformation.Main_Relational2Class"
         }

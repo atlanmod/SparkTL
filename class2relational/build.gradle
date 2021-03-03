@@ -6,7 +6,7 @@ group 'atlanmod'
 version '1.0-SNAPSHOT'
 
 dependencies {
-    implementation project(":EMFmodeling")
+//    implementation project(":EMFmodeling")
     implementation project(":dynamicmodeling")
     implementation project(":transformation")
     implementation group: 'org.apache.spark', name: 'spark-graphx_2.12', version: '3.0.1'

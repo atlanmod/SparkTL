@@ -11,7 +11,7 @@ object Main_Class2Relational {
 
     final val DEFAULT_NTEST = 2
     final val DEFAULT_SEQ = true
-    final val DEFAULT_NCORE = 0
+    final val DEFAULT_NCORE = 1
     final val DEFAULT_PRINT_FILE = false
     final val DEFAULT_PRINT_SCREEN = false
     final val DEFAULT_SIZES = List(10000)

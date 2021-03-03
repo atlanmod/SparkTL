@@ -1,8 +1,8 @@
 package org.atlanmod.model
 
-import org.atlanmod.EMFTool
+//import org.atlanmod.EMFTool
 import org.atlanmod.tl.model.Model
-import org.eclipse.emf.ecore.resource.Resource
+//import org.eclipse.emf.ecore.resource.Resource
 
 class DynamicModel(elements: List[DynamicElement] = List(), links: List[DynamicLink] = List())
   extends Model[DynamicElement, DynamicLink]{
@@ -10,14 +10,14 @@ class DynamicModel(elements: List[DynamicElement] = List(), links: List[DynamicL
     override def allModelElements: List[DynamicElement] = elements
 
     override def allModelLinks: List[DynamicLink] = links
-
-    def load(uri: String) : Unit = {
-        this.load(EMFTool.loadEcore(uri))
-    }
-
-    def load(resource: Resource) : Unit = {
-        // TODO
-    }
+//
+//    def load(uri: String) : Unit = {
+//        this.load(EMFTool.loadEcore(uri))
+//    }
+//
+//    def load(resource: Resource) : Unit = {
+//        // TODO
+//    }
 
     override def toString: String = {
         var res = ""
