@@ -5,10 +5,10 @@ import org.apache.spark.{SparkConf, SparkContext}
 object SparkUtils {
 
     def context(ncore: Int = 0): SparkContext ={
-        val config = new SparkConf()
-        config.setAppName("Lab")
-        if (ncore == 0) config.setMaster("local") else config.setMaster("local[" + ncore + "]")
-        val scontext : SparkContext = new SparkContext(config)
+//        val config = new SparkConf()
+//        config.setAppName("Lab")
+//        if (ncore == 0) config.setMaster("local") else config.setMaster("local[" + ncore + "]")
+        val scontext : SparkContext = new SparkContext(new SparkConf())
         scontext.setLogLevel("OFF")
         scontext
     }
