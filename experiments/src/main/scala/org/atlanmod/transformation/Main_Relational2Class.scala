@@ -5,34 +5,39 @@ import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.util._
 
+import scala.annotation.tailrec
 import scala.collection.mutable
 
 object Main_Relational2Class {
 
     final val DEFAULT_NTEST = 2
     final val DEFAULT_SEQ = true
-    final val DEFAULT_NCORE = 0
+    final val DEFAULT_NCORE = 1
     final val DEFAULT_PRINT_FILE = false
+    final val DEFAULT_PRINT_RFILE = false
     final val DEFAULT_PRINT_SCREEN = false
     final val DEFAULT_SIZES = List(10000)
 
-    final val GLOBAL_DIR_RES_NAME = "c2r_results"
-    final val DIR_RES_NAME = GLOBAL_DIR_RES_NAME + "/" + TimeUtil.strLocalTime
+//    final val GLOBAL_DIR_RES_NAME = "r2c_results"
+    //    final val DIR_RES_NAME = GLOBAL_DIR_RES_NAME + "/" + TimeUtil.strLocalTime
+    final val DEFAULT_DIR_RES_NAME = "~/result_c2r/"
     final val FILE_RES_DATA_EXT = "csv"
     final val FILE_RES_ANALYSE_EXT = "r"
     final val FILE_RES_NAME = "results"
 
+    var path_file: String = DEFAULT_DIR_RES_NAME
     var ncore: Int = DEFAULT_NCORE
     var sequential: Boolean = DEFAULT_SEQ
     var times: Int = DEFAULT_NTEST
     var sizes: List[Int] = DEFAULT_SIZES
-    var print_file = DEFAULT_PRINT_FILE
-    var print_screen = DEFAULT_PRINT_SCREEN
+    var print_file: Boolean = DEFAULT_PRINT_FILE
+    var print_rfile: Boolean = DEFAULT_PRINT_RFILE
+    var print_screen: Boolean = DEFAULT_PRINT_SCREEN
 
 
     def init(): Unit = {
-        FileUtil.create_if_not_exits(GLOBAL_DIR_RES_NAME)
-        FileUtil.create_if_not_exits(DIR_RES_NAME)
+//        FileUtil.create_if_not_exits(GLOBAL_DIR_RES_NAME)
+        FileUtil.create_if_not_exits(DEFAULT_DIR_RES_NAME)
     }
 
     def run_test_csv_lines(methods: List[(String, String, TransformationUtil.transformation_function)],
@@ -83,8 +88,8 @@ object Main_Relational2Class {
         try {
             for (size <- sizes){
                 val lines = run_test_csv_lines(methods, transformation, metamodel, times, ncore, size)
-                val filename =  size.toString + "_" + ncore.toString + ".csv"
-                if (print_file) CSVUtil.writeCSV(DIR_RES_NAME + "/" + filename, lines)
+                val filename = "r2c_" +  size.toString + "_" + ncore.toString + ".csv"
+                if (print_file) CSVUtil.writeCSV(path_file + "/" + filename, lines)
                 filenames = filename :: filenames
             }
         }catch{
@@ -93,6 +98,7 @@ object Main_Relational2Class {
         filenames
     }
 
+    @tailrec
     def parseArgs(args: List[String]): Unit = {
         args match {
             case "--ncore" :: core :: args_ =>
@@ -113,12 +119,21 @@ object Main_Relational2Class {
                 times = n.toInt
                 parseArgs(args_)
             }
+            case "-csv" :: args_ =>{
+                print_file = true
+                parseArgs(args_)
+            }
             case "-rfile" :: args_ =>{
                 print_file = true
+                print_rfile = true
                 parseArgs(args_)
             }
             case "-print" :: args_ =>{
                 print_screen = true
+                parseArgs(args_)
+            }
+            case "--path" :: path :: args_ =>{
+                path_file = path
                 parseArgs(args_)
             }
             case _ :: args_ => parseArgs(args_)
@@ -130,8 +145,8 @@ object Main_Relational2Class {
         parseArgs(args.toList)
         init()
         val filenames = run_experiment_sizes_csv_files(sizes, times, ncore)
-        val filename_rmd = DIR_RES_NAME + "/result" + ".rmd"
-        if(print_file) FileUtil.write_content(filename_rmd, TransformationUtil.make_rmd_content(filenames))
+        val filename_rmd = path_file + "/result" + ".rmd"
+        if(print_rfile) FileUtil.write_content(filename_rmd, TransformationUtil.make_rmd_content(filenames))
     }
 
 }

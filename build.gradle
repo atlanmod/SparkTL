@@ -23,7 +23,6 @@ buildscript {
 subprojects {
     apply plugin: 'scala'
     apply plugin: 'java'
-    apply plugin: 'com.github.johnrengelman.shadow'
 
     java {
         sourceCompatibility = JavaVersion.VERSION_1_8
