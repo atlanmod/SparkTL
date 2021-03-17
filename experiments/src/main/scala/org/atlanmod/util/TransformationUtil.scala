@@ -77,7 +77,6 @@ object TransformationUtil {
             if (print_screen) print(time._1 + "ms, ")
             res = time :: res
         }
-        println("")
         res.reverse
     }
 

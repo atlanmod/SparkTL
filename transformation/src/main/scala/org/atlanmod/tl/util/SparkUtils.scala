@@ -8,7 +8,8 @@ object SparkUtils {
 //        val config = new SparkConf()
 //        config.setAppName("Lab")
 //        if (ncore == 0) config.setMaster("local") else config.setMaster("local[" + ncore + "]")
-        val scontext : SparkContext = new SparkContext(new SparkConf())
+        val conf = new SparkConf()
+        val scontext : SparkContext = new SparkContext(conf)
         scontext.setLogLevel("OFF")
         scontext
     }

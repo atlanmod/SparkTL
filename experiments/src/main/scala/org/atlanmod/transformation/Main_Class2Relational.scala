@@ -34,6 +34,8 @@ object Main_Class2Relational {
     var print_rfile: Boolean = DEFAULT_PRINT_RFILE
     var print_screen: Boolean = DEFAULT_PRINT_SCREEN
 
+
+
     def init(): Unit = {
 //        if (print_file) FileUtil.create_if_not_exits(GLOBAL_DIR_RES_NAME)
         if (print_file) FileUtil.create_if_not_exits(path_file)
@@ -88,7 +90,9 @@ object Main_Class2Relational {
             for (size <- sizes){
                 val lines = run_test_csv_lines(methods, transformation, metamodel, times, ncore, size)
                 val filename =  "c2r_" + size.toString + "_" + ncore.toString + ".csv"
-                if (print_file) CSVUtil.writeCSV(path_file + "/" + filename, lines)
+                if (print_file) {
+                    CSVUtil.writeCSV(path_file + "/" + filename, lines)
+                }
                 filenames = filename :: filenames
             }
         }catch{

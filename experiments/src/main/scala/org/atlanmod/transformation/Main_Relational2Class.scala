@@ -18,9 +18,9 @@ object Main_Relational2Class {
     final val DEFAULT_PRINT_SCREEN = false
     final val DEFAULT_SIZES = List(10000)
 
-//    final val GLOBAL_DIR_RES_NAME = "r2c_results"
+    //    final val GLOBAL_DIR_RES_NAME = "c2r_results"
     //    final val DIR_RES_NAME = GLOBAL_DIR_RES_NAME + "/" + TimeUtil.strLocalTime
-    final val DEFAULT_DIR_RES_NAME = "~/result_c2r/"
+    final val DEFAULT_DIR_RES_NAME = "~/result_r2c/"
     final val FILE_RES_DATA_EXT = "csv"
     final val FILE_RES_ANALYSE_EXT = "r"
     final val FILE_RES_NAME = "results"
