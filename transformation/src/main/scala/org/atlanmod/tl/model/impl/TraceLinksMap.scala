@@ -16,6 +16,22 @@ class TraceLinksMap[SME, TME](map: mutable.Map[List[SME], List[TraceLink[SME, TM
             case None => None
         }
 
+    override def filter(p: TraceLink[SME, TME] => Boolean): TraceLinks[SME, TME] =
+        {
+            val new_map = new TraceLinksMap(new mutable.HashMap[List[SME], List[TraceLink[SME, TME]]]())
+            for (key <- map.keys){
+                map.get(key) match {
+                    case Some(tls) =>
+                       tls.filter(p) match{
+                           case h::t => new_map.put(key, h::t)
+                           case _ =>
+                       }
+                    case _ =>
+                }
+            }
+            new_map
+        }
+
     override def getTargetElements: List[TME] = map.flatMap(tl => tl._2.map(t => t.getTargetElement)).toList
 
     override def getSourcePatterns: List[List[SME]] = map.keys.toList
@@ -46,4 +62,5 @@ class TraceLinksMap[SME, TME](map: mutable.Map[List[SME], List[TraceLink[SME, TM
             case None => map.put(key, value)
         }
     }
+
 }

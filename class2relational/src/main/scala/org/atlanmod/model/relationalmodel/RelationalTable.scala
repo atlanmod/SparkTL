@@ -33,6 +33,3 @@ class RelationalTable extends RelationalTypable(RelationalMetamodel.TABLE) {
     }
 
 }
-
-
-

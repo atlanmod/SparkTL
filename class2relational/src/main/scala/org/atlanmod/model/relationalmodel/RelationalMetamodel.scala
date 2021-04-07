@@ -50,7 +50,7 @@ object RelationalMetamodel {
     : Option[List[RelationalColumn]] =
         allModelLinks match {
             case (h: TableToColumns) :: l2 =>
-                if (h.getSource.equals(table)) Some(h.getTarget.filter(col => RelationalMetamodel.isNotKeyOf(col, model)))
+                if (h.getSource.equals(table)) Some(h.getTarget.filter(col => RelationalMetamodel.isNotAKey(col, model)))
                 else getSVColumnsOfTableOnLinks(table, l2, model)
             case _ :: l2 => getSVColumnsOfTableOnLinks(table, l2, model)
             case List() => None
@@ -62,13 +62,13 @@ object RelationalMetamodel {
 
     @tailrec
     private def getMVTablesOfTableOnElements(table: RelationalTable, allModelElements: List[RelationalElement],
-                                     acc: List[List[RelationalTable]] = List())
-    : List[List[RelationalTable]] = {
+                                     acc: List[RelationalTable] = List())
+    : List[RelationalTable] = {
         allModelElements match {
             case (h: RelationalTable) :: l2 =>
                 val new_acc =
                     if (h.getName.startsWith(table.getName) & h != table)
-                        List(table, h) :: acc
+                        h :: acc
                     else acc
                 getMVTablesOfTableOnElements(table, l2, new_acc)
             case _ :: l2 => getMVTablesOfTableOnElements(table, l2, acc)
@@ -76,7 +76,7 @@ object RelationalMetamodel {
         }
     }
 
-    def getMVTablesOfTable(table: RelationalTable, model: RelationalModel): Option[List[List[RelationalTable]]] = {
+    def getMVTablesOfTable(table: RelationalTable, model: RelationalModel): Option[List[RelationalTable]] = {
         if (table.getName.indexOf("_") != -1) None
         getMVTablesOfTableOnElements(table, model.allModelElements) match {
             case l if l.nonEmpty => Some(l)
@@ -85,21 +85,39 @@ object RelationalMetamodel {
     }
 
     @tailrec
-    private def isKeyOfOnLinks(column: RelationalColumn, links: List[RelationalLink]) : Boolean = {
+    private def isAKeyOnLinks(column: RelationalColumn, links: List[RelationalLink]) : Boolean = {
         links match {
             case (h: TableToKeys) :: l2 =>
                 if (h.getTarget.contains(column)) true
-                else isKeyOfOnLinks(column, l2)
-            case _ :: l2 => isKeyOfOnLinks(column, l2)
+                else isAKeyOnLinks(column, l2)
+            case _ :: l2 => isAKeyOnLinks(column, l2)
             case List() => false
         }
     }
 
-    def isKeyOf(c: RelationalColumn, model: RelationalModel): Boolean  =
-        isKeyOfOnLinks(c, model.allModelLinks)
+    def isAKey(c: RelationalColumn, model: RelationalModel): Boolean  =
+        isAKeyOnLinks(c, model.allModelLinks)
 
-    def isNotKeyOf(c: RelationalColumn, model: RelationalModel): Boolean  =
-        !isKeyOf(c, model)
+    def isNotAKey(c: RelationalColumn, model: RelationalModel): Boolean  =
+        !isAKey(c, model)
+
+    @tailrec
+    private def isKeyOfOnLinks(column: RelationalColumn, table: RelationalTable, links: List[RelationalLink]): Boolean =
+        links match {
+            case (h: TableToKeys) :: l2 =>
+                if (h.getSource.equals(table) & h.getTarget.contains(column)) true
+                else isKeyOfOnLinks(column, table, l2)
+            case _ :: l2 => isKeyOfOnLinks(column, table, l2)
+            case List() => false
+        }
+
+    def isKeyOf(c: RelationalColumn, t: RelationalTable, model: RelationalModel): Boolean =
+        isKeyOfOnLinks(c, t, model.allModelLinks)
+
+    def isNotKeyOf(c: RelationalColumn, t: RelationalTable, model: RelationalModel): Boolean =
+        !isKeyOf(c, t, model)
+
+
 
     @tailrec
     private def getColumnTypeOnLinks(column: RelationalColumn, links: List[RelationalLink]): Option[RelationalTypable] =

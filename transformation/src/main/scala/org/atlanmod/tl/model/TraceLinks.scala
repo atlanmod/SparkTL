@@ -8,4 +8,6 @@ trait TraceLinks[SME, TME] extends Serializable {
 
     def find(sp: List[SME])(p: TraceLink[SME, TME] => Boolean): Option[TraceLink[SME, TME]]
 
+    def filter(p: TraceLink[SME, TME] => Boolean): TraceLinks[SME, TME]
+
 }

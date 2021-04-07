@@ -46,7 +46,11 @@ object Main_Class2Relational {
                      metamodel: DynamicMetamodel[DynamicElement, DynamicLink],
                      times: Int, ncore: Int, patterns: Int): List[String] = {
         // create model
+        val startTimeMillis = System.currentTimeMillis()
         val model = R2CUtil.get_model_from_n_patterns(patterns)
+        val endTimeMillis = System.currentTimeMillis()
+        val mili = endTimeMillis - startTimeMillis
+        println("MODEL GENERATED IN "+mili+"ms")
         if(print_screen) println("size: "+ model.allModelElements.size+ " elements, " + model.allModelLinks.size + "links"+ "; ")
         // execution + get the results (computation time)
         val results: mutable.HashMap[(String, String), List[(Double, List[Double])]]=
@@ -76,7 +80,7 @@ object Main_Class2Relational {
                 case _ =>
             }
         }
-        val header = "fullname,parseq,ncore,method,total_size,number_classes,number_attributes, " +
+        val header = "fullname,parseq,nexecutor,method,total_size,number_classes,number_attributes, " +
           "number_multivalued,combo,global_time,step1_time,step2_time,step3_time"
         header :: lines
     }
@@ -104,7 +108,7 @@ object Main_Class2Relational {
     @tailrec
     def parseArgs(args: List[String]): Unit = {
         args match {
-            case "--ncore" :: core :: args_ =>
+            case "--nexecutor" :: core :: args_ =>
                 sequential = core.toInt == 0
                 ncore = core.toInt
                 parseArgs(args_)

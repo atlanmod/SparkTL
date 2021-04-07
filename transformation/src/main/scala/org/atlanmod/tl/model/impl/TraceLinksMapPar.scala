@@ -2,8 +2,9 @@ package org.atlanmod.tl.model.impl
 
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.atlanmod.tl.model.{ParallelTraceLinks, TraceLink}
+import org.atlanmod.tl.model.{ParallelTraceLinks, TraceLink, TraceLinks}
 
+import scala.collection.mutable
 import scala.reflect.ClassTag
 
 class TraceLinksMapPar[SME, TME: ClassTag] (tls: TraceLinksMap[SME, TME], sc: SparkContext) extends ParallelTraceLinks[SME, TME] {
@@ -17,6 +18,22 @@ class TraceLinksMapPar[SME, TME: ClassTag] (tls: TraceLinksMap[SME, TME], sc: Sp
         } catch {
             case _: Exception => None
         }
+
+    override def filter(p: TraceLink[SME, TME] => Boolean): TraceLinks[SME, TME] =
+    {
+        val new_map = new TraceLinksMap(new mutable.HashMap[List[SME], List[TraceLink[SME, TME]]]())
+        for (key <- tls.keys){
+            tls.get(key) match {
+                case Some(tls) =>
+                    tls.filter(p) match{
+                        case h::t => new_map.put(key, h::t)
+                        case _ =>
+                    }
+                case _ =>
+            }
+        }
+        new TraceLinksMapPar(new_map, sc)
+    }
 
     override def getTargetElements: List[TME] = rdd.flatMap(tl => tl._2.map(t => t.getTargetElement)).collect.toList
 

@@ -15,6 +15,9 @@ class TraceLinksList[SME, TME](tls: List[TraceLink[SME, TME]]) extends TraceLink
     override def find(sp: List[SME])(p: TraceLink[SME, TME] => Boolean): Option[TraceLink[SME, TME]] =
         tls.find(tl => tl.getSourcePattern.equals(sp) && p(tl))
 
+    override def filter(p: TraceLink[SME, TME] => Boolean): TraceLinks[SME, TME] =
+        new TraceLinksList(tls.filter(tl => p(tl)))
+
     override def getTargetElements: List[TME] = tls.map(tl => tl.getTargetElement)
 
     override def getSourcePatterns: List[List[SME]] = tls.map(tl => tl.getSourcePattern)

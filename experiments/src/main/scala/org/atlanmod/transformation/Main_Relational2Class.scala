@@ -10,13 +10,13 @@ import scala.collection.mutable
 
 object Main_Relational2Class {
 
-    final val DEFAULT_NTEST = 2
+    final val DEFAULT_NTEST = 1
     final val DEFAULT_SEQ = true
-    final val DEFAULT_NCORE = 1
+    final val DEFAULT_NCORE = 8
     final val DEFAULT_PRINT_FILE = false
     final val DEFAULT_PRINT_RFILE = false
-    final val DEFAULT_PRINT_SCREEN = false
-    final val DEFAULT_SIZES = List(10000)
+    final val DEFAULT_PRINT_SCREEN = true
+    final val DEFAULT_SIZES = List(10)
 
     //    final val GLOBAL_DIR_RES_NAME = "c2r_results"
     //    final val DIR_RES_NAME = GLOBAL_DIR_RES_NAME + "/" + TimeUtil.strLocalTime
@@ -45,12 +45,13 @@ object Main_Relational2Class {
                            metamodel: DynamicMetamodel[DynamicElement, DynamicLink],
                            times: Int, ncore: Int, patterns: Int): List[String] = {
         // create model
-        val model = C2RUtil.get_model_from_n_patterns(patterns)
-        if(print_screen) println("size: "+ model.allModelElements.size+ " elements, " + model.allModelLinks.size + "links"+ "; ")
+        val model = R2CUtil.get_model_from_n_patterns(patterns)
+//        if(print_screen) println("size: "+ model.allModelElements.size+ " elements, " + model.allModelLinks.size + "links"+ "; ")
         // execution + get the results (computation time)
         val results: mutable.HashMap[(String, String), List[(Double, List[Double])]]=
             TransformationUtil.apply(methods, transformation, model, metamodel, times, ncore, print_screen)
         var lines: List[String] = List()
+
         // for each method: treat of the lines
         for((parseq, method) <- results.keys) {
             val fullname = parseq + "." + method
@@ -75,11 +76,12 @@ object Main_Relational2Class {
                 case _ =>
             }
         }
-        val header = "fullname,parseq,ncore,method,total_size,number_classes,number_attributes, " +
-          "number_multivalued,combo,global_time,step1_time,step2_time,step3_time"
-        header :: lines
+//        val header = "fullname,parseq,nexecutor,method,total_size,number_classes,number_attributes, " +
+//          "number_multivalued,combo,global_time,step1_time,step2_time,step3_time"
+//        header :: lines
+        lines
     }
-
+ 
     def run_experiment_sizes_csv_files(sizes: List[Int], times: Int, ncore: Int): List[String] = {
         val methods = TransformationUtil.get_methods()
         val transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class()
@@ -89,7 +91,10 @@ object Main_Relational2Class {
             for (size <- sizes){
                 val lines = run_test_csv_lines(methods, transformation, metamodel, times, ncore, size)
                 val filename = "r2c_" +  size.toString + "_" + ncore.toString + ".csv"
-                if (print_file) CSVUtil.writeCSV(path_file + "/" + filename, lines)
+                if (print_file) {
+                    println(lines.mkString("\n"))
+                    CSVUtil.writeCSV(path_file + "/" + filename, lines)
+                }
                 filenames = filename :: filenames
             }
         }catch{
@@ -101,7 +106,7 @@ object Main_Relational2Class {
     @tailrec
     def parseArgs(args: List[String]): Unit = {
         args match {
-            case "--ncore" :: core :: args_ =>
+            case "--nexecutor" :: core :: args_ =>
                 sequential = core.toInt == 0
                 ncore = core.toInt
                 parseArgs(args_)
@@ -123,7 +128,7 @@ object Main_Relational2Class {
                 print_file = true
                 parseArgs(args_)
             }
-            case "-rfile" :: args_ =>{
+            case "-rfile" :: args_ =>{ 
                 print_file = true
                 print_rfile = true
                 parseArgs(args_)
@@ -142,11 +147,16 @@ object Main_Relational2Class {
     }
 
     def main(args: Array[String]): Unit = {
-        parseArgs(args.toList)
-        init()
-        val filenames = run_experiment_sizes_csv_files(sizes, times, ncore)
-        val filename_rmd = path_file + "/result" + ".rmd"
-        if(print_rfile) FileUtil.write_content(filename_rmd, TransformationUtil.make_rmd_content(filenames))
+        try {
+            parseArgs(args.toList)
+            init()
+            val filenames = run_experiment_sizes_csv_files(sizes, times, ncore)
+            val filename_rmd = path_file + "/result" + ".rmd"
+            if(print_rfile) FileUtil.write_content(filename_rmd, TransformationUtil.make_rmd_content(filenames))
+            FileUtil.write_content("result.rmd", TransformationUtil.make_rmd_content(List("result.csv")))
+        } catch {
+            case e: Exception => e.printStackTrace()
+        }
     }
 
 }
