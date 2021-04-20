@@ -7,6 +7,31 @@ import scala.annotation.tailrec
 
 object RelationalMetamodel {
 
+    @tailrec
+    private def getMVTablesOfTableOnElementsOld(table: RelationalTable, allModelElements: List[RelationalElement],
+                                             acc: List[List[RelationalTable]] = List())
+    : List[List[RelationalTable]] = {
+        allModelElements match {
+            case (h: RelationalTable) :: l2 =>
+                val new_acc =
+                    if (h.getName.startsWith(table.getName) & h != table)
+                        List(table, h) :: acc
+                    else acc
+                getMVTablesOfTableOnElementsOld(table, l2, new_acc)
+            case _ :: l2 => getMVTablesOfTableOnElementsOld(table, l2, acc)
+            case List() => acc
+        }
+    }
+
+    def getMVTablesOfTableOld(table: RelationalTable, model: RelationalModel): Option[List[List[RelationalTable]]] = {
+        if (table.getName.indexOf("_") != -1) None
+        getMVTablesOfTableOnElementsOld(table, model.allModelElements) match {
+            case l if l.nonEmpty => Some(l)
+            case List() => None
+        }
+    }
+
+
     def metamodel : Metamodel[DynamicElement, DynamicLink, String, String]
     = new DynamicMetamodel[DynamicElement, DynamicLink]()
 

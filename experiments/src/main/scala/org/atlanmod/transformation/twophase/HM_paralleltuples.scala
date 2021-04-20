@@ -9,7 +9,7 @@ import scala.reflect.ClassTag
 
 object HM_paralleltuples extends ExperimentalTransformationEngine {
 
-    private def instantiateTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
+    private def instantiateTraces[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                                     sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                                     sc: SparkContext)
     : (List[TME], TraceLinks[SME, TME]) = {

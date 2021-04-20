@@ -35,7 +35,6 @@ class TestProfiler extends AnyFunSuite {
         val time_without_profiling = (t3 - t2) / ntest
         val overhead_ms = (time_with_profiling - time_without_profiling) / 1e6d
 //        println(overhead_ms + "ms")
-        assert(condition = true)
     }
 
 

@@ -1,7 +1,10 @@
 package org.atlanmod.tl.engine
 
+import org.apache.spark.SparkContext
 import org.atlanmod.tl.model.{Metamodel, Model, Transformation}
 import org.atlanmod.tl.util.TupleUtils
+
+import scala.reflect.ClassTag
 
 object Utils {
 
@@ -44,5 +47,10 @@ object Utils {
     def allTuples[SME, SML, SMC, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML])
     : List[List[SME]] =
     TupleUtils.tuples_up_to_n_prime(allModelElements (sm), maxArity (tr) )
+
+    def allTuplesParallel[SME: ClassTag, SML, SMC, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
+                                                   sc: SparkContext)
+    : List[List[SME]] =
+        TupleUtils.tuples_up_to_n_prime_parallel(sc.parallelize(allModelElements (sm)), maxArity (tr) )
 
 }

@@ -33,7 +33,7 @@ object TransformationUtil {
 
     type transformation_function = (transformation_type, source_model, source_metamodel, SparkContext) => (Double, List[Double])
 
-    def get_methods(): List[(String, String, transformation_function)] = {
+    def get_methods(method: String = "all"): List[(String, String, transformation_function)] = {
         // We excluded:
         //        ("par", "List_paralleltrace", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltrace.execute(tr, m, mm, sc)),
         //        ("par", "HM_paralleltrace", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltrace.execute(tr, m, mm, sc))
@@ -59,7 +59,11 @@ object TransformationUtil {
 //                ("par", "List_paralleltrace_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltrace_paralleltuples.execute(tr, m, mm, sc)),
 //                ("par", "List_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltuples.execute(tr, m, mm, sc)),
             )
-        res
+
+        if (method == "all")
+            res
+        else
+            res.filter(m => m._2.contains(method))
     }
 
     def apply_transformation(tr_foo: transformation_function, tr: transformation_type,
@@ -74,7 +78,7 @@ object TransformationUtil {
         var res: List[(Double, List[Double])] = List()
         for(_ <- 1 to times) {
             val time = apply_transformation(tr_foo, tr, sm, mm, sc)
-//            if (print_screen) print(time._1 + "ms, ")
+            if (print_screen) print(time._1 + "ms, ")
             res = time :: res
         }
         res.reverse
@@ -90,7 +94,7 @@ object TransformationUtil {
         val res = new mutable.HashMap[(String, String), List[(Double, List[Double])]]
         for(method <- methods){
             if((sequential & method._1.equals("seq")) | (!sequential & method._1.equals("par"))) {
-//                if(print_screen) print("Method: "+ (method._1, method._2)+ " => ")
+                if(print_screen) print("Method: "+ (method._1, method._2)+ " => ")
                 res.put(
                     (method._1, method._2),
                     apply_transformations(method._3, transformation, model, metamodel, sc, times, print_screen)

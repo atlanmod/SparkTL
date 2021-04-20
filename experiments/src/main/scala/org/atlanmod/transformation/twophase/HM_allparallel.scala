@@ -9,7 +9,7 @@ import scala.reflect.ClassTag
 
 object HM_allparallel extends ExperimentalTransformationEngine {
 
-    private def instantiateTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
+    private def instantiateTraces[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                                     sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                                     sc: SparkContext)
     : (List[TME], TraceLinks[SME, TME]) = {
@@ -18,10 +18,10 @@ object HM_allparallel extends ExperimentalTransformationEngine {
     }
 
 
-    def allSourcePatterns[SME, TME](tls: TraceLinks[SME, TME]) : List[List[SME]] =
+    def allSourcePatterns[SME: ClassTag, TME](tls: TraceLinks[SME, TME]) : List[List[SME]] =
         tls.getSourcePatterns
 
-    private def applyTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
+    private def applyTraces[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                               sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                               tls: TraceLinks[SME, TME], sc: SparkContext)
     : List[TML] = {

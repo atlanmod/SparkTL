@@ -55,7 +55,7 @@ object Relational2Class {
                 val sps = tls.filter(tl => tables.contains(tl.getSourcePattern.head)).getSourcePatterns
                 (
                   Resolve.resolveAll(tls, model, dynamic_mm, PATTERN_MVATTRIBUTE_DATATYPE, ClassMetamodel.ATTRIBUTE, sps),
-                  Resolve.resolveAll(tls, model, dynamic_mm, PATTERN_MVATTRIBUTE_TYPECLASS, ClassMetamodel.ATTRIBUTE, sps)
+                  Resolve.resolveAll(tls, model, dynamic_mm, PATTERN_MVATTRIBUTE_TYPECLASS, ClassMetamodel.ATTRIBUTE, sps),
                 ) match {
                     case (Some(attributes_dt: List[ClassAttribute]), Some(attributes_tc: List[ClassAttribute])) =>
                         sv_mv_attributes = sv_mv_attributes ++ attributes_dt ++ attributes_tc
@@ -64,6 +64,16 @@ object Relational2Class {
                     case (Some(attributes: List[ClassAttribute]), None) =>
                         sv_mv_attributes = sv_mv_attributes ++ attributes
                     case _ =>
+                }
+        }
+
+        // TODO : check this function, to don't use getMVTablesOfTableOld anymore
+        RelationalMetamodel.getMVTablesOfTableOld(table, model) match {
+            case Some(tables) =>
+                Resolve.resolveAll(tls, model, dynamic_mm, PATTERN_MVATTRIBUTE,
+                    ClassMetamodel.ATTRIBUTE, tables) match {
+                    case Some(attributes: List[ClassAttribute]) =>
+                        sv_mv_attributes = sv_mv_attributes ++ attributes
                 }
         }
 
@@ -111,6 +121,8 @@ object Relational2Class {
             case _ => None
         }
 
+    
+    
     def makeMVAttributeToType(tls: TraceLinks[DynamicElement, DynamicElement], model: RelationalModel,
                               ttype: RelationalType, attribute: ClassAttribute): Option[AttributeToType] =
       Resolve.resolve(tls, model, dynamic_mm, PATTERN_TYPE, ClassMetamodel.DATATYPE, List(ttype)) match {
@@ -124,8 +136,131 @@ object Relational2Class {
             case Some(class_) => Some(new AttributeToType(attribute, class_.asInstanceOf[ClassDatatype]))
             case _ => None
         }
+    
+    def makeMVAttributeToTypeFromGotTable(tls: TraceLinks[DynamicElement, DynamicElement], model: RelationalModel,
+                                          table: RelationalTable, attribute: ClassAttribute): Option[DynamicLink] =
+        RelationalMetamodel.getMVTableType(table, model) match {
+            case Some(type_ : RelationalType) =>
+                Resolve.resolve(tls, model, dynamic_mm, PATTERN_TYPE, ClassMetamodel.DATATYPE, List(type_)) match {
+                    case Some(datatype) => Some(new AttributeToType(attribute, datatype.asInstanceOf[ClassDatatype]))
+                    case _ => None
+                }
+            case Some(table: RelationalTable) =>
+                Resolve.resolve(tls, model, dynamic_mm, PATTERN_CLASS, ClassMetamodel.CLASS, List(table)) match {
+                    case Some(class_) => Some(new AttributeToType(attribute, class_.asInstanceOf[ClassClass]))
+                    case _ => None
+                }
+            case _ => None
+        }
 
-    def relational2class(): Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
+
+    def relational2class_simple():  Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
+        new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
+            List(
+                new RuleImpl(
+                    name = "Type2Datatype",
+                    types = List(RelationalMetamodel.TYPE),
+                    to = List(
+                        new OutputPatternElementImpl(
+                            name = PATTERN_TYPE,
+                            elementExpr =
+                              (_, _, l) => if (l.isEmpty) None else {
+                                val type_ = l.head.asInstanceOf[RelationalType]
+                                Some(new ClassDatatype(type_.getId, type_.getName))
+                              }
+                        )
+                    )
+                ), // Type2Datatype
+                new RuleImpl(
+                    name = "Table2Class",
+                    types = List(RelationalMetamodel.TABLE),
+                    from = (_, l) => Some(l.head.asInstanceOf[RelationalTable].getName.indexOf('_') == -1),
+                    to = List(
+                        new OutputPatternElementImpl(
+                            name = PATTERN_CLASS,
+                            elementExpr = (_, _, l) => if (l.isEmpty) None else {
+                                val table = l.head.asInstanceOf[RelationalTable]
+                                Some(new ClassClass(table.getId, table.getName, false))
+                            },
+                            outputElemRefs = List(
+                                new OutputPatternElementReferenceImpl(
+                                    (tls, _, sm, t, c) => {
+                                        makeClassToAttributes_SV_MV(tls, sm.asInstanceOf[RelationalModel],
+                                            t.head.asInstanceOf[RelationalTable], c.asInstanceOf[ClassClass])
+                                    }
+                                )
+                            )
+                        )
+                    )
+                ), // Table2Class
+                new RuleImpl(
+                    name = "Column2Attribute",
+                    types = List(RelationalMetamodel.COLUMN),
+                    from = (sm, l) =>
+                        Some(
+                            RelationalMetamodel.isNotAKey(l.head.asInstanceOf[RelationalColumn], sm.asInstanceOf[RelationalModel])
+                        ),
+                    to = List(
+                        new OutputPatternElementImpl(name = PATTERN_SVATTRIBUTE,
+                            elementExpr = (_, _, l) => if (l.isEmpty) None else {
+                                val column = l.head.asInstanceOf[RelationalColumn]
+                                Some(new ClassAttribute(column.getId, column.getName, false))
+                            },
+                            outputElemRefs = List(
+                                new OutputPatternElementReferenceImpl(
+                                    (tls, _, sm, c, a) =>
+                                      makeSVAttributeToType(tls, sm.asInstanceOf[RelationalModel],
+                                          c.head.asInstanceOf[RelationalColumn], a.asInstanceOf[ClassAttribute])
+                                ), // Attribute to type
+                                new OutputPatternElementReferenceImpl(
+                                    (tls, _, sm, c, a) =>
+                                        makeSVAttributeToOwner(tls, sm.asInstanceOf[RelationalModel],
+                                            c.head.asInstanceOf[RelationalColumn], a.asInstanceOf[ClassAttribute])
+                                ) // Attribute to owner
+                            )
+                        )
+                    )
+                ), // Column2Attribute
+                new RuleImpl(
+                    name = "Multivalued",
+                    types = List(RelationalMetamodel.TABLE, RelationalMetamodel.TABLE),
+                    from = (_, l) => {
+                        val t1 = l.head.asInstanceOf[RelationalTable].getName
+                        val t2 = l(1).asInstanceOf[RelationalTable].getName
+                        Some(t2.indexOf("_") != -1 & !t2.equals(t1) & t2.startsWith(t1))
+                    },
+                    to = List(
+                        new OutputPatternElementImpl(name = PATTERN_MVATTRIBUTE,
+                            elementExpr = (_, _, l) => if (l.isEmpty) None else {
+                                val t2 = l(1).asInstanceOf[RelationalTable]
+                                Some(new ClassAttribute(
+                                    t2.getId.replace("pivot", ""),
+                                    t2.getName.substring(t2.getName.indexOf("_") + 1, t2.getName.length),
+                                    true))
+                            },
+                            outputElemRefs = List(
+                                new OutputPatternElementReferenceImpl(
+                                    (tls, _, sm, ts, a) => {
+                                        val owner_table = ts.head.asInstanceOf[RelationalTable]
+                                        makeMVAttributeToOwner(tls, sm.asInstanceOf[RelationalModel], owner_table,
+                                            a.asInstanceOf[ClassAttribute])
+                                    }
+                                ),
+                                new OutputPatternElementReferenceImpl(
+                                    (tls, _, sm, ts, a) => {
+                                        val table = ts(1).asInstanceOf[RelationalTable]
+                                        makeMVAttributeToTypeFromGotTable(tls, sm.asInstanceOf[RelationalModel], table,
+                                            a.asInstanceOf[ClassAttribute])
+                                    }
+                                )
+                            )
+                        )
+                    )
+                ) // Multivalued
+            ))
+    }
+
+    def relational2class_strong(): Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
             List(
                 new RuleImpl(
