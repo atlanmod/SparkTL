@@ -13,9 +13,10 @@ object Main_Relational2Class_Simple {
     final val DEFAULT_NTEST = 1
     final val DEFAULT_SEQ = true
     final val DEFAULT_NCORE = 8
+    final val DEFAULT_MODE = "both"
     final val DEFAULT_PRINT_FILE = false
     final val DEFAULT_PRINT_RFILE = false
-    final val DEFAULT_PRINT_SCREEN = true
+    final val DEFAULT_PRINT_SCREEN = false
     final val DEFAULT_METHOD = "all"
     final val DEFAULT_SIZES = List(10)
 
@@ -35,6 +36,7 @@ object Main_Relational2Class_Simple {
     var print_rfile: Boolean = DEFAULT_PRINT_RFILE
     var print_screen: Boolean = DEFAULT_PRINT_SCREEN
     var method: String = DEFAULT_METHOD
+    var mode: String = DEFAULT_MODE
 
 
     def init(): Unit = {
@@ -48,7 +50,6 @@ object Main_Relational2Class_Simple {
                            times: Int, ncore: Int, patterns: Int): List[String] = {
         // create model
         val model = R2CUtil.get_model_from_n_patterns(patterns)
-//        if(print_screen) println("size: "+ model.allModelElements.size+ " elements, " + model.allModelLinks.size + "links"+ "; ")
         // execution + get the results (computation time)
         val results: mutable.HashMap[(String, String), List[(Double, List[Double])]]=
             TransformationUtil.apply(methods, transformation, model, metamodel, times, ncore, print_screen)
@@ -136,6 +137,10 @@ object Main_Relational2Class_Simple {
             }
             case "--method" :: m :: args_ =>{
                 method = m
+                parseArgs(args_)
+            }
+            case "--mode" :: m :: args_ =>{
+                mode = m
                 parseArgs(args_)
             }
             case "-rfile" :: args_ =>{ 

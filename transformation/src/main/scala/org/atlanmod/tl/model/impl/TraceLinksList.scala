@@ -1,6 +1,7 @@
 package org.atlanmod.tl.model.impl
 
 import org.atlanmod.tl.model.{TraceLink, TraceLinks}
+import org.atlanmod.tl.util.ListUtils
 
 class TraceLinksList[SME, TME](tls: List[TraceLink[SME, TME]]) extends TraceLinks[SME, TME] {
 
@@ -22,4 +23,12 @@ class TraceLinksList[SME, TME](tls: List[TraceLink[SME, TME]]) extends TraceLink
 
     override def getSourcePatterns: List[List[SME]] = tls.map(tl => tl.getSourcePattern)
 
+    def asList(): List[TraceLink[SME, TME]] = tls
+
+    override def equals(obj: Any): Boolean = {
+        obj match {
+            case tl: TraceLinks[SME,TME] => ListUtils.eqList(tl.asList(), this.asList())
+            case _ => false
+        }
+    }
 }

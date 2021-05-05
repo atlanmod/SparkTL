@@ -13,6 +13,7 @@ object Main_Class2Relational_Simple {
     final val DEFAULT_NTEST = 2
     final val DEFAULT_SEQ = true
     final val DEFAULT_NCORE = 1
+    final val DEFAULT_MODE = "both"
     final val DEFAULT_PRINT_FILE = false
     final val DEFAULT_PRINT_RFILE = false
     final val DEFAULT_PRINT_SCREEN = true
@@ -35,6 +36,7 @@ object Main_Class2Relational_Simple {
     var print_rfile: Boolean = DEFAULT_PRINT_RFILE
     var print_screen: Boolean = DEFAULT_PRINT_SCREEN
     var method: String = DEFAULT_METHOD
+    var mode: String = DEFAULT_MODE
 
 
 

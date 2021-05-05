@@ -1,6 +1,7 @@
 package org.atlanmod.tl.engine
 
 import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
 import org.atlanmod.tl.model.{Metamodel, Model, Transformation}
 import org.atlanmod.tl.util.TupleUtils
 
@@ -50,7 +51,7 @@ object Utils {
 
     def allTuplesParallel[SME: ClassTag, SML, SMC, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
                                                    sc: SparkContext)
-    : List[List[SME]] =
-        TupleUtils.tuples_up_to_n_prime_parallel(sc.parallelize(allModelElements (sm)), maxArity (tr) )
+    : RDD[List[SME]] =
+        TupleUtils.tuples_up_to_n_parallel(allModelElements (sm), maxArity (tr), sc)
 
 }

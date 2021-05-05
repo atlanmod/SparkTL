@@ -1,6 +1,7 @@
 package org.atlanmod.tl.model.impl
 
 import org.atlanmod.tl.model.{TraceLink, TraceLinks}
+import org.atlanmod.tl.util.ListUtils
 
 import scala.collection.mutable
 
@@ -63,4 +64,14 @@ class TraceLinksMap[SME, TME](map: mutable.Map[List[SME], List[TraceLink[SME, TM
         }
     }
 
+    def asList(): List[TraceLink[SME, TME]] = map.toList.flatMap(t => t._2)
+
+    override def equals(obj: Any): Boolean = {
+        obj match {
+            case tl: TraceLinks[SME,TME] =>
+                ListUtils.eqList(tl.asList(), this.asList())
+            case _ =>
+                false
+        }
+    }
 }

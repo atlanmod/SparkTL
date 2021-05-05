@@ -1,6 +1,7 @@
 package org.atlanmod.transformation.parallel
 
 import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
 import org.atlanmod.tl.engine.{Apply, Trace}
 import org.atlanmod.tl.model.{Metamodel, Model, TraceLinks, Transformation}
 import org.atlanmod.transformation.ExperimentalTransformationEngine
@@ -9,22 +10,24 @@ import scala.reflect.ClassTag
 
 object TransformationEngineTwoPhase extends ExperimentalTransformationEngine{
 
-    private def instantiateTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
-                                                                                    sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-                                                                                    sc: SparkContext)
+    private def instantiateTraces[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
+    (tr: Transformation[SME, SML, SMC, TME, TML],  sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR], sc: SparkContext)
     : (List[TME], TraceLinks[SME, TME]) = {
-        val tls = Trace.trace(tr, sm, mm)
-        (tls.getTargetElements, tls)
+        val tls : TraceLinks[SME, TME] = Trace.parallel_trace(tr, sm, mm, sc)
+        (tls.getTargetElements , tls)
     }
 
-    def allSourcePatterns[SME, TME](tls: TraceLinks[SME, TME]) : List[List[SME]] =
-        tls.getSourcePatterns
 
-    private def applyTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
-                                                                              sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-                                                                              tls: TraceLinks[SME, TME], sc: SparkContext)
+    def allSourcePatternsParallel[SME, TME](tls: TraceLinks[SME, TME], sc:SparkContext) : RDD[List[SME]] =
+        sc.parallelize(tls.getSourcePatterns)
+
+    def applyTraces[SME, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
+                                                                      sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
+                                                                      tls: TraceLinks[SME, TME], sc: SparkContext)
     : List[TML] = {
-        sc.parallelize(allSourcePatterns(tls)).flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls)).collect().toList
+        val tls_broad = sc.broadcast(tls)
+        tls_broad.value.getSourcePatterns.
+          flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls_broad.value))
     }
 
     override def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],

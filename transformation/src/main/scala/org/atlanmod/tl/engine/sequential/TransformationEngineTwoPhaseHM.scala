@@ -25,6 +25,7 @@ object TransformationEngineTwoPhaseHM extends TransformationEngine {
     : List[TML] =
         allSourcePatterns(tls).flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls))
 
+
     override def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
     (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
      sc: SparkContext = null,
@@ -36,4 +37,18 @@ object TransformationEngineTwoPhaseHM extends TransformationEngine {
         val links = applyTraces(tr, sm, mm, tls)
         makeModel(elements, links)
     }
+
+    def execute_test[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
+    (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
+     sc: SparkContext = null,
+     makeModel: (List[TME], List[TML]) => Model[TME, TML] = (a, b) => ModelUtil.makeTupleModel[TME, TML](a, b))
+    : (TraceLinks[SME, TME], Model[TME, TML]) = {
+        val elements_and_tls = instantiateTraces(tr, sm, mm)
+        val elements = elements_and_tls._1
+        val tls = elements_and_tls._2
+        val links = applyTraces(tr, sm, mm, tls)
+        (tls, makeModel(elements, links))
+    }
+
 }
+

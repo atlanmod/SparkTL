@@ -6,6 +6,7 @@ import org.atlanmod.tl.model.{Model, Transformation}
 import org.atlanmod.tl.util.SparkUtils
 
 import scala.collection.mutable
+import scala.language.postfixOps
 
 object TransformationUtil {
 //
@@ -33,42 +34,34 @@ object TransformationUtil {
 
     type transformation_function = (transformation_type, source_model, source_metamodel, SparkContext) => (Double, List[Double])
 
-    def get_methods(method: String = "all"): List[(String, String, transformation_function)] = {
-        // We excluded:
-        //        ("par", "List_paralleltrace", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltrace.execute(tr, m, mm, sc)),
-        //        ("par", "HM_paralleltrace", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltrace.execute(tr, m, mm, sc))
+    def get_methods(method: String = "all", mode: String="both"): List[(String, String, transformation_function)] = {
         val res : List[(String, String, transformation_function)] =
             List(
                 ("seq", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineImpl.execute(tr, m, mm, sc)),
                 ("par", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineImpl.execute(tr, m, mm, sc)),
                 ("seq", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
                 ("par", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
-//                ("seq", "twophase", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
-//                ("par", "HM_allparallel", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_allparallel.execute(tr, m, mm, sc)),
-                ("seq", "HM_noparallelism", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_noparallelism.execute(tr, m, mm, sc)),
-//                ("par", "HM_parallelsm", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp.execute(tr, m, mm, sc)),
-                ("par", "HM_parallelsp_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp_paralleltuples.execute(tr, m, mm, sc)),
-//                ("par", "HM_paralleltrace_parallelsp", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_parallelsp.execute(tr, m, mm, sc)),
-//                ("par", "HM_paralleltrace_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltrace_paralleltuples.execute(tr, m, mm, sc)),
-//                ("par", "HM_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.HM_paralleltuples.execute(tr, m, mm, sc)),
-                ("par", "List_allparallel", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_allparallel.execute(tr, m, mm, sc)),
-                ("seq", "List_noparallelism", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_noparallelism.execute(tr, m, mm, sc)),
-//                ("par", "List_parallelsm", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp.execute(tr, m, mm, sc)),
-//                ("par", "List_parallelsp_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp_paralleltuples.execute(tr, m, mm, sc)),
-//                ("par", "List_paralleltrace_parallelsp", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_parallelsp.execute(tr, m, mm, sc)),
-//                ("par", "List_paralleltrace_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltrace_paralleltuples.execute(tr, m, mm, sc)),
-//                ("par", "List_paralleltuples", (tr, m, mm, sc) =>  org.atlanmod.transformation.twophase.List_paralleltuples.execute(tr, m, mm, sc)),
+                ("seq", "two_phase_HM", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhaseHM.execute(tr, m, mm, sc)),
+                ("seq", "two_phase", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
+                ("par", "two_phase", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhase.execute(tr, m, mm, sc))
             )
 
-        if (method == "all")
+        if (method.equals("all") && mode.equals("both"))
             res
-        else
+        else if (!method.equals("all") && mode.equals("both"))
             res.filter(m => m._2.contains(method))
+        else if (method.equals("all") && !mode.equals("both"))
+            res.filter(m => m._1.equals(mode))
+        else
+            res.filter(m => m._2.contains(method)).filter(m => m._1.equals(mode))
     }
 
     def apply_transformation(tr_foo: transformation_function, tr: transformation_type,
                              sm: source_model, mm: source_metamodel, sc: SparkContext): (Double, List[Double]) = {
-        tr_foo(tr, sm, mm, sc)
+        val broadcasted_tr = sc.broadcast(tr)
+        val broadcaster_sm = sc.broadcast(sm)
+        val broadcaster_mm = sc.broadcast(mm)
+        tr_foo(broadcasted_tr.value, broadcaster_sm.value, broadcaster_mm.value, sc)
     }
 
     def apply_transformations(tr_foo: transformation_function, tr: transformation_type,
@@ -90,7 +83,7 @@ object TransformationUtil {
               print_screen: Boolean = false)
     : mutable.HashMap[(String, String), List[(Double, List[Double])]] = {
         val sequential = ncore == 0
-        val sc = if (!sequential) SparkUtils.context() else null
+        val sc = if (!sequential) SparkUtils.context(4) else null
         val res = new mutable.HashMap[(String, String), List[(Double, List[Double])]]
         for(method <- methods){
             if((sequential & method._1.equals("seq")) | (!sequential & method._1.equals("par"))) {

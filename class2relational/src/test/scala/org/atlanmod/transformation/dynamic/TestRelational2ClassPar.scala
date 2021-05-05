@@ -1,11 +1,11 @@
 package org.atlanmod.transformation.dynamic
 
 import org.apache.spark.SparkContext
-import org.atlanmod.model.ModelSamples.{getClassModelSingle, getRelationalModelSample}
+import org.atlanmod.model.ModelSamples.{getClassModelSingle, getRelationalModelDummy, getRelationalModelSample}
 import org.atlanmod.model.classmodel.{ClassElement, ClassLink, ClassMetamodel, ClassModel}
 import org.atlanmod.model.relationalmodel.{RelationalElement, RelationalLink, RelationalMetamodel, RelationalModel}
 import org.atlanmod.model.{DynamicElement, DynamicLink}
-import org.atlanmod.tl.util.SparkUtils
+import org.atlanmod.tl.util.{ListUtils, SparkUtils}
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestRelational2ClassPar extends AnyFunSuite {
@@ -54,22 +54,25 @@ class TestRelational2ClassPar extends AnyFunSuite {
         val transformation = Relational2Class.relational2class_simple()
         val result_simple = org.atlanmod.tl.engine.parallel.TransformationEngineImpl.execute(transformation, model, metamodel,
             sc, makeModel = makeClassModel)
-        val result_byrule = org.atlanmod.tl.engine.parallel.TransformationEngineTwoPhase.execute(transformation, model, metamodel,
+        val result_twophases = org.atlanmod.tl.engine.parallel.TransformationEngineTwoPhase.execute(transformation, model, metamodel,
             sc, makeModel = makeClassModel)
         sc.stop()
-        assert(result_simple.equals(result_byrule))
+        assert(result_simple.equals(result_twophases))
     }
 
-    test("simple equals to twophaseHM in parallel") {
-        val sc: SparkContext = SparkUtils.context(2)
-        val model = getRelationalModelSample
+    test("simple equals to twophase HM in parallel") {
+        val sc: SparkContext = SparkUtils.context(1)
+        val model = getRelationalModelDummy
         val metamodel = RelationalMetamodel.metamodel
         val transformation = Relational2Class.relational2class_simple()
-        val result_simple = org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhaseHM.execute(transformation, model, metamodel,
+        val result_simple = org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhaseHM.execute_test(transformation, model, metamodel,
             sc, makeModel = makeClassModel)
-        val result_byrule = org.atlanmod.tl.engine.parallel.TransformationEngineTwoPhaseHM.execute(transformation, model, metamodel,
+        val result_parallel = org.atlanmod.tl.engine.parallel.TransformationEngineTwoPhaseHM.execute_test(transformation, model, metamodel,
             sc, makeModel = makeClassModel)
         sc.stop()
-        assert(result_simple.equals(result_byrule))
+        assert(ListUtils.eqList(result_simple._1.asList(), result_parallel._1.asList())) // true
+        assert(result_simple._2.equals(result_parallel._2)) // false
+//        assert(result_simple.equals(result_parallel))
     }
+
 }
