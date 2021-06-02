@@ -9,27 +9,6 @@ dependencies {
     implementation group: 'org.apache.spark', name: 'spark-graphx_2.12', version: '3.0.1'
 }
 
-//task R2CJar(type: Jar) {
-//    zip64 = true
-//    manifest {
-//        attributes "Main-Class": "org.atlanmod.transformation.Main_Relational2Class"
-//    }
-//    archivesBaseName = 'Relational2Relational'
-//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    with jar
-//}
-
-//task C2RJar(type: Jar) {
-//    zip64 = true
-//    manifest {
-//        attributes "Main-Class": "org.atlanmod.transformation.Main_Class2Relational"
-//    }
-//    archivesBaseName = 'Class2Relational'
-//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    with jar
-//}
-//
-
 jar {
     zip64 = true
     archivesBaseName = 'SparkTE'

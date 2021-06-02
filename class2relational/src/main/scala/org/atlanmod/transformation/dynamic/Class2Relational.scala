@@ -4,9 +4,10 @@ import org.atlanmod.model.classmodel._
 import org.atlanmod.model.relationalmodel._
 import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.engine.Resolve
-import org.atlanmod.tl.model.{Model, TraceLinks, Transformation}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
+import org.atlanmod.tl.model.{Model, TraceLinks, Transformation}
 import org.atlanmod.tl.util.ListUtils
+import org.atlanmod.transformation.dynamic.Utils.my_sleep
 
 object Class2Relational {
 
@@ -353,15 +354,6 @@ object Class2Relational {
             ))
     }
 
-
-    def factorial(i: Int): Int = i match {
-        case 0 => 1
-        case n => n * factorial(n-1)
-    }
-    def dumb(n: Int, i: Int) : Unit =
-        for (k <- 1 to n) factorial(i)
-    def very_dumb(): Unit = dumb(20, 5000)
-
     def class2relational_dumb(): Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
         val rmm = new DynamicMetamodel[DynamicElement, DynamicLink]()
 
@@ -377,13 +369,14 @@ object Class2Relational {
                               (_, _, l) =>
                                   if (l.isEmpty) None
                                   else {
-                                      very_dumb()
+                                      my_sleep(5)
                                       val class_ = l.head.asInstanceOf[ClassClass]
                                       Some(new RelationalTable(class_.getId,class_.getName))
                                   },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, c, t) => {
+                                        my_sleep(5)
                                         val class_ = c.head.asInstanceOf[ClassClass]
                                         ClassMetamodel.getClassAttributes(class_, sm.asInstanceOf[ClassModel]) match {
                                             case Some(attrs) =>
@@ -414,7 +407,7 @@ object Class2Relational {
                             elementExpr =
                               (_, _, l) =>
                                   if (l.isEmpty) None else{
-                                      very_dumb()
+                                      my_sleep(5)
                                       val att = l.head.asInstanceOf[ClassAttribute]
                                       Some(new RelationalColumn(att.getId, att.getName))
                                   },
@@ -422,6 +415,7 @@ object Class2Relational {
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, a, c) =>
                                     {
+                                        my_sleep(5)
                                         val attribute = a.head.asInstanceOf[ClassAttribute]
                                         ClassMetamodel.getAttributeOwner(attribute, sm.asInstanceOf[ClassModel]) match {
                                             case Some(class_) =>

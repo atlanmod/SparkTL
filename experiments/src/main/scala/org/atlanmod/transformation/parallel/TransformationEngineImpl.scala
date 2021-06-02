@@ -11,10 +11,10 @@ import scala.reflect.ClassTag
 object TransformationEngineImpl extends ExperimentalTransformationEngine{
     override def execute[SME: ClassTag, SML, SMC, SMR, TME : ClassTag , TML : ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                               sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-                                                                              sc: SparkContext)
+                                                                                        npartition: Int, sc: SparkContext)
     : (Double, List[Double]) = {
         val t1 = System.nanoTime
-        val tuples = sc.parallelize(allTuples(tr, sm))
+        val tuples = sc.parallelize(allTuples(tr, sm), npartition)
         val t2 = System.nanoTime
         /* Instantiate */ val elements = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t)).collect
         val t3 = System.nanoTime

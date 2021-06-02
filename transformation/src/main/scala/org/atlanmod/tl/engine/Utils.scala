@@ -50,8 +50,8 @@ object Utils {
     TupleUtils.tuples_up_to_n_prime(allModelElements (sm), maxArity (tr) )
 
     def allTuplesParallel[SME: ClassTag, SML, SMC, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
-                                                   sc: SparkContext)
+                                                             npartition:Int, sc: SparkContext)
     : RDD[List[SME]] =
-        TupleUtils.tuples_up_to_n_parallel(allModelElements (sm), maxArity (tr), sc)
+        TupleUtils.tuples_up_to_n_parallel(allModelElements (sm), maxArity (tr), npartition, sc)
 
 }

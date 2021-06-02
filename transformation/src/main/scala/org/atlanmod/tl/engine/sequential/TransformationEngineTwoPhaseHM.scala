@@ -28,7 +28,7 @@ object TransformationEngineTwoPhaseHM extends TransformationEngine {
 
     override def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
     (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-     sc: SparkContext = null,
+     npartition: Int = 0, sc: SparkContext = null,
      makeModel: (List[TME], List[TML]) => Model[TME, TML] = (a, b) => ModelUtil.makeTupleModel[TME, TML](a, b))
     : Model[TME, TML] = {
         val elements_and_tls = instantiateTraces(tr, sm, mm)
@@ -40,7 +40,7 @@ object TransformationEngineTwoPhaseHM extends TransformationEngine {
 
     def execute_test[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
     (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-     sc: SparkContext = null,
+     npartition: Int = 0, sc: SparkContext = null,
      makeModel: (List[TME], List[TML]) => Model[TME, TML] = (a, b) => ModelUtil.makeTupleModel[TME, TML](a, b))
     : (TraceLinks[SME, TME], Model[TME, TML]) = {
         val elements_and_tls = instantiateTraces(tr, sm, mm)

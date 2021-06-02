@@ -32,18 +32,18 @@ object TransformationUtil {
     type source_metamodel = DynamicMetamodel[DynamicElement, DynamicLink]
     type target_model = Model[DynamicElement, DynamicLink]
 
-    type transformation_function = (transformation_type, source_model, source_metamodel, SparkContext) => (Double, List[Double])
+    type transformation_function = (transformation_type, source_model, source_metamodel, Int, SparkContext) => (Double, List[Double])
 
     def get_methods(method: String = "all", mode: String="both"): List[(String, String, transformation_function)] = {
         val res : List[(String, String, transformation_function)] =
             List(
-                ("seq", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineImpl.execute(tr, m, mm, sc)),
-                ("par", "simple", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineImpl.execute(tr, m, mm, sc)),
-                ("seq", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineByRule.execute(tr, m, mm, sc)),
-                ("par", "byrule", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineByRule.execute(tr, m, mm, sc)),
-                ("seq", "two_phase_HM", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhaseHM.execute(tr, m, mm, sc)),
-                ("seq", "two_phase", (tr, m, mm, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm, sc)),
-                ("par", "two_phase", (tr, m, mm, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhase.execute(tr, m, mm, sc))
+                ("seq", "simple", (tr, m, mm, n, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineImpl.execute(tr, m, mm, n, sc)),
+                ("par", "simple", (tr, m, mm, n, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineImpl.execute(tr, m, mm,  n, sc)),
+                ("seq", "byrule", (tr, m, mm, n, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineByRule.execute(tr, m, mm,  n, sc)),
+                ("par", "byrule", (tr, m, mm, n, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineByRule.execute(tr, m, mm, n, sc)),
+                ("seq", "two_phase_HM", (tr, m, mm, n, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhaseHM.execute(tr, m, mm,  n, sc)),
+                ("seq", "two_phase", (tr, m, mm, n, sc) =>  org.atlanmod.transformation.sequential.TransformationEngineTwoPhase.execute(tr, m, mm,  n, sc)),
+                ("par", "two_phase", (tr, m, mm, n, sc) =>  org.atlanmod.transformation.parallel.TransformationEngineTwoPhase.execute(tr, m, mm,  n, sc))
             )
 
         if (method.equals("all") && mode.equals("both"))
@@ -57,20 +57,20 @@ object TransformationUtil {
     }
 
     def apply_transformation(tr_foo: transformation_function, tr: transformation_type,
-                             sm: source_model, mm: source_metamodel, sc: SparkContext): (Double, List[Double]) = {
+                             sm: source_model, mm: source_metamodel, npartition: Int, sc: SparkContext): (Double, List[Double]) = {
         val broadcasted_tr = sc.broadcast(tr)
         val broadcaster_sm = sc.broadcast(sm)
         val broadcaster_mm = sc.broadcast(mm)
-        tr_foo(broadcasted_tr.value, broadcaster_sm.value, broadcaster_mm.value, sc)
+        tr_foo(broadcasted_tr.value, broadcaster_sm.value, broadcaster_mm.value, npartition, sc)
     }
 
     def apply_transformations(tr_foo: transformation_function, tr: transformation_type,
-                              sm: source_model, mm: source_metamodel, sc: SparkContext, times: Int,
+                              sm: source_model, mm: source_metamodel, npartition: Int, sc: SparkContext, times: Int,
                               print_screen: Boolean = false)
     : List[(Double, List[Double])] = {
         var res: List[(Double, List[Double])] = List()
         for(_ <- 1 to times) {
-            val time = apply_transformation(tr_foo, tr, sm, mm, sc)
+            val time = apply_transformation(tr_foo, tr, sm, mm, npartition, sc)
             if (print_screen) print(time._1 + "ms, ")
             res = time :: res
         }
@@ -90,7 +90,7 @@ object TransformationUtil {
                 if(print_screen) print("Method: "+ (method._1, method._2)+ " => ")
                 res.put(
                     (method._1, method._2),
-                    apply_transformations(method._3, transformation, model, metamodel, sc, times, print_screen)
+                    apply_transformations(method._3, transformation, model, metamodel, ncore * 4, sc, times, print_screen)
                 )
             }
         }

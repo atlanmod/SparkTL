@@ -23,11 +23,11 @@ object TupleUtils {
             case n1 => tuples_of_length_n(s1, n1) ++ tuples_up_to_n(s1, n1-1)
         }
 
-    def prod_cons_parallel[A: ClassTag](s1: List[A], s2: List[List[A]], sc: SparkContext): RDD[List[A]] =
-        sc.parallelize(s1).flatMap(a => s2.map(x => a :: x))
+    def prod_cons_parallel[A: ClassTag](s1: List[A], s2: List[List[A]], npartition: Int, sc: SparkContext): RDD[List[A]] =
+        sc.parallelize(s1, npartition).flatMap(a => s2.map(x => a :: x))
 
-    def tuples_up_to_n_parallel[A: ClassTag](s1: List[A], n : Int, sc: SparkContext) : RDD[List[A]] =
-       prod_cons_parallel( s1, tuples_up_to_n(s1, n-1), sc)
+    def tuples_up_to_n_parallel[A: ClassTag](s1: List[A], n : Int, npartition: Int, sc: SparkContext) : RDD[List[A]] =
+       prod_cons_parallel( s1, tuples_up_to_n(s1, n-1), npartition, sc)
 
     def tuples_up_to_n_prime[A](s1: List[A], n : Int) : List[List[A]] =
         (0 to n).map(i => tuples_of_length_n(s1, i)).reduce((a, b) => a ++ b)

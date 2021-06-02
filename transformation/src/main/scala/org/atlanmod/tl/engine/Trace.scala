@@ -60,11 +60,11 @@ object Trace {
     }
 
     def parallel_trace_HM[SME: ClassTag, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
-                                                        sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-                                                        sc: SparkContext)
+                                                                  sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
+                                                                  npartition: Int, sc: SparkContext)
     : TraceLinks[SME, TME] = {
         val tls_map = new TraceLinksMap[SME, TME]()
-        val t = allTuplesParallel(tr, sm, sc).collect
+        val t = allTuplesParallel(tr, sm, npartition, sc).collect
         t.foreach(tuple => {
             val tls = tracePattern(tr, sm, mm, tuple)
             if (tls.nonEmpty) tls_map.put(tuple, tls)
@@ -73,10 +73,10 @@ object Trace {
     }
 
     def parallel_trace[SME: ClassTag, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
-                                                                  sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-                                                                  sc: SparkContext)
+                                                               sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
+                                                               npartition: Int, sc: SparkContext)
     : TraceLinks[SME, TME] = {
-        new TraceLinksList(allTuplesParallel(tr, sm, sc).flatMap(tuple => tracePattern(tr, sm, mm, tuple)).collect)
+        new TraceLinksList(allTuplesParallel(tr, sm, npartition, sc).flatMap(tuple => tracePattern(tr, sm, mm, tuple)).collect)
     }
 
 }

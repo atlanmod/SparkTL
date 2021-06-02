@@ -13,10 +13,10 @@ object TransformationEngineByRule extends TransformationEngine {
 
     override def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
     (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-     sc: SparkContext = null,
+     npartition: Int, sc: SparkContext = null,
      makeModel: (List[TME], List[TML]) => Model[TME, TML] = (a, b) => ModelUtil.makeTupleModel[TME, TML](a, b))
     : Model[TME, TML] = {
-        val tuples : RDD[List[SME]] = sc.parallelize(allTuplesByRule(tr, sm, mm).distinct)
+        val tuples : RDD[List[SME]] = sc.parallelize(allTuplesByRule(tr, sm, mm).distinct, npartition)
         /* Instantiate */ val elements : RDD[TME] = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t))
         /* Apply */ val links : RDD[TML] = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t))
 
