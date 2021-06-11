@@ -7,7 +7,6 @@ import org.atlanmod.tl.engine.Resolve
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.atlanmod.tl.model.{TraceLinks, Transformation}
 import org.atlanmod.tl.util.ListUtils
-import org.atlanmod.transformation.dynamic.Utils.very_dumb
 
 object Relational2Class {
 
@@ -170,7 +169,7 @@ object Relational2Class {
         d.toInt
     }
 
-    def relational2class_dumb(): Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
+    def relational2class_dumb(sleeping: Int = 0): Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
             List(
                 new RuleImpl(
@@ -182,7 +181,7 @@ object Relational2Class {
                             elementExpr =
                               (_, _, l) => if (l.isEmpty) None else {
                                   val type_ = l.head.asInstanceOf[RelationalType]
-                                  my_sleep(TIME_SLEEP, random.nextInt())
+                                  my_sleep(sleeping, random.nextInt())
                                   Some(new ClassDatatype(type_.getId, type_.getName))
                               }
                         )
@@ -197,13 +196,13 @@ object Relational2Class {
                             name = PATTERN_CLASS,
                             elementExpr = (_, _, l) => if (l.isEmpty) None else {
                                 val table = l.head.asInstanceOf[RelationalTable]
-                                my_sleep(TIME_SLEEP, random.nextInt())
+                                my_sleep(sleeping, random.nextInt())
                                 Some(new ClassClass(table.getId, table.getName, false))
                             },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, t, c) => {
-                                        my_sleep(TIME_SLEEP, random.nextInt())
+                                        my_sleep(sleeping, random.nextInt())
                                         makeClassToAttributes_SV_MV(tls, sm.asInstanceOf[RelationalModel],
                                             t.head.asInstanceOf[RelationalTable], c.asInstanceOf[ClassClass])
                                     }
@@ -223,20 +222,20 @@ object Relational2Class {
                         new OutputPatternElementImpl(name = PATTERN_SVATTRIBUTE,
                             elementExpr = (_, _, l) => if (l.isEmpty) None else {
                                 val column = l.head.asInstanceOf[RelationalColumn]
-                                my_sleep(TIME_SLEEP, random.nextInt())
+                                my_sleep(sleeping, random.nextInt())
                                 Some(new ClassAttribute(column.getId, column.getName, false))
                             },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, c, a) =>{
-                                        very_dumb()
+                                        my_sleep(sleeping, random.nextInt())
                                         makeSVAttributeToType(tls, sm.asInstanceOf[RelationalModel],
                                             c.head.asInstanceOf[RelationalColumn], a.asInstanceOf[ClassAttribute])
                                     }
                                 ), // Attribute to type
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, c, a) =>{
-                                        my_sleep(TIME_SLEEP, random.nextInt())
+                                        my_sleep(sleeping, random.nextInt())
                                         makeSVAttributeToOwner(tls, sm.asInstanceOf[RelationalModel],
                                             c.head.asInstanceOf[RelationalColumn], a.asInstanceOf[ClassAttribute])
                                     }
@@ -257,7 +256,7 @@ object Relational2Class {
                         new OutputPatternElementImpl(name = PATTERN_MVATTRIBUTE,
                             elementExpr = (_, _, l) => if (l.isEmpty) None else {
                                 val t2 = l(1).asInstanceOf[RelationalTable]
-                                my_sleep(TIME_SLEEP, random.nextInt())
+                                my_sleep(sleeping, random.nextInt())
                                 Some(new ClassAttribute(
                                     t2.getId.replace("pivot", ""),
                                     t2.getName.substring(t2.getName.indexOf("_") + 1, t2.getName.length),
@@ -266,7 +265,7 @@ object Relational2Class {
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, ts, a) => {
-                                        my_sleep(TIME_SLEEP, random.nextInt())
+                                        my_sleep(sleeping, random.nextInt())
                                         val owner_table = ts.head.asInstanceOf[RelationalTable]
                                         makeMVAttributeToOwner(tls, sm.asInstanceOf[RelationalModel], owner_table,
                                             a.asInstanceOf[ClassAttribute])
@@ -274,7 +273,7 @@ object Relational2Class {
                                 ),
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, ts, a) => {
-                                        my_sleep(TIME_SLEEP, random.nextInt())
+                                        my_sleep(sleeping, random.nextInt())
                                         val table = ts(1).asInstanceOf[RelationalTable]
                                         makeMVAttributeToTypeFromGotTable(tls, sm.asInstanceOf[RelationalModel], table,
                                             a.asInstanceOf[ClassAttribute])

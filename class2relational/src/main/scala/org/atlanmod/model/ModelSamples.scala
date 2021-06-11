@@ -8,17 +8,42 @@ object ModelSamples {
     def getClassModelSingle: ClassModel = {
         val c1 = new ClassClass("0","class1")
         val sv = new ClassAttribute("1","sv", false)
-        val mv = new ClassAttribute("2","mv", true)
+//        val mv = new ClassAttribute("2","mv", true)
         val t = new ClassDatatype("int", "int")
-        val elements = List(c1, sv, mv, t)
-        val c1_attributes = new ClassToAttributes(c1, List(sv, mv))
+        val elements = List(c1, sv,  t)
+        val c1_attributes = new ClassToAttributes(c1, List(sv))
         val sv_owner = new AttributeToClass(sv, c1)
-        val mv_owner = new AttributeToClass(mv, c1)
+//        val mv_owner = new AttributeToClass(mv, c1)
         val sv_type = new AttributeToType(sv, t)
-        val mv_type = new AttributeToType(mv, t)
-        val links = List(c1_attributes, sv_owner, sv_type, mv_owner, mv_type)
+//        val mv_type = new AttributeToType(mv, t)
+        val links = List(c1_attributes, sv_owner, sv_type)
         new ClassModel(elements, links)
     }
+
+    def getRelationalModelSingle : RelationalModel = {
+        val t = new RelationalType("int", "int")
+        val c1 = new RelationalTable("0","class1")
+        val c1id = new RelationalColumn("0id","id")
+        val sv = new RelationalColumn("1","sv")
+//        val pivot = new RelationalTable("2pivot", "mv")
+//        val mvsrc = new RelationalColumn("2src", "id")
+//        val mvtrg = new RelationalColumn("2trg", "int")
+        val elements = List(t, c1, c1id, sv)
+
+        val c1columns = new TableToColumns(c1, List(c1id, sv))
+        val c1key = new TableToKeys(c1, c1id)
+        val c1idtable = new ColumnToTable(c1id, c1)
+        val a = new ColumnToTable(sv, c1)
+        val b = new ColumnToType(sv, t)
+//        val c = new TableToKeys(pivot, List(mvsrc, mvtrg))
+//        val d = new TableToColumns(pivot, List(mvsrc, mvtrg))
+//        val e = new ColumnToTable(mvsrc, pivot)
+//        val f = new ColumnToTable(mvtrg, pivot)
+        val links = List(c1columns, c1key, c1idtable, a, b)
+
+        new RelationalModel(elements, links)
+    }
+
 
     def getClassModelDummy : ClassModel = {
         val family = new ClassClass("0","Family")
