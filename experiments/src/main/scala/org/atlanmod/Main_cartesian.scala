@@ -11,7 +11,7 @@ object Main_cartesian {
    : RDD[List[A]] = {
        arity match {
            case 0 => default
-           case n => values.cartesian(tuples_to_n(n-1, default, values)).map(x => x._1 :: x._2).union(default)
+           case n => default.union(values.cartesian(tuples_to_n(n-1, default, values)).map(x => x._1 :: x._2))
        }
    }
 
