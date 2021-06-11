@@ -42,6 +42,14 @@ object Main_cartesian {
         }
     }
 
+    def tuples_to_n_tail_parallel[A: ClassTag](arity: Int, current_arity: Int, current: RDD[List[A]], empty:RDD[List[A]], values: RDD[A])
+    : RDD[List[A]] = {
+        current_arity match {
+            case `arity` => current
+            case n => tuples_to_n_tail_parallel(arity, n+1, values.cartesian(current).map(x => x._1 :: x._2).union(empty), empty, values)
+        }
+    }
+
    def tuples_to_n[A: ClassTag](arity: Int, default: RDD[List[A]], values: RDD[A])
    : RDD[List[A]] = {
        arity match {
@@ -55,6 +63,7 @@ object Main_cartesian {
        val values_rdd: RDD[A] = sc.parallelize(values) // Values that are used, as an RDD for using `cartesian` function
        val default_rdd: RDD[List[A]] = sc.parallelize(List(List())) // Initial tuple: empty list
        tuples_to_n(arity, default_rdd, values_rdd) // List[RDD[List[A]]] -> RDD[List[A]]
+       // tuples_to_n_tail_parallel(arity, 0, default_rdd, default_rdd, values_rdd)
    }
 
     def main(args: Array[String]): Unit = {
