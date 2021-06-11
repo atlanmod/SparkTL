@@ -7,16 +7,18 @@ import org.atlanmod.util.R2CUtil
 
 object Main_Relational2Class {
     final val DEFAULT_NCORE: Int = 1
-    final val DEFAULT_NEXECUTOR: Int = 1
+    final val DEFAULT_NEXECUTOR: Int = 2
     final val DEFAULT_NPARTITION: Int = 4
     final val DEFAULT_SIZE: Int = 10
-    final val DEFAULT_MODE: String = "simple"
+    final val DEFAULT_MODE: String = "dumb"
+    final val DEFAULT_SLEEPING: Int = 0
 
     var ncore: Int = DEFAULT_NCORE
     var nexecutor: Int = DEFAULT_NEXECUTOR
     var model_size: Int = DEFAULT_SIZE
     var npartition: Int = DEFAULT_NPARTITION
     var execution_mode: String = DEFAULT_MODE
+    var sleeping: Int = DEFAULT_SLEEPING
 
     def parseArgs(args: List[String]): Unit = {
         args match {
@@ -26,6 +28,10 @@ object Main_Relational2Class {
             }
             case "-core" :: core :: args => {
                 ncore = core.toInt
+                parseArgs(args)
+            }
+            case "-sleep" :: sleep :: args => {
+                sleeping = sleep.toInt
                 parseArgs(args)
             }
             case "-executor" :: executor :: args =>{
@@ -46,13 +52,11 @@ object Main_Relational2Class {
         parseArgs(args.toList)
         npartition =  ncore * nexecutor * 4
         val conf = new SparkConf()
-        conf.setAppName("Test")
-        conf.setMaster("local[2]")
         val sc = new SparkContext(conf)
 
         var transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class_simple()
         if (execution_mode.equals("dumb"))
-            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_dumb()
+            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_dumb(sleeping)
 
         val input_model = R2CUtil.get_model_from_n_patterns(model_size)
         val input_metamodel = RelationalMetamodel.metamodel
@@ -62,6 +66,7 @@ object Main_Relational2Class {
 
         val a_line =
             List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition).mkString(",")
+        println("nb_element,nb_links,nb_core,nb_partition,total_time,time_step1,time_bcast,time_step2")
         println(a_line + "," + res._1 + "," + res._2.mkString(","))
     }
 
