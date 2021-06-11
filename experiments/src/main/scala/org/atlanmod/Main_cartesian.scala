@@ -2,10 +2,45 @@ package org.atlanmod
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
+import org.atlanmod.tl.util.TupleUtils
 
 import scala.reflect.ClassTag
 
 object Main_cartesian {
+    final val DEFAULT_NCORE: Int = 1
+    final val DEFAULT_NEXECUTOR: Int = 2
+    final val DEFAULT_NPARTITION: Int = 1
+    final val DEFAULT_SIZE: Int = 2000
+    final val DEFAULT_ARITY: Int = 2
+
+    var ncore: Int = DEFAULT_NCORE
+    var nexecutor: Int = DEFAULT_NEXECUTOR
+    var size: Int = DEFAULT_SIZE
+    var npartition: Int = DEFAULT_NPARTITION
+    var arity: Int = DEFAULT_ARITY
+
+    def parseArgs(args: List[String]): Unit = {
+        args match {
+            case "-size" :: s :: args => {
+                size = s.toInt
+                parseArgs(args)
+            }
+            case "-core" :: core :: args => {
+                ncore = core.toInt
+                parseArgs(args)
+            }
+            case "-executor" :: executor :: args =>{
+                nexecutor = executor.toInt
+                parseArgs(args)
+            }
+            case "-arity" :: a :: args =>{
+                arity = a.toInt
+                parseArgs(args)
+            }
+            case _ :: args => parseArgs(args)
+            case List() =>
+        }
+    }
 
    def tuples_to_n[A: ClassTag](arity: Int, default: RDD[List[A]], values: RDD[A])
    : RDD[List[A]] = {
@@ -24,11 +59,20 @@ object Main_cartesian {
 
     def main(args: Array[String]): Unit = {
         val conf: SparkConf = new SparkConf()
-        conf.setAppName("Test allTuples")
-        conf.setMaster("local[2]")
         val sc: SparkContext = new SparkContext(conf)
-        val values: List[Int] = List(1,2)
-        val result: RDD[List[Int]] = allTuple(3, values, sc) // List[Int] is representing a generated tuple
-        println(result.collect().mkString(",")) // collect is used to get a sequential type
+
+        parseArgs(args.toList)
+
+        val values: List[Int] = (1 to size).toList
+        val t1 = System.currentTimeMillis()
+        TupleUtils.tuples_up_to_n_parallel(values, arity, npartition, sc)
+        val t2 = System.currentTimeMillis()
+
+        val t3 = System.currentTimeMillis()
+        allTuple(arity, values, sc).collect()
+        val t4 = System.currentTimeMillis()
+
+        val a_line = List(ncore, nexecutor, size, arity, t2 - t1, t4 - t3).mkString(",")
+        println(a_line)
     }
 }
