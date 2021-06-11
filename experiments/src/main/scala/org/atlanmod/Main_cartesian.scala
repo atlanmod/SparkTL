@@ -8,7 +8,7 @@ import scala.reflect.ClassTag
 object Main_cartesian {
 
    def tuples_to_n[A: ClassTag](arity: Int, default: RDD[List[A]], values: RDD[A])
-   : (RDD[List[A]]) = {
+   : RDD[List[A]] = {
        arity match {
            case 0 => default
            case n => {
@@ -24,28 +24,8 @@ object Main_cartesian {
    : RDD[List[A]] = {
        val values_rdd: RDD[A] = sc.parallelize(values) // Values that are used, as an RDD for using `cartesian` function
        val current_rdd: RDD[List[A]] = sc.parallelize(List()) // Initial tuple: empty list
-       tuples_to_n(arity, current_rdd, values_rdd) // List[RDD[List[A]]] -> RDD[List[A]]
+       tuples_to_n(arity, current_rdd, values_rdd).union(sc.parallelize(List(List()))) // List[RDD[List[A]]] -> RDD[List[A]]
    }
-
-
-   /* def tuples_to_n[A: ClassTag](arity: Int, rdd: RDD[List[A]], values: RDD[A])
-    : (RDD[List[A]], List[RDD[List[A]]]) = {
-        arity match {
-            case 0 => (rdd, List(rdd))
-            case n => {
-                val n_1: (RDD[List[A]], List[RDD[List[A]]]) = tuples_to_n(n-1, rdd, values) // tuples of size n-1
-                val current = values.cartesian(n_1._1).map(x => x._1 :: x._2)
-                (current, current :: n_1._2)
-            }
-        }
-    }
-
-    def allTuple[A: ClassTag] (arity: Int, values: List[A], sc: SparkContext)
-    : RDD[List[A]] = {
-        val values_rdd: RDD[A] = sc.parallelize(values) // Values that are used, as an RDD for using `cartesian` function
-        val current_rdd: RDD[List[A]] = sc.parallelize(List(List())) // Initial tuple: empty list
-        tuples_to_n(arity, current_rdd, values_rdd)._2.reduce(_ union _) // List[RDD[List[A]]] -> RDD[List[A]]
-    }*/
 
     def main(args: Array[String]): Unit = {
         val conf: SparkConf = new SparkConf()
