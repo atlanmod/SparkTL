@@ -2,10 +2,10 @@ package org.atlanmod
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.atlanmod.model.relationalmodel.RelationalMetamodel
-import org.atlanmod.transformation.parallel.TransformationEngineTwoPhase
+import org.atlanmod.transformation.parallel.TransformationEngineOnePhase
 import org.atlanmod.util.R2CUtil
 
-object Main_Relational2Class {
+object Main_Relational2Class_Step1_local {
     final val DEFAULT_NCORE: Int = 1
     final val DEFAULT_NEXECUTOR: Int = 2
     final val DEFAULT_NPARTITION: Int = 4
@@ -52,6 +52,8 @@ object Main_Relational2Class {
         parseArgs(args.toList)
         npartition =  ncore * nexecutor * 4
         val conf = new SparkConf()
+        conf.setMaster("local[1]")
+        conf.setAppName("test")
         val sc = new SparkContext(conf)
 
         var transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class_simple()
@@ -62,7 +64,7 @@ object Main_Relational2Class {
         val input_metamodel = RelationalMetamodel.metamodel
 
         val res: (Double, List[Double]) =
-            TransformationEngineTwoPhase.execute(transformation, input_model, input_metamodel, npartition, sc)
+            TransformationEngineOnePhase.execute(transformation, input_model, input_metamodel, npartition, sc)
 
         val a_line =
             List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition).mkString(",")
