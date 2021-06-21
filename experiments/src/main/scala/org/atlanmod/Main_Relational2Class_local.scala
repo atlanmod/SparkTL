@@ -8,7 +8,7 @@ import org.atlanmod.util.R2CUtil
 object Main_Relational2Class_local {
     final val DEFAULT_NCORE: Int = 1
     final val DEFAULT_NPARTITION: Int = 4
-    final val DEFAULT_PATTERN: Int = 5
+    final val DEFAULT_PATTERN: Int = 1
     final val DEFAULT_MODE: String = "dumb"
     final val DEFAULT_SLEEPING: Int = 1
 
