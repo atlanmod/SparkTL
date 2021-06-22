@@ -56,9 +56,9 @@ object Main_Relational2Class_Step1_tuples_excluded {
 
         var transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class_simple()
         if (execution_mode.equals("dumb"))
-            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_dumb(sleeping)
+            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_instanciate_and_apply(sleeping)
         if (execution_mode.equals("super_dumb"))
-            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_super_dumb(sleeping)
+            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_from_instanciate_apply(sleeping)
 
         val input_model = R2CUtil.get_model_from_n_patterns(model_size)
         val input_metamodel = RelationalMetamodel.metamodel

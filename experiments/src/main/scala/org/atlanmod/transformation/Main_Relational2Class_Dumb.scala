@@ -87,7 +87,7 @@ object Main_Relational2Class_Dumb {
  
     def run_experiment_sizes_csv_files(sizes: List[Int], times: Int, ncore: Int): List[String] = {
         val methods = TransformationUtil.get_methods(method)
-        val transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class_dumb()
+        val transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_instanciate_and_apply()
         val metamodel = ClassMetamodel.metamodel
         var filenames : List[String] = List()
         try {

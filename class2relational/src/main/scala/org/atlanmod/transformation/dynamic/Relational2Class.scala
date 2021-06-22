@@ -169,7 +169,7 @@ object Relational2Class {
         d.toInt
     }
 
-    def relational2class_dumb(sleeping: Int = 0): Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
+    def relational2class_sleeping_instanciate_and_apply(sleeping: Int = 0): Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
             List(
                 new RuleImpl(
@@ -286,7 +286,7 @@ object Relational2Class {
             ))
     }
 
-    def relational2class_super_dumb(sleeping: Int = 0): Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
+    def relational2class_sleeping_from_instanciate_apply(sleeping: Int = 0): Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
             List(
                 new RuleImpl(
