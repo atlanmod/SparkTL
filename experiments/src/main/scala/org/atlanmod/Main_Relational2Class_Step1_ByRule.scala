@@ -52,6 +52,8 @@ object Main_Relational2Class_Step1_ByRule {
         parseArgs(args.toList)
         npartition =  ncore * nexecutor * 4
         val conf = new SparkConf()
+        // conf.setAppName("name")
+        // conf.setMaster("local")
         val sc = new SparkContext(conf)
 
         var transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class_simple()
