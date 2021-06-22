@@ -7,12 +7,12 @@ import org.atlanmod.tl.engine.Utils.allTuplesByRule
 import org.atlanmod.tl.model.impl.TraceLinksList
 import org.atlanmod.util.R2CUtil
 
-object Main_Relational2Class_Instanciate_ByRule {
+object Main_Relational2Class_Instantiate_ByRule {
     final val DEFAULT_NCORE: Int = 1
     final val DEFAULT_NEXECUTOR: Int = 2
     final val DEFAULT_NPARTITION: Int = 4
     final val DEFAULT_SIZE: Int = 10
-    final val DEFAULT_MODE: String = "dumb"
+    final val DEFAULT_MODE: String = "normal"
     final val DEFAULT_SLEEPING: Int = 1
 
     var ncore: Int = DEFAULT_NCORE
@@ -41,7 +41,7 @@ object Main_Relational2Class_Instanciate_ByRule {
                 parseArgs(args)
             }
             case "-mode" :: mode :: args => {
-                assert(mode.equals("sleeping_instantiate") || mode.equals("sleeping_guard_instantiate") || mode.equals("sleeping_guard"))
+                assert(mode.equals(DEFAULT_MODE) || mode.equals("sleeping_instantiate") || mode.equals("sleeping_guard_instantiate") || mode.equals("sleeping_guard"))
                 execution_mode = mode
                 parseArgs(args)
             }
@@ -54,8 +54,8 @@ object Main_Relational2Class_Instanciate_ByRule {
         parseArgs(args.toList)
         npartition =  ncore * nexecutor * 4
         val conf = new SparkConf()
-        // conf.setAppName("name")
-        // conf.setMaster("local")
+         conf.setAppName("name")
+         conf.setMaster("local")
         val sc = new SparkContext(conf)
 
         var transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class_simple()
@@ -77,7 +77,7 @@ object Main_Relational2Class_Instanciate_ByRule {
         val t1 = System.nanoTime()
         val res = new TraceLinksList(tuples_rdd.flatMap(tuple => tracePattern(transformation, input_model, input_metamodel, tuple)).collect)
         val t2 = System.nanoTime()
-        val time = (t1 - t2) * 1000 / 1e9d
+        val time = (t2 - t1) * 1000 / 1e9d
 
         //        println("It took " + time + "ms to do the instantiate part")
 
