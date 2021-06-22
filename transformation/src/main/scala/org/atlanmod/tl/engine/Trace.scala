@@ -88,13 +88,29 @@ object Trace {
         new TraceLinksList(tuples.flatMap(tuple => tracePattern(tr, sm, mm, tuple)).collect)
     }
 
-
     def seq_trace_par_apply_ByRule[SME: ClassTag, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
-                                                                    sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-                                                                    npartition: Int, sc: SparkContext)
+                                                                           sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
+                                                                           npartition: Int, sc: SparkContext)
     : TraceLinks[SME, TME] = {
         val tuples = sc.parallelize(allTuplesByRule(tr, sm, mm), npartition)
         new TraceLinksList(tuples.flatMap(tuple => tracePattern(tr, sm, mm, tuple)).collect)
+    }
+
+
+    def seq_trace_par_apply_ByRule_experiment[SME: ClassTag, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
+                                                                    sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
+                                                                    npartition: Int, sc: SparkContext)
+    : TraceLinks[SME, TME] = {
+        val tuples = allTuplesByRule(tr, sm, mm)
+        val tuples_rdd = sc.parallelize(tuples, npartition)
+
+        val t1 = System.nanoTime()
+        val res = new TraceLinksList(tuples_rdd.flatMap(tuple => tracePattern(tr, sm, mm, tuple)).collect)
+        val t2 = System.nanoTime()
+        val time = (t1 - t2) * 1000 / 1e9d
+
+        println("It took " + time + "ms to do the instantiate part")
+        res
     }
 
 }

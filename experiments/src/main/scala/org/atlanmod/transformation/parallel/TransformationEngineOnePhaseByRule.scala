@@ -15,7 +15,7 @@ object TransformationEngineOnePhaseByRule extends ExperimentalTransformationEngi
     (tr: Transformation[SME, SML, SMC, TME, TML],  sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR], npartition: Int,
      sc: SparkContext)
     : (List[TME], TraceLinks[SME, TME]) = {
-        val tls : TraceLinks[SME, TME] = Trace.seq_trace_par_apply_ByRule(tr, sm, mm, npartition, sc)
+        val tls : TraceLinks[SME, TME] = Trace.seq_trace_par_apply_ByRule_experiment(tr, sm, mm, npartition, sc)
         (tls.getTargetElements , tls)
     }
 

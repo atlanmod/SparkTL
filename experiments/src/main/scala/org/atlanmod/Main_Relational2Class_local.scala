@@ -27,7 +27,7 @@ object Main_Relational2Class_local {
 
         var transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class_simple()
         if (execution_mode.equals("dumb"))
-            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_instanciate_and_apply(sleeping)
+            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_instantiate_and_apply(sleeping)
 
         val input_model = R2CUtil.get_model_from_n_patterns(model_times_pattern)
         val input_metamodel = RelationalMetamodel.metamodel

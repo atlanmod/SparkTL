@@ -39,7 +39,7 @@ object Main_Relational2Class_Step1_ByRule {
                 parseArgs(args)
             }
             case "-mode" :: mode :: args => {
-                assert(mode.equals("dumb") || mode.equals("simple") || mode.equals("super_dumb"))
+                assert(mode.equals("sleeping_instantiate") || mode.equals("sleeping_guard_instantiate") || mode.equals("sleeping_guard"))
                 execution_mode = mode
                 parseArgs(args)
             }
@@ -57,10 +57,14 @@ object Main_Relational2Class_Step1_ByRule {
         val sc = new SparkContext(conf)
 
         var transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class_simple()
-        if (execution_mode.equals("dumb"))
-            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_instanciate_and_apply(sleeping)
-        if (execution_mode.equals("super_dumb"))
-            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_from_instanciate_apply(sleeping)
+
+        println(execution_mode)
+        if (execution_mode.equals("sleeping_instantiate"))
+            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_instantiate_and_apply(sleeping)
+        if (execution_mode.equals("sleeping_guard_instantiate"))
+            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_guard_instantiate_apply(sleeping)
+        if (execution_mode.equals("sleeping_guard"))
+            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_guard_apply(sleeping)
 
         val input_model = R2CUtil.get_model_from_n_patterns(model_size)
         val input_metamodel = RelationalMetamodel.metamodel
