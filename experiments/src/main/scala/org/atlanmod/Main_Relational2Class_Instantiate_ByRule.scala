@@ -13,7 +13,7 @@ object Main_Relational2Class_Instantiate_ByRule {
     final val DEFAULT_NPARTITION: Int = 4
     final val DEFAULT_SIZE: Int = 10
     final val DEFAULT_MODE: String = "normal"
-    final val DEFAULT_SLEEPING: Int = 1
+    final val DEFAULT_SLEEPING: Int = 500
 
     var ncore: Int = DEFAULT_NCORE
     var nexecutor: Int = DEFAULT_NEXECUTOR
@@ -54,8 +54,8 @@ object Main_Relational2Class_Instantiate_ByRule {
         parseArgs(args.toList)
         npartition =  ncore * nexecutor * 4
         val conf = new SparkConf()
-         conf.setAppName("name")
-         conf.setMaster("local")
+//         conf.setAppName("name")
+//         conf.setMaster("local")
         val sc = new SparkContext(conf)
 
         var transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class_simple()
