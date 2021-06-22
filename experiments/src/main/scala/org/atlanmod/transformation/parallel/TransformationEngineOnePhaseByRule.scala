@@ -11,11 +11,11 @@ import scala.reflect.ClassTag
 object TransformationEngineOnePhaseByRule extends ExperimentalTransformationEngine{
 
 
-    private def instantiateTracesByRule_experiment[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
+    private def instantiateTracesByRule[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
     (tr: Transformation[SME, SML, SMC, TME, TML],  sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR], npartition: Int,
      sc: SparkContext)
     : (List[TME], TraceLinks[SME, TME]) = {
-        val tls : TraceLinks[SME, TME] = Trace.seq_trace_par_apply_ByRule_experiment(tr, sm, mm, npartition, sc)
+        val tls : TraceLinks[SME, TME] = Trace.seq_trace_par_apply_ByRule(tr, sm, mm, npartition, sc)
         (tls.getTargetElements , tls)
     }
 
@@ -37,7 +37,7 @@ object TransformationEngineOnePhaseByRule extends ExperimentalTransformationEngi
         // 1.Instantiate the trace + output element
 
         val t1 = System.nanoTime
-        val elements_and_tls =  instantiateTracesByRule_experiment(tr, sm, mm, npartition, sc)
+        val elements_and_tls =  instantiateTracesByRule(tr, sm, mm, npartition, sc)
         val elements: List[TME] = elements_and_tls._1
         val tls: TraceLinks[SME, TME] = elements_and_tls._2
 
