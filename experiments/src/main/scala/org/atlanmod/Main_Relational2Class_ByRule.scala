@@ -2,18 +2,16 @@ package org.atlanmod
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.atlanmod.model.relationalmodel.RelationalMetamodel
-import org.atlanmod.tl.engine.Trace.tracePattern
-import org.atlanmod.tl.engine.Utils.allTuplesByRule
-import org.atlanmod.tl.model.impl.TraceLinksList
+import org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseByRule
 import org.atlanmod.util.R2CUtil
 
-object Main_Relational2Class_Instantiate_ByRule {
+object Main_Relational2Class_ByRule {
     final val DEFAULT_NCORE: Int = 1
     final val DEFAULT_NEXECUTOR: Int = 2
     final val DEFAULT_NPARTITION: Int = 4
     final val DEFAULT_SIZE: Int = 10
-    final val DEFAULT_MODE: String = "normal"
-    final val DEFAULT_SLEEPING: Int = 500
+    final val DEFAULT_MODE: String = "dumb"
+    final val DEFAULT_SLEEPING: Int = 1
 
     var ncore: Int = DEFAULT_NCORE
     var nexecutor: Int = DEFAULT_NEXECUTOR
@@ -41,7 +39,7 @@ object Main_Relational2Class_Instantiate_ByRule {
                 parseArgs(args)
             }
             case "-mode" :: mode :: args => {
-                assert(mode.equals(DEFAULT_MODE) || mode.equals("sleeping_instantiate") || mode.equals("sleeping_guard_instantiate") || mode.equals("sleeping_guard"))
+                assert(mode.equals("sleeping") || mode.equals("normal"))
                 execution_mode = mode
                 parseArgs(args)
             }
@@ -60,32 +58,19 @@ object Main_Relational2Class_Instantiate_ByRule {
 
         var transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class_simple()
 
-        println(execution_mode)
-        if (execution_mode.equals("sleeping_instantiate"))
-            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_instantiate_and_apply(sleeping)
-        if (execution_mode.equals("sleeping_guard_instantiate"))
+
+        if (execution_mode.equals("sleeping"))
             transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_guard_instantiate_apply(sleeping)
-        if (execution_mode.equals("sleeping_guard"))
-            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_guard_apply(sleeping)
 
         val input_model = R2CUtil.get_model_from_n_patterns(model_size)
         val input_metamodel = RelationalMetamodel.metamodel
 
-        val t1 = System.nanoTime()
-        val tuples = allTuplesByRule(transformation, input_model, input_metamodel).distinct
-        val tuples_rdd = sc.parallelize(tuples, npartition)
-
-        val res = new TraceLinksList(tuples_rdd.flatMap(tuple => tracePattern(transformation, input_model, input_metamodel, tuple)).collect)
-        val t2 = System.nanoTime()
-        val time = (t2 - t1) * 1000 / 1e9d
-
-        //        println("It took " + time + "ms to do the instantiate part")
-
+        val res: (Double, List[Double]) =
+            TransformationEngineTwoPhaseByRule.execute(transformation, input_model, input_metamodel, npartition, sc)
 
         val a_line =
-            List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition, time).mkString(",")
-        //        println(a_line + "," + res._1 + "," + res._2.mkString(","))
-        println(a_line)
+            List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition).mkString(",")
+        println(a_line + "," + res._1 + "," + res._2.mkString(","))
     }
 
 }
