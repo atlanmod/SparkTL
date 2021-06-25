@@ -1,6 +1,6 @@
 package org.atlanmod.class2relational.model.classmodel
 
-import org.atlanmod.class2relational.model.{DynamicElement, DynamicLink, DynamicMetamodel}
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 
 import scala.annotation.tailrec
 

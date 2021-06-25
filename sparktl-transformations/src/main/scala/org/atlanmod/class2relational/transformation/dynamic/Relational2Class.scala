@@ -2,8 +2,8 @@ package org.atlanmod.class2relational.transformation.dynamic
 
 import org.atlanmod.class2relational.model.classmodel._
 import org.atlanmod.class2relational.model.relationalmodel._
-import org.atlanmod.class2relational.model.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.engine.Resolve
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.atlanmod.tl.model.{TraceLinks, Transformation}
 import org.atlanmod.tl.util.ListUtils

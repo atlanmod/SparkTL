@@ -2,7 +2,7 @@ package org.atlanmod.class2relational.model.transformation.dynamic
 
 import org.atlanmod.class2relational.model.classmodel.{ClassElement, ClassLink, ClassModel}
 import org.atlanmod.class2relational.model.relationalmodel.{RelationalElement, RelationalLink, RelationalModel}
-import org.atlanmod.class2relational.model.{DynamicElement, DynamicLink}
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestRelational2ClassPar extends AnyFunSuite {

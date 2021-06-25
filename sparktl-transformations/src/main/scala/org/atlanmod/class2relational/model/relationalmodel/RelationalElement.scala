@@ -1,6 +1,7 @@
 package org.atlanmod.class2relational.model.relationalmodel
 
-import org.atlanmod.class2relational.model.DynamicElement
+import org.atlanmod.tl.model.impl.dynamic.DynamicElement
+
 import scala.collection.mutable
 
 abstract class RelationalElement (classname: String) extends DynamicElement(classname, mutable.HashMap()) {

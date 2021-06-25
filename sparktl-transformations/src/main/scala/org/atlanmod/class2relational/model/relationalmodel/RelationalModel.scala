@@ -1,6 +1,6 @@
 package org.atlanmod.class2relational.model.relationalmodel
 
-import org.atlanmod.class2relational.model.DynamicModel
+import org.atlanmod.tl.model.impl.dynamic.DynamicModel
 import org.atlanmod.tl.util.ListUtils
 
 class RelationalModel(elements: List[RelationalElement] = List(), links: List[RelationalLink] = List())

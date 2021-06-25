@@ -1,6 +1,6 @@
 package org.atlanmod.class2relational.model.relationalmodel
 
-import org.atlanmod.class2relational.model.DynamicLink
+import org.atlanmod.tl.model.impl.dynamic.DynamicLink
 import org.atlanmod.tl.util.ListUtils
 
 abstract class RelationalLink (type_ : String, source: RelationalElement, target: List[RelationalElement])

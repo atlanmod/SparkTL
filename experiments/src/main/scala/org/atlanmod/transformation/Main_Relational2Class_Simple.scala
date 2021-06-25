@@ -1,8 +1,8 @@
 package org.atlanmod.transformation
 
 import org.atlanmod.class2relational.model.classmodel.ClassMetamodel
-import org.atlanmod.class2relational.model.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.model.Transformation
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.util._
 
 import scala.annotation.tailrec

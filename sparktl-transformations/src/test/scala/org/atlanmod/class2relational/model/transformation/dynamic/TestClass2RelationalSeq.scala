@@ -3,8 +3,8 @@ package org.atlanmod.class2relational.model.transformation.dynamic
 import org.atlanmod.class2relational.model.ModelSamples.{getClassModelSample, getRelationalModelSample}
 import org.atlanmod.class2relational.model.classmodel.ClassMetamodel
 import org.atlanmod.class2relational.model.relationalmodel.{RelationalElement, RelationalLink, RelationalModel}
-import org.atlanmod.class2relational.model.{DynamicElement, DynamicLink}
 import org.atlanmod.class2relational.transformation.dynamic.Class2Relational
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestClass2RelationalSeq extends AnyFunSuite {

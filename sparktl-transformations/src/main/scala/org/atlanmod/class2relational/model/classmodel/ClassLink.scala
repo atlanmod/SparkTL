@@ -1,6 +1,6 @@
 package org.atlanmod.class2relational.model.classmodel
 
-import org.atlanmod.class2relational.model.DynamicLink
+import org.atlanmod.tl.model.impl.dynamic.DynamicLink
 import org.atlanmod.tl.util.ListUtils
 
 abstract class ClassLink(type_ : String, source: ClassElement, target: List[ClassElement])

@@ -1,4 +1,4 @@
-package org.atlanmod.class2relational.model
+package org.atlanmod.tl.model.impl.dynamic
 
 import org.atlanmod.tl.model.Metamodel
 

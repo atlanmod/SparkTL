@@ -1,7 +1,0 @@
-group 'atlanmod'
-version '1.0-SNAPSHOT'
-
-dependencies {
-//    implementation project(":EMFmodeling")
-    implementation project(":sparktl-core")
-}
