@@ -1,0 +1,58 @@
+-- @atlcompiler atl2006
+  -- @path ClassDiagram=/ClassDiagram2Relational/ClassDiagram.ecore
+  -- @path Relational=/ClassDiagram2Relational/Relational.ecore
+  module ClassDiagram2Relational;
+  create OUT : Relational from IN : ClassDiagram;
+
+  rule Class2Table {
+  	from
+  		s : ClassDiagram!Class
+  	to
+  		t : Relational!Table (
+  			name <- s.name,
+  			col <- s.attr
+  					->select(i | not i.multiValued)
+  					->append(k),
+  			key <- k
+  		),
+  		k : Relational!Column (
+  			name <- 'Id'
+  		)
+  }
+
+  rule SVAttribute2Column {
+  	from
+  		s : ClassDiagram!Attribute
+  			(not s.multiValued)
+  	to
+  		t : Relational!Column (
+  	   		name <- s.name
+  		)
+  }
+
+  rule MVAttribute2Column {
+  	from
+  		s : ClassDiagram!Attribute
+  			(s.multiValued)
+  	to
+  		t : Relational!Table (
+  			name <- s.owner.name + '_' + s.name,
+  			col <- OrderedSet {c1, c2},
+  			key <- OrderedSet {c1, c2}
+  		),
+  		c1 : Relational!Column (
+  			name <- 'Id'
+  		),
+  		c2 : Relational!Column (
+  			name <- s.type.name
+  		)
+  }
+
+  rule DataType2Type {
+  	from
+  	   s : ClassDiagram!DataType
+  	to
+  	   t : Relational!Type (
+  	  		name <- s.name
+  	   )
+  }

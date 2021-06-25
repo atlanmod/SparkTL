@@ -1,6 +1,6 @@
 package org.atlanmod.util
 
-import org.atlanmod.model.classmodel.{ClassElement, ClassLink, ClassModel}
+import org.atlanmod.class2relational.model.classmodel.{ClassElement, ClassLink, ClassModel}
 
 object C2RUtil {
 
@@ -8,7 +8,7 @@ object C2RUtil {
         var elements : List[ClassElement] = List()
         var links  : List[ClassLink] = List()
         for (_ <- 0 to n) {
-            val tmp_model = org.atlanmod.model.ModelSamples.getClassModelSample
+            val tmp_model = org.atlanmod.class2relational.model.ModelSamples.getClassModelSample
             elements = elements ++ tmp_model.allModelElements
             links = links ++ tmp_model.allModelLinks
         }

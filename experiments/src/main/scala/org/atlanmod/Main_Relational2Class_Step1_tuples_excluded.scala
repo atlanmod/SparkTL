@@ -1,7 +1,7 @@
 package org.atlanmod
 
 import org.apache.spark.{SparkConf, SparkContext}
-import org.atlanmod.model.relationalmodel.RelationalMetamodel
+import org.atlanmod.class2relational.model.relationalmodel.RelationalMetamodel
 import org.atlanmod.transformation.parallel.TransformationEngineOnePhase
 import org.atlanmod.util.R2CUtil
 
@@ -54,11 +54,11 @@ object Main_Relational2Class_Step1_tuples_excluded {
         val conf = new SparkConf()
         val sc = new SparkContext(conf)
 
-        var transformation = org.atlanmod.transformation.dynamic.Relational2Class.relational2class_simple()
+        var transformation = org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class_simple()
         if (execution_mode.equals("dumb"))
-            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_instantiate_and_apply(sleeping)
+            transformation =  org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class_sleeping_instantiate_and_apply(sleeping)
         if (execution_mode.equals("super_dumb"))
-            transformation =  org.atlanmod.transformation.dynamic.Relational2Class.relational2class_sleeping_guard_instantiate_apply(sleeping)
+            transformation =  org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class_sleeping_guard_instantiate_apply(sleeping)
 
         val input_model = R2CUtil.get_model_from_n_patterns(model_size)
         val input_metamodel = RelationalMetamodel.metamodel

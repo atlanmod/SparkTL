@@ -2,12 +2,12 @@ rootProject.name = 'SparkTL'
 
 include ':sparktl-core'
 include ':dynamicmodeling'
-include ':class2relational'
+include ':sparktl-transformations'
 include ':experiments'
 
 project(':sparktl-core').projectDir = file('./sparktl-core')
 project(':dynamicmodeling').projectDir = file('./dynamicmodeling')
-project(':class2relational').projectDir = file('./class2relational')
+project(':sparktl-transformations').projectDir = file('./sparktl-transformations')
 project(':experiments').projectDir = file('./experiments')
-
+include 'sparktl-transformations'
 

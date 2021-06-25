@@ -1,7 +1,7 @@
 package org.atlanmod.util
 
 import org.apache.spark.SparkContext
-import org.atlanmod.model.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
+import org.atlanmod.class2relational.model.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
 import org.atlanmod.tl.model.{Model, Transformation}
 import org.atlanmod.tl.util.SparkUtils
 

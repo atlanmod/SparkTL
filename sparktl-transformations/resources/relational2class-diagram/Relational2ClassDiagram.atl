@@ -1,0 +1,144 @@
+-- @atlcompiler atl2006
+-- @path Relational=/ClassDiagram2Relational/Relational.ecore
+-- @path ClassDiagram=/ClassDiagram2Relational/ClassDiagram.ecore
+
+module Relational2ClassDiagram;
+create OUT : ClassDiagram from IN : Relational;
+
+rule Type2DataType {
+	from
+		s: Relational!Type
+	to
+		t: ClassDiagram!DataType (
+			name <- s.name
+		)
+}
+
+-- exo1
+-- rule Table2Class {
+--	from
+--		s: Relational!Table
+--	to
+--		t: ClassDiagram!Class (
+--			name <- s.name,
+--			isAbstract <- false,
+--			attr <- s.col
+--		)
+--}
+
+rule Table2Class {
+	from
+		s: Relational!Table (s.name.indexOf('_')=-1)
+	to
+		t: ClassDiagram!Class (
+			name <- s.name,
+			isAbstract <- false,
+			attr <- s.col
+		)
+}
+
+rule Column2Attribute {
+	from
+		s: Relational!Column (s.keyOf.oclIsUndefined())
+	to
+		t: ClassDiagram!Attribute (
+			name <- s.name,
+			multiValued <- false,
+			type <- s.type
+		)
+}
+
+rule MultivaluedType {
+	from
+		tattr: Relational!Table,
+		ttype: Relational!Type,
+		town:  Relational!Table,
+		cid: Relational!Column,
+		cref: Relational!Column
+			((tattr.name.indexOf('_')<>-1 and town <> tattr and tattr.name.startsWith(town.name))
+				and
+			(tattr = cref.owner and cref.keyOf = tattr and cref.name.equals(ttype.name))
+			    and
+		    (tattr = cid.owner and cid.keyOf = tattr and cid.name.equals('Id')))
+	to
+		t: ClassDiagram!Attribute (
+			name <- tattr.name.substring(tattr.name.indexOf('_')+2, tattr.name.size()),
+			owner <- town,
+			multiValued <- true,
+			type <- ttype
+		)
+}
+
+rule MultivaluedTable {
+	from
+		tattr: Relational!Table,
+		ttype: Relational!Table,
+		town:  Relational!Table,
+		cid: Relational!Column,
+		cref: Relational!Column
+			((tattr.name.indexOf('_')<>-1 and town <> tattr and tattr.name.startsWith(town.name))
+				and
+			(tattr = cref.owner and cref.keyOf = tattr and cref.name.equals(ttype.name))
+			    and
+		    (tattr = cid.owner and cid.keyOf = tattr and cid.name.equals('Id')))
+	to
+		t: ClassDiagram!Attribute (
+			name <- tattr.name.substring(tattr.name.indexOf('_')+2, tattr.name.size()),
+			owner <- town,
+			multiValued <- true,
+			type <- ttype
+		)
+}
+
+rule PivotTable {
+	from
+		tattr: Relational!Table,
+		t1: Relational!Table,
+		t2: Relational!Table,
+		c1: Relational!Column,
+		c2: Relational!Column,
+		k1: Relational!Column,
+		k2: Relational!Column
+			(
+				(tattr.name.indexOf('_')<>-1 and t1 <> tattr and t2 <> tattr and tattr.name.startsWith(t1.name)
+					and tattr.name.endsWith(t2.name))
+					and
+				(tattr = c1.owner and c1.keyOf = tattr and c1.name.equals(k1.name))
+				    and
+			    (tattr = c2.owner and c2.keyOf = tattr and c2.name.equals(k2.name))
+					and
+				(t1 = k1.owner and k1.keyOf = t1)
+				    and
+			    (t2 = k2.owner and k2.keyOf = t2)
+			)
+	to
+		a1: ClassDiagram!Attribute (
+			name <- tattr.name.substring(1, tattr.name.indexOf('_')),
+			owner <- t1,
+			multiValued <- true,
+			type <- t2
+		),
+		a2: ClassDiagram!Attribute (
+			name <- tattr.name.substring(tattr.name.indexOf('_')+2, tattr.name.size()),
+			owner <- t2,
+			multiValued <- true,
+			type <- t1
+		)
+}
+
+--rule Multivalued {
+--	from
+--		s1: Relational!Table,
+--		s2: Relational!Table
+--			(s2.name.indexOf('_')<>-1
+--				and s2.name.startsWith(s1.name)
+--				and s1<>s2)
+--	to
+--		t: ClassDiagram!Attribute (
+--			name <- s2.name.substring(s2.name.indexOf('_')+2, s2.name.size()),
+--			owner <- s1,
+--			multiValued <- true
+--		)
+--}
+
+
