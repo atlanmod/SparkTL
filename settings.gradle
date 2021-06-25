@@ -3,15 +3,11 @@ rootProject.name = 'SparkTL'
 include ':transformation'
 include ':dynamicmodeling'
 include ':class2relational'
-include ':html2xml'
 include ':experiments'
-include ':profiling'
 
 project(':transformation').projectDir = file('./transformation')
 project(':dynamicmodeling').projectDir = file('./dynamicmodeling')
 project(':class2relational').projectDir = file('./class2relational')
-project(':html2xml').projectDir = file('./html2xml')
 project(':experiments').projectDir = file('./experiments')
-project(':profiling').projectDir = file('./profiling')
 
 
