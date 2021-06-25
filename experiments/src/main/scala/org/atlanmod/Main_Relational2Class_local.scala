@@ -8,15 +8,17 @@ import org.atlanmod.util.R2CUtil
 object Main_Relational2Class_local {
     final val DEFAULT_NCORE: Int = 1
     final val DEFAULT_NPARTITION: Int = 4
-    final val DEFAULT_PATTERN: Int = 1
-    final val DEFAULT_MODE: String = "dumb"
-    final val DEFAULT_SLEEPING: Int = 1
+    final val DEFAULT_SIZE: Int = 1
+    final val DEFAULT_SLEEPING_GUARD: Int = 0
+    final val DEFAULT_SLEEPING_INSTANTIATE: Int = 0
+    final val DEFAULT_SLEEPING_APPLY: Int = 0
 
     var ncore: Int = DEFAULT_NCORE
-    var model_times_pattern: Int = DEFAULT_PATTERN
+    var model_size: Int = DEFAULT_SIZE
     var npartition: Int = DEFAULT_NPARTITION
-    var execution_mode: String = DEFAULT_MODE
-    var sleeping: Int = DEFAULT_SLEEPING
+    var sleeping_guard: Int = DEFAULT_SLEEPING_GUARD
+    var sleeping_instantiate: Int = DEFAULT_SLEEPING_INSTANTIATE
+    var sleeping_apply: Int = DEFAULT_SLEEPING_APPLY
 
     def main(args: Array[String]): Unit = {
         npartition =  ncore * 4
@@ -25,11 +27,9 @@ object Main_Relational2Class_local {
         conf.setAppName("test")
         val sc = new SparkContext(conf)
 
-        var transformation = org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class_simple()
-        if (execution_mode.equals("dumb"))
-            transformation =  org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class_sleeping_instantiate_and_apply(sleeping)
+        val transformation = org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class(sleeping_guard, sleeping_instantiate, sleeping_apply)
 
-        val input_model = R2CUtil.get_model_from_n_patterns(model_times_pattern)
+        val input_model = R2CUtil.get_model_from_n_patterns(model_size)
         val input_metamodel = RelationalMetamodel.metamodel
 
         val res: (Double, List[Double]) =

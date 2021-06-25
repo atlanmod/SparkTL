@@ -10,15 +10,17 @@ object Main_Relational2Class {
     final val DEFAULT_NEXECUTOR: Int = 2
     final val DEFAULT_NPARTITION: Int = 4
     final val DEFAULT_SIZE: Int = 10
-    final val DEFAULT_MODE: String = "dumb"
-    final val DEFAULT_SLEEPING: Int = 0
+    final val DEFAULT_SLEEPING_GUARD: Int = 0
+    final val DEFAULT_SLEEPING_INSTANTIATE: Int = 0
+    final val DEFAULT_SLEEPING_APPLY: Int = 0
 
     var ncore: Int = DEFAULT_NCORE
     var nexecutor: Int = DEFAULT_NEXECUTOR
     var model_size: Int = DEFAULT_SIZE
     var npartition: Int = DEFAULT_NPARTITION
-    var execution_mode: String = DEFAULT_MODE
-    var sleeping: Int = DEFAULT_SLEEPING
+    var sleeping_guard: Int = DEFAULT_SLEEPING_GUARD
+    var sleeping_instantiate: Int = DEFAULT_SLEEPING_INSTANTIATE
+    var sleeping_apply: Int = DEFAULT_SLEEPING_APPLY
 
     def parseArgs(args: List[String]): Unit = {
         args match {
@@ -30,17 +32,20 @@ object Main_Relational2Class {
                 ncore = core.toInt
                 parseArgs(args)
             }
-            case "-sleep" :: sleep :: args => {
-                sleeping = sleep.toInt
+            case "-sleep_guard" :: sleep :: args => {
+                sleeping_guard = sleep.toInt
+                parseArgs(args)
+            }
+            case "-sleep_instantiate" :: sleep :: args => {
+                sleeping_instantiate = sleep.toInt
+                parseArgs(args)
+            }
+            case "-sleep_apply" :: sleep :: args => {
+                sleeping_apply = sleep.toInt
                 parseArgs(args)
             }
             case "-executor" :: executor :: args =>{
                 nexecutor = executor.toInt
-                parseArgs(args)
-            }
-            case "-mode" :: mode :: args => {
-                assert(mode.equals("dumb") || mode.equals("simple"))
-                execution_mode = mode
                 parseArgs(args)
             }
             case _ :: args => parseArgs(args)
@@ -56,10 +61,7 @@ object Main_Relational2Class {
         conf.setAppName("ap")
         val sc = new SparkContext(conf)
 
-        var transformation = org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class_simple()
-        if (execution_mode.equals("dumb"))
-            transformation =  org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class_sleeping_instantiate_and_apply(sleeping)
-
+        val transformation = org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class(sleeping_guard, sleeping_instantiate, sleeping_apply)
         val input_model = R2CUtil.get_model_from_n_patterns(model_size)
         val input_metamodel = RelationalMetamodel.metamodel
 
