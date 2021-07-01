@@ -42,12 +42,17 @@ object TransformationEngineTwoPhaseByRule extends ExperimentalTransformationEngi
      npartition: Int, sc: SparkContext, nstep: Int = 5): (Double, List[Double]) = {
         // 1.Instantiate the trace + output element
 
-        var t0 : Long = 0
-        var t1 : Long = 0
-        var t2 : Long  = 0
-        var t3 : Long = 0
-        var t4 : Long  = 0
-        var t5 : Long  = 0
+        var t1_start : Long = 0
+        var t2_start : Long  = 0
+        var t3_start : Long = 0
+        var t4_start : Long  = 0
+        var t5_start : Long  = 0
+
+        var t1_end : Long = 0
+        var t2_end : Long  = 0
+        var t3_end : Long = 0
+        var t4_end : Long  = 0
+        var t5_end : Long  = 0
 
         var tuples : RDD[List[SME]] = null
         var trace : TraceLinks[SME, TME] = null
@@ -60,47 +65,54 @@ object TransformationEngineTwoPhaseByRule extends ExperimentalTransformationEngi
 
         if (nstep >= 1) {
             // 1.Create the tuples
-            t0 = System.nanoTime
+            t1_start = System.nanoTime
             tuples = sc.parallelize(allTuplesByRule(tr, sm, mm), npartition)
+//            println(tuples.count() + " tuples")
+            t1_end = System.nanoTime
         }
 
         if (nstep >= 2) {
             // 2.Instantiate tracelinks
-            t1 = System.nanoTime
+            t2_start = System.nanoTime
             trace = new TraceLinksList(tuples.flatMap(tuple => tracePattern(tr, sm, mm, tuple)).collect)
+            t2_end = System.nanoTime
         }
 
         if (nstep >= 3) {
             // 3.Extract info from tracelinks
-            t2 = System.nanoTime
+            t3_start = System.nanoTime
             elements_and_tls = (trace.getTargetElements, trace)
             elements = elements_and_tls._1
+//            println(elements.length + " output element")
             tls = elements_and_tls._2
+            t3_end = System.nanoTime
         }
 
         if (nstep >= 4) {
             // 4.Broad cast tls, and assign a subpart to compute via a RDD
-            t3 = System.nanoTime
+            t4_start = System.nanoTime
             tls_broad = sc.broadcast(tls)
             sps_rdd = sc.parallelize(allSourcePatterns(tls), npartition)
+            t4_end = System.nanoTime
         }
 
         if (nstep >= 5) {
             // 5.Instantiate links (apply phase)
-            t4 = System.nanoTime
+            t5_start = System.nanoTime
             links = applyTraces(tr, sm, mm, sps_rdd, tls_broad.value)
+//            println(links.length + " output links")
+            t5_end = System.nanoTime
         }
-        // END
-        t5 = System.nanoTime
 
+        // THE END
 
-        val t0_to_t1 = (t1 - t0) * 1000 / 1e9d
-        val t1_to_t2 = (t2 - t1) * 1000 / 1e9d
-        val t2_to_t3 = (t3 - t2) * 1000 / 1e9d
-        val t3_to_t4 = (t4 - t3) * 1000 / 1e9d
-        val t4_to_t5 = (t5 - t4) * 1000 / 1e9d
-        val t0_to_t5 =  t0_to_t1 + t1_to_t2 + t2_to_t3 + t3_to_t4 + t4_to_t5
-        (t0_to_t5, List(t0_to_t1, t1_to_t2, t2_to_t3, t3_to_t4, t4_to_t5))
+        val t1 = (t1_end - t1_start) * 1000 / 1e9d
+        val t2 = (t2_end - t2_start) * 1000 / 1e9d
+        val t3 = (t3_end - t3_start) * 1000 / 1e9d
+        val t4 = (t4_end - t4_start) * 1000 / 1e9d
+        val t5 = (t5_end - t5_start) * 1000 / 1e9d
+        val time =  t1 + t2 + t3 + t4 + t5
+        (time, List(t1,t2,t3,t4,t5))
     }
 
     override def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]

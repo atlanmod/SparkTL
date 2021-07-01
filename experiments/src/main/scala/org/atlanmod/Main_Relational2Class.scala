@@ -19,19 +19,19 @@ object Main_Relational2Class {
     final val DEFAULT_NSTEP: Int = 5
     var nstep: Int = DEFAULT_NSTEP
 
-    final val DEFAULT_NEXECUTOR: Int = 2
+    final val DEFAULT_NEXECUTOR: Int = 1
     var nexecutor: Int = DEFAULT_NEXECUTOR
 
-    final val DEFAULT_NPARTITION: Int = 2
+    final val DEFAULT_NPARTITION: Int = 1 * 4
     var npartition: Int = DEFAULT_NPARTITION
 
-    final val DEFAULT_SLEEPING_GUARD: Int = 0
+    final val DEFAULT_SLEEPING_GUARD: Int = 120
     var sleeping_guard: Int = DEFAULT_SLEEPING_GUARD
 
-    final val DEFAULT_SLEEPING_INSTANTIATE: Int = 0
+    final val DEFAULT_SLEEPING_INSTANTIATE: Int = 120
     var sleeping_instantiate: Int = DEFAULT_SLEEPING_INSTANTIATE
 
-    final val DEFAULT_SLEEPING_APPLY: Int = 0
+    final val DEFAULT_SLEEPING_APPLY: Int = 120
     var sleeping_apply: Int = DEFAULT_SLEEPING_APPLY
 
 
@@ -81,10 +81,10 @@ object Main_Relational2Class {
 
     def getContext(): SparkContext = {
         val conf = new SparkConf()
-        if (conf.getExecutorEnv.isEmpty) {
-            conf.setMaster("local[" + (DEFAULT_NEXECUTOR * DEFAULT_NCORE) + "]")
-            conf.setAppName("Relational2Class")
-        }
+//        if (conf.getExecutorEnv.isEmpty) {
+//            conf.setMaster("local[" + (DEFAULT_NEXECUTOR * DEFAULT_NCORE) + "]")
+//            conf.setAppName("Relational2Class")
+//        }
         new SparkContext(conf)
     }
 
@@ -96,6 +96,10 @@ object Main_Relational2Class {
         val input_model = R2CUtil.get_model_from_n_patterns(model_size)
         val input_metamodel = RelationalMetamodel.metamodel
 
+        var line = List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition,
+            sleeping_guard,sleeping_instantiate,sleeping_apply).mkString(",")
+//        println(line)
+
         var res: (Double, List[Double]) = null
         if (tuples_mode == "by_rule")
             res = TransformationEngineTwoPhaseByRule.execute_bystep(transformation, input_model, input_metamodel, npartition, sc, nstep)
@@ -103,12 +107,8 @@ object Main_Relational2Class {
             res = TransformationEngineTwoPhase.execute(transformation, input_model, input_metamodel, npartition, sc)
 
         println("element,link,executor,core,partition,sleeping_guard,sleeping_instantiate,sleeping_apply,total_time,time_tuples,time_instantiate,time_extract,time_broadcast,time_apply")
-        val line = List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition,
+        line = List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition,
             sleeping_guard,sleeping_instantiate,sleeping_apply).mkString(",")
         println(line + "," + res._1 + "," + res._2.mkString(","))
     }
-
-
-
-
 }
