@@ -1,0 +1,51 @@
+
+```{r include=FALSE}
+packages <- c("ggplot2", "dplyr", "Rmpfr")
+install.packages(setdiff(packages, rownames(installed.packages())))
+```
+
+```{r}
+# element,link,executor,core,partition,sleeping_guard,sleeping_instantiate,sleeping_apply,total_time,time_tuples,time_instantiate,time_extract,time_broadcast,time_apply
+colTypes <- rep("numeric",14)
+data <- read.csv(file="150_220_4partitions_Jul_1.csv", colClasses=colTypes, comment.char = "#")
+```
+
+```{r}
+raw_df <- data.frame(data)
+df <- raw_df %>% 
+  group_by(element, link, executor, core, partition,sleeping_guard,sleeping_instantiate,sleeping_apply) %>% 
+  summarise(count=length(total_time),total_time.mean = mean(total_time), total_time.sd = sd(total_time), total_time.median = median(total_time),
+            time_tuples.mean = mean(time_tuples), time_tuples.sd = sd(time_tuples), time_tuples.median = median(time_tuples),
+            time_instantiate.mean = mean(time_instantiate), time_instantiate.sd = sd(time_instantiate), time_instantiate.median = median(time_instantiate),
+            time_extract.mean = mean(time_extract), time_extract.sd = sd(time_extract), time_extract.median = median(time_extract),
+            time_broadcast.mean = mean(time_broadcast), time_broadcast.sd = sd(time_broadcast), time_broadcast.median = median(time_broadcast),
+            time_apply.mean = mean(time_apply), time_apply.sd = sd(time_apply), time_apply.median = median(time_apply)) 
+(df <- df[order(df$sleeping_guard), ])
+```
+
+```{r}
+sleeping_times <- unique(df$sleeping_guard)
+
+for(i in sleeping_times){
+  df.sleeping <- df %>% filter(sleeping_guard == i)
+  df.sleeping["sleeping_time"] <- df.sleeping$sleeping_guard
+  df.sleeping = subset(df.sleeping, select = -c(sleeping_guard, sleeping_instantiate, sleeping_apply))
+  #txt = paste(paste("For sleeping=",(df.sleeping$sleeping_time)[1]), "ms:")
+  ref_value = df.sleeping %>% filter(partition == min(df.sleeping$partition))
+  ref_value.total_time = ref_value$total_time.mean
+  ref_value.time_instantiate = ref_value$time_instantiate.mean
+  ref_value.time_apply = ref_value$time_apply.mean
+  
+  df.sleeping["total_time.speedup"] =  ref_value.total_time / df.sleeping$total_time.mean 
+  df.sleeping["time_instantiate.speedup"] =  ref_value.time_instantiate / df.sleeping$time_instantiate.mean 
+  df.sleeping["time_apply.speedup"] =  ref_value.time_apply / df.sleeping$time_apply.mean 
+  
+  df.toprint = subset(df.sleeping, select = c(sleeping_time,element,link,executor,core,partition,count,total_time.speedup,time_instantiate.speedup,time_apply.speedup))
+  print(df.toprint)
+}
+```
+
+
+
+
+
