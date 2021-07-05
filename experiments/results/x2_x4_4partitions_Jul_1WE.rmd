@@ -1,13 +1,16 @@
-```{r}
-packages <- c("ggplot2", "dplyr")
+
+```{r include=FALSE}
+packages <- c("ggplot2", "dplyr", "Rmpfr")
 install.packages(setdiff(packages, rownames(installed.packages())))
 library(ggplot2)
 library(dplyr)
+library(Rmpfr)
 ```
 
 ```{r}
+# element,link,executor,core,partition,sleeping_guard,sleeping_instantiate,sleeping_apply,total_time,time_tuples,time_instantiate,time_extract,time_broadcast,time_apply
 colTypes <- rep("numeric",14)
-data <- read.csv(file="x4_4partitions_Jul_1WE.csv", colClasses=colTypes, comment.char = "#")
+data <- read.csv(file="x2_x3_4partitions_Jul_1WE.csv", colClasses=colTypes, comment.char = "#")
 ```
 
 ```{r}
@@ -20,8 +23,9 @@ df <- raw_df %>%
             time_extract.mean = mean(time_extract), time_extract.sd = sd(time_extract), time_extract.median = median(time_extract),
             time_broadcast.mean = mean(time_broadcast), time_broadcast.sd = sd(time_broadcast), time_broadcast.median = median(time_broadcast),
             time_apply.mean = mean(time_apply), time_apply.sd = sd(time_apply), time_apply.median = median(time_apply)) 
-#(df <- df[order(df$sleeping_guard), ])
+(df <- df[order(df$sleeping_guard), ])
 ```
+
 ```{r}
 size = unique(df$element)
 sleeping_times = unique(df$sleeping_guard)
@@ -36,7 +40,6 @@ for (j in size) {
     df.size$total_cores = df.size$core * df.size$executor
     df.sleeping <- df.size %>% filter(sleeping_guard == i)
     df.sleeping$sleeping_time <- df.sleeping$sleeping_guard
-    df.sleeping$time_parallel <- df.sleeping$time_apply.mean + df.sleeping$time_instantiate.mean
 
     df.sleeping = subset(df.sleeping, select = -c(sleeping_guard, sleeping_instantiate, sleeping_apply))
   
@@ -44,15 +47,13 @@ for (j in size) {
     ref_value.total_time = ref_value$total_time.mean
     ref_value.time_instantiate = ref_value$time_instantiate.mean
     ref_value.time_apply = ref_value$time_apply.mean
-    ref_value.time_parallel = ref_value$time_parallel
     
     df.sleeping["total_time.speedup"] =  ref_value.total_time / df.sleeping$total_time.mean 
     df.sleeping["time_instantiate.speedup"] =  ref_value.time_instantiate / df.sleeping$time_instantiate.mean 
     df.sleeping["time_apply.speedup"] =  ref_value.time_apply / df.sleeping$time_apply.mean 
-    df.sleeping["time_parallel.speedup"] =  ref_value.time_parallel / df.sleeping$time_parallel
     
-    df.toprint = subset(df.sleeping, select = c(sleeping_time,element,link,executor,core,total_cores,partition,count,total_time.speedup,time_instantiate.speedup,time_apply.speedup,time_parallel.speedup))
-    print(df.toprint)
+    df.toprint = subset(df.sleeping, select = c(sleeping_time,element,link,executor,core,total_cores,partition,count,total_time.speedup,time_instantiate.speedup,time_apply.speedup))
+    #print(df.toprint)
     
     if (is.null(df.with_speedups )) {
       df.with_speedups  = df.toprint
@@ -62,27 +63,34 @@ for (j in size) {
 }
 
 }
+
+df.with_speedups
 ```
 
+dataset x2 (300 elements, 440 links):
+avec 250ms:
+  - 8 vs 16 : speed up total de 1.77 (phase1: 1.735944; phase2: 1.884280)
+  - 8 vs 32 : speed up total de 3 (phase1: 2.888475; phase2: 3.389765)
+avec 500ms:
+  - 16 vs 32 : speed up total de 1.73 (phase1: 1.711028; phase2: 1.791007)
+avec 2 sec:
+  - 8 vs 16 : speed up total de 1.83 (phase1: 1.802389; phase2: 1.914326)
+  - 8 vs 32 : speed up total de 3.29 (phase1: 2.888475; phase2: 3.210558)
 
 ```{r}
-ggplot(data=df.with_speedups, aes(x=total_cores,y=time_parallel.speedup,group=as.factor(sleeping_time),color=as.factor(sleeping_time))) + 
-  geom_line() + geom_point() + labs(fill = "") + geom_segment(aes(x = 8, y = 1, xend = 32, yend = 4),  color="black", linetype="dashed") +
-  theme(legend.key.size = unit(0.5, 'cm')) + theme(legend.position = "top") + xlab("number of cores") + ylab("relative speedup") + scale_color_discrete(name="Introduced simulated computation\n time on phases (ms)") +
-  guides(colour =guide_legend(title.position="top", title.hjust = 0.5),
-         size = guide_legend(title.position="top", title.hjust = 0.5))
+size_for_speedup <- unique(df.with_speedups$element)
 
-ggsave("x4_sleeping_onlyparallel.pdf",width = 4, height = 4)
-```
+df.with_speedups%>%filter(element == 300)
 
-```{r}
-ggplot(data=df.with_speedups, aes(x=total_cores,y=total_time.speedup,group=as.factor(sleeping_time),color=as.factor(sleeping_time))) + 
-  geom_line() + geom_point() + labs(fill = "") + geom_segment(aes(x = 8, y = 1, xend = 32, yend = 4),  color="black", linetype="dashed") +
-  theme(legend.key.size = unit(0.5, 'cm')) + theme(legend.position = "top") + xlab("number of cores") + ylab("relative speedup") + scale_color_discrete(name="Introduced simulated computation\n time on phases (ms)") +
-  guides(colour =guide_legend(title.position="top", title.hjust = 0.5),
-         size = guide_legend(title.position="top", title.hjust = 0.5))
 
-ggsave("x4_sleeping.pdf",width = 4, height = 4)
+for (j in size_for_speedup) {
+  print(j)
+  df.with_speedups%>%filter(element == j)
+  # plot <- ggplot(data=df.sized, aes(x=total_cores, y=total_time.speedup, group=sleeping_time, color=sleeping_time)) + geom_line() + geom_point()
+  #print(plot)
+}
+
+
 ```
 
 
