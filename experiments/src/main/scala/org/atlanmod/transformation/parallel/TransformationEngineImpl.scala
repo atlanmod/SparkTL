@@ -13,19 +13,25 @@ object TransformationEngineImpl extends ExperimentalTransformationEngine{
                                                                               sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                                         npartition: Int, sc: SparkContext)
     : (Double, List[Double]) = {
-        val t1 = System.nanoTime
-        val tuples = sc.parallelize(allTuples(tr, sm), npartition)
-        val t2 = System.nanoTime
-        /* Instantiate */ val elements = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t)).collect
-        val t3 = System.nanoTime
+        val t1_start = System.nanoTime()
+        val tuples = sc.parallelize(allTuples(tr, sm))
+        val t1_end = System.nanoTime()
+        val t1 = (t1_end - t1_start) * 1000 / 1e9d
+
+        val t2_start = System.nanoTime()
+        val elements = tuples.flatMap(t => Instantiate.instantiatePattern(tr, sm, mm, t)).collect
+        val t2_end = System.nanoTime()
+        val t2 = (t2_end - t2_start) * 1000 / 1e9d
+
+        val t3 = 0.0
+        val t4 = 0.0
+
+        val t5_start = System.nanoTime()
         /* Apply */ val links = tuples.flatMap(t => Apply.applyPattern(tr, sm, mm, t)).collect
-        val t4 = System.nanoTime
+        val t5_end = System.nanoTime()
+        val t5 = (t5_end - t5_start) * 1000 / 1e9d
 
-        val t1_to_t2 = (t2 - t1) * 1000 / 1e9d
-        val t2_to_t3 = (t3 - t2) * 1000 / 1e9d
-        val t3_to_t4 = (t4 - t3) * 1000 / 1e9d
-        val t1_to_t4 = (t4 - t1) * 1000 / 1e9d
-
-        (t1_to_t4, List(t1_to_t2, t2_to_t3, t3_to_t4))
+        val time =  t1 + t2 + t3 + t4 + t5
+        (time, List(t1,t2,t3,t4,t5))
     }
 }

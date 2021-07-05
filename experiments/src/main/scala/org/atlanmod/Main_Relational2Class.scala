@@ -2,7 +2,7 @@ package org.atlanmod
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.atlanmod.class2relational.model.relationalmodel.RelationalMetamodel
-import org.atlanmod.transformation.parallel.{TransformationEngineTwoPhase, TransformationEngineTwoPhaseByRule}
+import org.atlanmod.transformation.parallel.{TransformationEngineImpl, TransformationEngineTwoPhase, TransformationEngineTwoPhaseByRule}
 import org.atlanmod.util.R2CUtil
 
 object Main_Relational2Class {
@@ -66,7 +66,7 @@ object Main_Relational2Class {
                 parseArgs(args)
             }
             case "-mode" :: mode :: args =>{
-                assert(mode.equals("by_rule") || mode.equals("full"))
+                assert(mode.equals("by_rule") || mode.equals("full") || mode.equals("simple"))
                 tuples_mode = mode
                 parseArgs(args)
             }
@@ -105,6 +105,8 @@ object Main_Relational2Class {
             res = TransformationEngineTwoPhaseByRule.execute_bystep(transformation, input_model, input_metamodel, npartition, sc, nstep)
         if (tuples_mode == "full")
             res = TransformationEngineTwoPhase.execute(transformation, input_model, input_metamodel, npartition, sc)
+        if (tuples_mode == "simple")
+            res = TransformationEngineImpl.execute(transformation, input_model, input_metamodel, npartition, sc)
 
         println("element,link,executor,core,partition,sleeping_guard,sleeping_instantiate,sleeping_apply,total_time,time_tuples,time_instantiate,time_extract,time_broadcast,time_apply")
         line = List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition,
