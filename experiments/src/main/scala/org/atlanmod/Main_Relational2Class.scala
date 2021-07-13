@@ -79,7 +79,7 @@ object Main_Relational2Class {
                 parseArgs(args)
             }
             case "-pivot" :: pivot :: args =>{
-                assert(pivot.equals("simple") || pivot.equals("complex"))
+                assert(pivot.equals("simple") || pivot.equals("complex") || pivot.equals("n2"))
                 pivot_complexity = pivot
                 parseArgs(args)
             }
@@ -107,6 +107,8 @@ object Main_Relational2Class {
             foo_pivot = Relational2Class.isPivot
         if (pivot_complexity.equals("complex"))
             foo_pivot = Relational2Class.isPivot_complex
+        if (pivot_complexity.equals("n2"))
+            foo_pivot = Relational2Class.isPivot_n2
 
         val transformation = org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class(sleeping_guard, sleeping_instantiate, sleeping_apply)
         val input_model = R2CUtil.get_model_from_n_patterns(model_size)
@@ -125,8 +127,8 @@ object Main_Relational2Class {
             res = TransformationEngineImpl.execute(transformation, input_model, input_metamodel, npartition, sc)
 
 
-        println("element,link,executor,core,partition,sleeping_guard,sleeping_instantiate,sleeping_apply,total_time,time_tuples,time_instantiate,time_extract,time_broadcast,time_apply")
-        line = List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition,
+        println("pivot,element,link,executor,core,partition,sleeping_guard,sleeping_instantiate,sleeping_apply,total_time,time_tuples,time_instantiate,time_extract,time_broadcast,time_apply")
+        line = List(pivot_complexity,input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition,
             sleeping_guard,sleeping_instantiate,sleeping_apply).mkString(",")
         println(line + "," + res._1 + "," + res._2.mkString(","))
     }

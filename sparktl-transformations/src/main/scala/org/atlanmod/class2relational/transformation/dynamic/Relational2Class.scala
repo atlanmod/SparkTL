@@ -175,6 +175,51 @@ object Relational2Class {
         n2.indexOf("_") != -1 & !n2.equals(n1) & n2.startsWith(n1)
     }
 
+    def isPivot_n2(model:RelationalModel, town:RelationalTable, tattr:RelationalTable) : Boolean = {
+        /*
+            Goal: find cref, ttype, and cid such as
+            ```
+            tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) &
+              RelationalMetamodel.getColumnOwner(cref, model).contains(tattr) &
+              RelationalMetamodel.isKeyOf(cref, tattr, model) &
+              cref.getName.equals(ttype.getName) &
+              RelationalMetamodel.getColumnOwner(cid, model).contains(tattr) &
+              RelationalMetamodel.isKeyOf(cid, tattr, model) &
+              cid.getName.equals("Id")
+             ```
+             is respected
+             */
+
+        val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
+        val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
+
+        var g1 = false
+        for (cref <- columns){
+            // Find cref
+            val c1 = RelationalMetamodel.getColumnOwner(cref, model).contains(tattr)
+            val c2 = RelationalMetamodel.isKeyOf(cref, tattr, model)
+            var g2 = false
+            for (ttype <- typables) {
+                // Find ttype
+                val c3 = cref.getName.equals(ttype.getName)
+                g2 = g2 || c3
+            }
+            g1 = g1 || (c1 && c2 && g2)
+        }
+
+        var g3 = false
+        for (cid <- columns){
+            // Find cid
+            val c1 = RelationalMetamodel.getColumnOwner(cid, model).contains(tattr)
+            val c2 = RelationalMetamodel.isKeyOf(cid, tattr, model)
+            val c3 = cid.getName.equals("Id")
+            g3 = g3 || (c1 && c2 && c3)
+        }
+
+        tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) && g1 && g3
+
+    }
+
     def isPivot_complex(model:RelationalModel, town:RelationalTable, tattr:RelationalTable) : Boolean = {
         /*
         Goal: find cref, ttype, and cid such as
@@ -192,48 +237,21 @@ object Relational2Class {
 
         val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
         val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
-        /*val columns2: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
 
         for (cref <- columns){
             for (ttype <- typables) {
                 for (cid <- columns){
-                    tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) &
+                    if (tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) &
                     RelationalMetamodel.getColumnOwner(cref, model).contains(tattr) &
                     RelationalMetamodel.isKeyOf(cref, tattr, model) &
                     cref.getName.equals(ttype.getName) &
                     RelationalMetamodel.getColumnOwner(cid, model).contains(tattr) &
                     RelationalMetamodel.isKeyOf(cid, tattr, model) &
-                    cid.getName.equals("Id")
+                    cid.getName.equals("Id")) return true
                 }
             }
-        }*/
-
-        var g1 = false
-        for (cref <- columns){
-            // Find cref
-            val c1 = RelationalMetamodel.getColumnOwner(cref, model).contains(tattr)
-            val c2 = RelationalMetamodel.isKeyOf(cref, tattr, model)
-            var g2 = false
-            for (ttype <- typables) {
-                // Find ttype
-                val c3 = cref.getName.equals(ttype.getName)
-                g2 = g2 || c3
-            }
-            g1 = g1 || (c1 && c2 && g2)
         }
-
-
-        var g3 = false
-        for (cid <- columns){
-            // Find cid
-            val c1 = RelationalMetamodel.getColumnOwner(cid, model).contains(tattr)
-            val c2 = RelationalMetamodel.isKeyOf(cid, tattr, model)
-            val c3 = cid.getName.equals("Id")
-            g3 = g3 || (c1 && c2 && c3)
-        }
-
-        tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) && g1 && g3
-
+        false
     }
 
     def relational2class(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0,
