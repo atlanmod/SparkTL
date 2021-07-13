@@ -192,6 +192,21 @@ object Relational2Class {
 
         val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
         val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
+        /*val columns2: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
+
+        for (cref <- columns){
+            for (ttype <- typables) {
+                for (cid <- columns){
+                    tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) &
+                    RelationalMetamodel.getColumnOwner(cref, model).contains(tattr) &
+                    RelationalMetamodel.isKeyOf(cref, tattr, model) &
+                    cref.getName.equals(ttype.getName) &
+                    RelationalMetamodel.getColumnOwner(cid, model).contains(tattr) &
+                    RelationalMetamodel.isKeyOf(cid, tattr, model) &
+                    cid.getName.equals("Id")
+                }
+            }
+        }*/
 
         var g1 = false
         for (cref <- columns){
