@@ -1,0 +1,57 @@
+```{r include=FALSE}
+packages <- c("ggplot2", "dplyr")
+install.packages(setdiff(packages, rownames(installed.packages())))
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+colTypes <- c("character", rep("numeric",14))
+data <- read.csv(file="x1_pivot.csv", colClasses=colTypes, comment.char = "#")
+```
+
+```{r}
+raw_df <- data.frame(data)
+df <- raw_df %>% 
+  group_by(pivot,element, link, executor, core, partition,sleeping_guard,sleeping_instantiate,sleeping_apply) %>% 
+  summarise(count=length(total_time),total_time.mean = mean(total_time), total_time.sd = sd(total_time), total_time.median = median(total_time),
+            time_tuples.mean = mean(time_tuples), time_tuples.sd = sd(time_tuples), time_tuples.median = median(time_tuples),
+            time_instantiate.mean = mean(time_instantiate), time_instantiate.sd = sd(time_instantiate), time_instantiate.median = median(time_instantiate),
+            time_extract.mean = mean(time_extract), time_extract.sd = sd(time_extract), time_extract.median = median(time_extract),
+            time_broadcast.mean = mean(time_broadcast), time_broadcast.sd = sd(time_broadcast), time_broadcast.median = median(time_broadcast),
+            time_apply.mean = mean(time_apply), time_apply.sd = sd(time_apply), time_apply.median = median(time_apply)) 
+#(df <- df[order(df$sleeping_guard), ])
+```
+
+```{r}
+size = unique(df$element)
+foo_pivot = unique(df$pivot)
+
+df.with_speedups  <- NULL
+
+for (foo in foo_pivot){
+  df.pivot <- df%>%filter(pivot == foo)
+  df.pivot$total_cores = df.pivot$core * df.pivot$executor
+  
+  ref_value = df.pivot %>% filter(total_cores == 1)
+#  ref_value = df.pivot %>% filter(total_cores == 2)
+  ref_value.total_time = ref_value$total_time.mean
+  df.pivot["total_time.speedup"] =  ref_value.total_time / df.pivot$total_time.mean 
+  
+  df.toprint = subset(df.pivot, select = c(pivot,element,link,executor,core,total_cores,partition,count,total_time.speedup, total_time.mean))
+  
+  if (is.null(df.with_speedups )) {
+      df.with_speedups  = df.toprint
+    }else {
+      df.with_speedups  = rbind.data.frame(df.with_speedups , df.toprint)
+    }
+}
+
+ggplot(data=df.with_speedups, aes(x=total_cores,y=total_time.speedup,group=as.factor(pivot),color=as.factor(pivot))) + 
+  geom_line() + geom_point() + labs(fill = "") + geom_segment(aes(x = 1, y = 1, xend = 8, yend = 8),  color="black", linetype="dashed") +
+  theme(legend.key.size = unit(0.5, 'cm')) + theme(legend.position = "top") + xlab("number of cores") + ylab("relative speedup") + scale_color_discrete(name="Introduced simulated computation time on phases (ms)") +
+  guides(colour =guide_legend(title.position="top", title.hjust = 0.4),
+         size = guide_legend(title.position="top", title.hjust = 0.4))
+ggsave("x1_pivot.pdf",width = 4, height = 3)
+
+```

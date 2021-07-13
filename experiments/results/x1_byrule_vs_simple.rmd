@@ -1,0 +1,81 @@
+```{r include=FALSE}
+packages <- c("ggplot2", "dplyr")
+install.packages(setdiff(packages, rownames(installed.packages())))
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+colTypes <- rep("numeric",14)
+data.x1.byrule.0sleeping <- data.frame(read.csv(file="x1_raw_byrule.csv", colClasses=colTypes, comment.char = "#"))
+df.byrule <- data.x1.byrule.0sleeping %>% filter(sleeping_guard == 0)  %>% filter(partition <= 32)  %>% 
+  group_by(element, link, executor, core, partition,sleeping_guard,sleeping_instantiate,sleeping_apply) %>% 
+  summarise(count=length(total_time),total_time.mean = mean(total_time), total_time.sd = sd(total_time), total_time.median = median(total_time),
+            time_tuples.mean = mean(time_tuples), time_tuples.sd = sd(time_tuples), time_tuples.median = median(time_tuples),
+            time_instantiate.mean = mean(time_instantiate), time_instantiate.sd = sd(time_instantiate), time_instantiate.median = median(time_instantiate),
+            time_extract.mean = mean(time_extract), time_extract.sd = sd(time_extract), time_extract.median = median(time_extract),
+            time_broadcast.mean = mean(time_broadcast), time_broadcast.sd = sd(time_broadcast), time_broadcast.median = median(time_broadcast),
+            time_apply.mean = mean(time_apply), time_apply.sd = sd(time_apply), time_apply.median = median(time_apply)) 
+df.byrule.time <-df.byrule 
+
+df.byrule$total_cores = df.byrule$core * df.byrule$executor
+df.byrule$sleeping_time <- df.byrule$sleeping_guard
+df.byrule = subset(df.byrule, select = -c(sleeping_guard, sleeping_instantiate, sleeping_apply))
+
+byrule.ref_value = df.byrule %>% filter(partition == min(df.byrule$partition))
+byrule.ref_value.total_time = byrule.ref_value$total_time.mean
+byrule.ref_value.time_instantiate = byrule.ref_value$time_instantiate.mean
+byrule.ref_value.time_apply = byrule.ref_value$time_apply.mean
+    
+df.byrule["total_time.speedup"] =  byrule.ref_value.total_time /df.byrule$total_time.mean 
+df.byrule["time_instantiate.speedup"] =  byrule.ref_value.time_instantiate / df.byrule$time_instantiate.mean 
+df.byrule["time_apply.speedup"] =  byrule.ref_value.time_apply / df.byrule$time_apply.mean 
+df.byrule["type"] =  "optimized"
+
+#df.byrule = subset(df.byrule, select = c(type,sleeping_time,element,link,executor,core,total_cores,partition,count,total_time.speedup,time_instantiate.speedup,time_apply.speedup))
+```
+
+```{r}
+  
+data.x1.simple.0sleeping <- data.frame(read.csv(file="x1_raw_simple.csv", colClasses=colTypes, comment.char = "#"))
+df.simple <- data.x1.simple.0sleeping %>% filter(sleeping_guard == 0)  %>% filter(element == 150)  %>% 
+  group_by(element, link, executor, core, partition,sleeping_guard,sleeping_instantiate,sleeping_apply) %>% 
+  summarise(count=length(total_time),total_time.mean = mean(total_time), total_time.sd = sd(total_time), total_time.median = median(total_time),
+            time_tuples.mean = mean(time_tuples), time_tuples.sd = sd(time_tuples), time_tuples.median = median(time_tuples),
+            time_instantiate.mean = mean(time_instantiate), time_instantiate.sd = sd(time_instantiate), time_instantiate.median = median(time_instantiate),
+            time_extract.mean = mean(time_extract), time_extract.sd = sd(time_extract), time_extract.median = median(time_extract),
+            time_broadcast.mean = mean(time_broadcast), time_broadcast.sd = sd(time_broadcast), time_broadcast.median = median(time_broadcast),
+            time_apply.mean = mean(time_apply), time_apply.sd = sd(time_apply), time_apply.median = median(time_apply)) 
+df.simple.time <- df.simple
+
+
+df.simple$total_cores = df.simple$core * df.simple$executor
+df.simple$sleeping_time <- df.simple$sleeping_guard
+df.simple = subset(df.simple, select = -c(sleeping_guard, sleeping_instantiate, sleeping_apply))
+
+simple.ref_value = df.simple %>% filter(partition == min(df.simple$partition))
+simple.ref_value.total_time = simple.ref_value$total_time.mean
+simple.ref_value.time_instantiate = simple.ref_value$time_instantiate.mean
+simple.ref_value.time_apply = simple.ref_value$time_apply.mean
+    
+df.simple["total_time.speedup"] =  simple.ref_value.total_time /df.simple$total_time.mean 
+df.simple["time_instantiate.speedup"] =  simple.ref_value.time_instantiate / df.simple$time_instantiate.mean 
+df.simple["time_apply.speedup"] =  simple.ref_value.time_apply / df.simple$time_apply.mean 
+df.simple["type"] =  "simple"
+#df.simple = subset(df.simple, select = c(type, sleeping_time,element,link,executor,core,total_cores,partition,count,total_time.speedup,time_instantiate.speedup,time_apply.speedup))
+
+df.computation_time <- rbind(df.simple.time, df.byrule.time)
+fulldata = rbind( df.simple,df.byrule)
+```
+
+```{r}
+ggplot(data=fulldata, aes(x=total_cores,y=total_time.mean,group=as.factor(type),color=as.factor(type))) + 
+  geom_line() + geom_point() + labs(fill = "") + 
+  theme(legend.key.size = unit(0.5, 'cm')) + theme(legend.position = "top") + xlab("number of cores") + ylab("relative speedup") + scale_color_discrete(name="CoqTL specification") +
+  guides(colour =guide_legend(title.position="top", title.hjust = 0.5),
+         size = guide_legend(title.position="top", title.hjust = 0.5))
+
+ggsave("x1_byrule_vs_simple.pdf",width = 4, height = 3)
+```
+
+

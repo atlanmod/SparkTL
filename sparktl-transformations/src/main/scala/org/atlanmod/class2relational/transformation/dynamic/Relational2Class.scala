@@ -238,6 +238,7 @@ object Relational2Class {
         val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
         val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
 
+        var result = false
         for (cref <- columns){
             for (ttype <- typables) {
                 for (cid <- columns){
@@ -247,11 +248,12 @@ object Relational2Class {
                     cref.getName.equals(ttype.getName) &
                     RelationalMetamodel.getColumnOwner(cid, model).contains(tattr) &
                     RelationalMetamodel.isKeyOf(cid, tattr, model) &
-                    cid.getName.equals("Id")) return true
+                    cid.getName.equals("Id"))
+                        result = true
                 }
             }
         }
-        false
+        result
     }
 
     def relational2class(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0,

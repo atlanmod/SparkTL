@@ -1,0 +1,81 @@
+```{r include=FALSE}
+packages <- c("ggplot2", "dplyr")
+install.packages(setdiff(packages, rownames(installed.packages())))
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+colTypes <- rep("numeric",14)
+data <- read.csv(file="x1_raw_byrule.csv", colClasses=colTypes, comment.char = "#")
+```
+
+```{r}
+raw_df <- data.frame(data)
+df <- raw_df %>% 
+  group_by(element, link, executor, core, partition,sleeping_guard,sleeping_instantiate,sleeping_apply) %>% 
+  summarise(count=length(total_time),total_time.mean = mean(total_time), total_time.sd = sd(total_time), total_time.median = median(total_time),
+            time_tuples.mean = mean(time_tuples), time_tuples.sd = sd(time_tuples), time_tuples.median = median(time_tuples),
+            time_instantiate.mean = mean(time_instantiate), time_instantiate.sd = sd(time_instantiate), time_instantiate.median = median(time_instantiate),
+            time_extract.mean = mean(time_extract), time_extract.sd = sd(time_extract), time_extract.median = median(time_extract),
+            time_broadcast.mean = mean(time_broadcast), time_broadcast.sd = sd(time_broadcast), time_broadcast.median = median(time_broadcast),
+            time_apply.mean = mean(time_apply), time_apply.sd = sd(time_apply), time_apply.median = median(time_apply)) 
+#(df <- df[order(df$sleeping_guard), ])
+```
+```{r}
+size = unique(df$element)
+sleeping_times = unique(df$sleeping_guard)
+
+df.with_speedups  <- NULL
+
+for (j in size) {
+  
+  for(i in sleeping_times){
+    
+    df.size <- df%>%filter(element == j)
+    df.size$total_cores = df.size$core * df.size$executor
+    df.sleeping <- df.size %>% filter(sleeping_guard == i)
+    df.sleeping$sleeping_time <- df.sleeping$sleeping_guard
+    df.sleeping$seq_time <- df.sleeping$time_tuples.mean + df.sleeping$time_broadcast.mean + df.sleeping$time_extract.mean
+    df.sleeping$par_time <- df.sleeping$time_instantiate.mean + df.sleeping$time_apply.mean
+
+    df.sleeping = subset(df.sleeping, select = -c(sleeping_guard, sleeping_instantiate, sleeping_apply))
+    
+    ref_value = df.sleeping %>% filter(partition == min(df.sleeping$partition))
+    ref_value.total_time = ref_value$total_time.mean
+    ref_value.time_instantiate = ref_value$time_instantiate.mean
+    ref_value.time_apply = ref_value$time_apply.mean
+    
+    df.sleeping["total_time.speedup"] =  ref_value.total_time / df.sleeping$total_time.mean 
+    df.sleeping["time_instantiate.speedup"] =  ref_value.time_instantiate / df.sleeping$time_instantiate.mean 
+    df.sleeping["time_apply.speedup"] =  ref_value.time_apply / df.sleeping$time_apply.mean 
+    df.sleeping["time_apply.par_percentage"] = df.sleeping$par_time / (df.sleeping$par_time + df.sleeping$seq_time)
+    df.sleeping["time_apply.seq_percentage"] = df.sleeping$seq_time / (df.sleeping$par_time + df.sleeping$seq_time)
+    
+    df.toprint = subset(df.sleeping, select = c(time_apply.par_percentage,time_apply.seq_percentage,sleeping_time,element,link,executor,core,total_cores,partition,count,total_time.speedup,time_instantiate.speedup,time_apply.speedup))
+    #print(df.toprint)
+    
+    if (is.null(df.with_speedups )) {
+      df.with_speedups  = df.toprint
+    }else {
+      df.with_speedups  = rbind.data.frame(df.with_speedups , df.toprint)
+    }
+}
+
+}
+```
+
+```{r}
+ggplot(data=df.with_speedups, aes(x= total_cores,y=total_time.speedup,group=as.factor(sleeping_time),color=as.factor(sleeping_time))) + 
+  geom_line() + geom_point() + labs(fill = "") + geom_segment(aes(x = 1, y = 1, xend = 32, yend = 32),  color="black", linetype="dashed") + 
+  geom_segment(aes(x = 1, y = 1, xend = 32, yend = 16),  color="red", linetype="dashed")  +
+  theme(legend.key.size = unit(0.5, 'cm'), legend.text = element_text(size = 8)) + theme(legend.position = "top") + xlab("number of cores") + ylab("relative speedup") + 
+  scale_color_discrete(name="Introduced simulated computation time on phases",  labels = c("0ms", "50ms", "120ms", "250ms", "500ms", "1000ms", "2000ms")) + 
+  scale_x_continuous(labels=as.character(unique(df.with_speedups$total_cores)), breaks = unique(df.with_speedups$total_cores))  +
+  guides(colour =guide_legend(title.position="top", title.hjust = 0.4),
+         size = guide_legend(title.position="top", title.hjust = 0.4))
+
+ggsave("x1_sleeping.pdf",width = 4.1, height = 4)
+```
+
+

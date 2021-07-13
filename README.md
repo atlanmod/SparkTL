@@ -17,11 +17,6 @@ The SparkTE library has been designed using the following versions
 
 The whole transformation engine can be compiled using ``gradle jar``.
 
-Pre-made application to experiment SparkTE performances can be compiled into jars using:
-
--  ``gradle C2RJar`` for getting a Class2Relational transformation
--  ``gradle R2CJar`` for getting a Relational2Class transformation
-
 ## How to use
  
  The application is designed for standalone Spark clusters
@@ -47,5 +42,5 @@ You can submit your job on your Spark cluster using the following command:
 
 For instance, the following command run 30 class2relational transformations of an input model containg 10 times a default pattern, for each implemented transformation strategy, on 1 executor and produce csv containing computation times as output:
 
-``$SPARK_HOME/bin/spark-submit --master spark://{master_ip}:7077 --class org.atlanmod.transformation.Main_Class2Relational Class2Relational-1.0-SNAPSHOT.jar --ncore 1 --size 10 --ntests 30 -csv --path /home/jolan``
+``$SPARK_HOME/bin/spark-submit --master spark://{master_ip}:7077  --num-executors 1 --executor-cores 1 --class org.atlanmod.Main_Relational2Class SparkTE-1.0-SNAPSHOT.jar --ncore 1 --executor 1 --size 1``
 
