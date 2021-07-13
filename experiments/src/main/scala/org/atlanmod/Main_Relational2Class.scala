@@ -1,7 +1,8 @@
 package org.atlanmod
 
 import org.apache.spark.{SparkConf, SparkContext}
-import org.atlanmod.class2relational.model.relationalmodel.RelationalMetamodel
+import org.atlanmod.class2relational.model.relationalmodel.{RelationalMetamodel, RelationalModel, RelationalTable}
+import org.atlanmod.class2relational.transformation.dynamic.Relational2Class
 import org.atlanmod.transformation.parallel.{TransformationEngineImpl, TransformationEngineTwoPhase, TransformationEngineTwoPhaseByRule}
 import org.atlanmod.util.R2CUtil
 
@@ -9,6 +10,9 @@ object Main_Relational2Class {
 
     val TUPLES_MODE_DEFAULT = "simple" // or "full"
     var tuples_mode: String = TUPLES_MODE_DEFAULT
+
+    val PIVOT_COMPLEXITY_DEFAULT = "simple" // or "full"
+    var pivot_complexity: String = PIVOT_COMPLEXITY_DEFAULT
 
     final val DEFAULT_SIZE: Int = 10
     var model_size: Int = DEFAULT_SIZE
@@ -74,6 +78,11 @@ object Main_Relational2Class {
                 nstep = step.toInt
                 parseArgs(args)
             }
+            case "-pivot" :: pivot :: args =>{
+                assert(pivot.equals("simple") || pivot.equals("complex"))
+                pivot_complexity = pivot
+                parseArgs(args)
+            }
             case _ :: args => parseArgs(args)
             case List() =>
         }
@@ -92,6 +101,13 @@ object Main_Relational2Class {
         parseArgs(args.toList)
         val sc = getContext()
 
+        var foo_pivot: (RelationalModel, RelationalTable, RelationalTable) => Boolean = null
+
+        if (pivot_complexity.equals("simple"))
+            foo_pivot = Relational2Class.isPivot
+        if (pivot_complexity.equals("complex"))
+            foo_pivot = Relational2Class.isPivot_complex
+
         val transformation = org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class(sleeping_guard, sleeping_instantiate, sleeping_apply)
         val input_model = R2CUtil.get_model_from_n_patterns(model_size)
         val input_metamodel = RelationalMetamodel.metamodel
@@ -107,6 +123,7 @@ object Main_Relational2Class {
             res = TransformationEngineTwoPhase.execute(transformation, input_model, input_metamodel, npartition, sc)
         if (tuples_mode == "simple")
             res = TransformationEngineImpl.execute(transformation, input_model, input_metamodel, npartition, sc)
+
 
         println("element,link,executor,core,partition,sleeping_guard,sleeping_instantiate,sleeping_apply,total_time,time_tuples,time_instantiate,time_extract,time_broadcast,time_apply")
         line = List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition,
