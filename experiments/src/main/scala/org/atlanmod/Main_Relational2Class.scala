@@ -7,7 +7,7 @@ import org.atlanmod.util.R2CUtil
 
 object Main_Relational2Class {
 
-    val TUPLES_MODE_DEFAULT = "by_rule" // or "full"
+    val TUPLES_MODE_DEFAULT = "simple" // or "full"
     var tuples_mode: String = TUPLES_MODE_DEFAULT
 
     final val DEFAULT_SIZE: Int = 10
@@ -25,13 +25,13 @@ object Main_Relational2Class {
     final val DEFAULT_NPARTITION: Int = 1 * 4
     var npartition: Int = DEFAULT_NPARTITION
 
-    final val DEFAULT_SLEEPING_GUARD: Int = 120
+    final val DEFAULT_SLEEPING_GUARD: Int = 0
     var sleeping_guard: Int = DEFAULT_SLEEPING_GUARD
 
-    final val DEFAULT_SLEEPING_INSTANTIATE: Int = 120
+    final val DEFAULT_SLEEPING_INSTANTIATE: Int = 0
     var sleeping_instantiate: Int = DEFAULT_SLEEPING_INSTANTIATE
 
-    final val DEFAULT_SLEEPING_APPLY: Int = 120
+    final val DEFAULT_SLEEPING_APPLY: Int = 0
     var sleeping_apply: Int = DEFAULT_SLEEPING_APPLY
 
 

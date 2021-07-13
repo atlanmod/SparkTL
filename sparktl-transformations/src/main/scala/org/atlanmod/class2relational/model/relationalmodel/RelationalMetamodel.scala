@@ -7,6 +7,8 @@ import scala.annotation.tailrec
 
 object RelationalMetamodel {
 
+
+
     @tailrec
     private def getMVTablesOfTableOnElementsOld(table: RelationalTable, allModelElements: List[RelationalElement],
                                              acc: List[List[RelationalTable]] = List())
@@ -182,5 +184,21 @@ object RelationalMetamodel {
             case Some(columns) => getAType(columns, model)
             case _ => None
         }
+    }
+
+    def getAllTable(model: RelationalModel): List[RelationalTable] = {
+        model.allModelElements.filter(r => r.getType.equals(TABLE)).map(de => de.asInstanceOf[RelationalTable])
+    }
+
+    def getAllColumns(model: RelationalModel): List[RelationalColumn] = {
+        model.allModelElements.filter(r => r.getType.equals(COLUMN)).map(de => de.asInstanceOf[RelationalColumn])
+    }
+
+    def getAllType(model: RelationalModel): List[RelationalType] = {
+        model.allModelElements.filter(r => r.getType.equals(TYPE)).map(de => de.asInstanceOf[RelationalType])
+    }
+
+    def getAllTypable(model: RelationalModel): List[RelationalTypable] = {
+        getAllTable(model).asInstanceOf[List[RelationalTypable]] ++ getAllType(model).asInstanceOf[List[RelationalTypable]]
     }
 }

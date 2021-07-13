@@ -14,7 +14,7 @@ object TransformationEngineImpl extends ExperimentalTransformationEngine{
                                                                                         npartition: Int, sc: SparkContext)
     : (Double, List[Double]) = {
         val t1_start = System.nanoTime()
-        val tuples = sc.parallelize(allTuples(tr, sm))
+        val tuples = sc.parallelize(allTuples(tr, sm), npartition)
         val t1_end = System.nanoTime()
         val t1 = (t1_end - t1_start) * 1000 / 1e9d
 

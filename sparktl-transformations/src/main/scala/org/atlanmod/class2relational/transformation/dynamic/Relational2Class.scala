@@ -169,14 +169,67 @@ object Relational2Class {
         d.toInt
     }
 
-    def relational2class(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0)
+    def isPivot(m:RelationalModel, t1:RelationalTable, t2:RelationalTable) : Boolean = {
+        val n1 = t1.getName
+        val n2 = t2.getName
+        n2.indexOf("_") != -1 & !n2.equals(n1) & n2.startsWith(n1)
+    }
+
+    def isPivot_complex(model:RelationalModel, town:RelationalTable, tattr:RelationalTable) : Boolean = {
+        /*
+        Goal: find cref, ttype, and cid such as
+        ```
+        tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) &
+          RelationalMetamodel.getColumnOwner(cref, model).contains(tattr) &
+          RelationalMetamodel.isKeyOf(cref, tattr, model) &
+          cref.getName.equals(ttype.getName) &
+          RelationalMetamodel.getColumnOwner(cid, model).contains(tattr) &
+          RelationalMetamodel.isKeyOf(cid, tattr, model) &
+          cid.getName.equals("Id")
+         ```
+         is respected
+         */
+
+        val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
+        val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
+
+        var g1 = false
+        for (cref <- columns){
+            // Find cref
+            val c1 = RelationalMetamodel.getColumnOwner(cref, model).contains(tattr)
+            val c2 = RelationalMetamodel.isKeyOf(cref, tattr, model)
+            var g2 = false
+            for (ttype <- typables) {
+                // Find ttype
+                val c3 = cref.getName.equals(ttype.getName)
+                g2 = g2 || c3
+            }
+            g1 = g1 || (c1 && c2 && g2)
+        }
+
+
+        var g3 = false
+        for (cid <- columns){
+            // Find cid
+            val c1 = RelationalMetamodel.getColumnOwner(cid, model).contains(tattr)
+            val c2 = RelationalMetamodel.isKeyOf(cid, tattr, model)
+            val c3 = cid.getName.equals("Id")
+            g3 = g3 || (c1 && c2 && c3)
+        }
+
+        tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) && g1 && g3
+
+    }
+
+    def relational2class(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0,
+                         foo_pivot: (RelationalModel, RelationalTable, RelationalTable) => Boolean = isPivot)
     : Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
             List(
                 new RuleImpl(
                     name = "Type2Datatype",
                     types = List(RelationalMetamodel.TYPE),
-                    from = (_, l) => {
+                    from = (m, l) => {
                         my_sleep(sleeping_guard, random.nextInt())
                         Some(true)
                     },
@@ -258,11 +311,12 @@ object Relational2Class {
                 new RuleImpl(
                     name = "Multivalued",
                     types = List(RelationalMetamodel.TABLE, RelationalMetamodel.TABLE),
-                    from = (_, l) => {
+                    from = (m, l) => {
                         my_sleep(sleeping_guard, random.nextInt())
-                        val t1 = l.head.asInstanceOf[RelationalTable].getName
-                        val t2 = l(1).asInstanceOf[RelationalTable].getName
-                        Some(t2.indexOf("_") != -1 & !t2.equals(t1) & t2.startsWith(t1))
+                        val t1 = l.head.asInstanceOf[RelationalTable]
+                        val t2 = l(1).asInstanceOf[RelationalTable]
+                        val model = m.asInstanceOf[RelationalModel]
+                        Some(foo_pivot(model, t1, t2))
                     },
                     to = List(
                         new OutputPatternElementImpl(name = PATTERN_MVATTRIBUTE,
