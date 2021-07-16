@@ -98,24 +98,31 @@ object Main_Relational2Class {
     }
 
     def main(args: Array[String]): Unit = {
-        parseArgs(args.toList)
-        val sc = getContext()
+       try {
+           parseArgs(args.toList)
+           val sc = getContext()
+           var foo_pivot: (RelationalModel, RelationalTable, RelationalTable) => Boolean = null
+           var foo_notpivot: (RelationalModel, RelationalTable) => Boolean = null
 
-        var foo_pivot: (RelationalModel, RelationalTable, RelationalTable) => Boolean = null
+           if (pivot_complexity.equals("simple")) {
+                foo_pivot = Relational2Class.isPivot
+                foo_notpivot = Relational2Class.isNotPivot
+           }
+           if (pivot_complexity.equals("complex")) {
+               foo_pivot = Relational2Class.isPivot_complex
+               foo_notpivot = Relational2Class.isNotPivot_complex
+           }
+           if (pivot_complexity.equals("n2")) {
+               foo_pivot = Relational2Class.isPivot_n2
+               foo_notpivot = Relational2Class.isNotPivot_n2
+            }
 
-        if (pivot_complexity.equals("simple"))
-            foo_pivot = Relational2Class.isPivot
-        if (pivot_complexity.equals("complex"))
-            foo_pivot = Relational2Class.isPivot_complex
-        if (pivot_complexity.equals("n2"))
-            foo_pivot = Relational2Class.isPivot_n2
+            val transformation = org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class(sleeping_guard, sleeping_instantiate, sleeping_apply,foo_pivot,foo_notpivot)
+            val input_model = R2CUtil.get_model_from_n_patterns(model_size)
+            val input_metamodel = RelationalMetamodel.metamodel
 
-        val transformation = org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class(sleeping_guard, sleeping_instantiate, sleeping_apply)
-        val input_model = R2CUtil.get_model_from_n_patterns(model_size)
-        val input_metamodel = RelationalMetamodel.metamodel
-
-        var line = List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition,
-            sleeping_guard,sleeping_instantiate,sleeping_apply).mkString(",")
+            var line = List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition,
+                sleeping_guard,sleeping_instantiate,sleeping_apply).mkString(",")
 //        println(line)
 
         var res: (Double, List[Double]) = null
@@ -131,5 +138,9 @@ object Main_Relational2Class {
         line = List(pivot_complexity,input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition,
             sleeping_guard,sleeping_instantiate,sleeping_apply).mkString(",")
         println(line + "," + res._1 + "," + res._2.mkString(","))
+
+       } catch {
+           case e: Exception => println(e.getMessage)
+       }
     }
 }
