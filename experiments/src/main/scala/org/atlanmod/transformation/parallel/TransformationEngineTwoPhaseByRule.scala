@@ -63,6 +63,10 @@ object TransformationEngineTwoPhaseByRule extends ExperimentalTransformationEngi
         var sps_rdd: RDD[List[SME]] = null
         var links : List[TML] = null
 
+        val model = sc.broadcast(sm)
+        val metamodel = sc.broadcast(mm)
+        val transformation = sc.broadcast(tr)
+
         if (nstep >= 1) {
             // 1.Create the tuples
             t1_start = System.nanoTime
@@ -74,7 +78,7 @@ object TransformationEngineTwoPhaseByRule extends ExperimentalTransformationEngi
         if (nstep >= 2) {
             // 2.Instantiate tracelinks
             t2_start = System.nanoTime
-            trace = new TraceLinksList(tuples.flatMap(tuple => tracePattern(tr, sm, mm, tuple)).collect)
+            trace = new TraceLinksList(tuples.flatMap(tuple => tracePattern(transformation.value, model.value, metamodel.value, tuple)).collect)
             t2_end = System.nanoTime
         }
 
@@ -99,7 +103,7 @@ object TransformationEngineTwoPhaseByRule extends ExperimentalTransformationEngi
         if (nstep >= 5) {
             // 5.Instantiate links (apply phase)
             t5_start = System.nanoTime
-            links = applyTraces(tr, sm, mm, sps_rdd, tls_broad.value)
+            links = applyTraces(transformation.value, model.value, metamodel.value, sps_rdd, tls_broad.value)
 //            println(links.length + " output links")
             t5_end = System.nanoTime
         }
