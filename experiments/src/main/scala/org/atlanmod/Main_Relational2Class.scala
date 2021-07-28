@@ -8,7 +8,7 @@ import org.atlanmod.util.R2CUtil
 
 object Main_Relational2Class {
 
-    val TUPLES_MODE_DEFAULT = "simple" // or "full"
+    val TUPLES_MODE_DEFAULT = "by_rule" // or "full"
     var tuples_mode: String = TUPLES_MODE_DEFAULT
 
     val PIVOT_COMPLEXITY_DEFAULT = "simple" // or "full"
@@ -91,8 +91,8 @@ object Main_Relational2Class {
     def getContext(): SparkContext = {
         val conf = new SparkConf()
 //        if (conf.getExecutorEnv.isEmpty) {
-//            conf.setMaster("local[" + (DEFAULT_NEXECUTOR * DEFAULT_NCORE) + "]")
-//            conf.setAppName("Relational2Class")
+          // conf.setMaster("local[" + (DEFAULT_NEXECUTOR * DEFAULT_NCORE) + "]")
+            //conf.setAppName("Relational2Class")
 //        }
         new SparkContext(conf)
     }
@@ -100,6 +100,7 @@ object Main_Relational2Class {
     def main(args: Array[String]): Unit = {
        try {
            parseArgs(args.toList)
+           //println(args)
            val sc = getContext()
            var foo_pivot: (RelationalModel, RelationalTable, RelationalTable) => Boolean = null
            var foo_notpivot: (RelationalModel, RelationalTable) => Boolean = null
@@ -134,8 +135,8 @@ object Main_Relational2Class {
             res = TransformationEngineImpl.execute(transformation, input_model, input_metamodel, npartition, sc)
 
 
-        println("pivot,element,link,executor,core,partition,sleeping_guard,sleeping_instantiate,sleeping_apply,total_time,time_tuples,time_instantiate,time_extract,time_broadcast,time_apply")
-        line = List(pivot_complexity,input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition,
+        //println("implem,element,link,executor,core,partition,sleeping_guard,sleeping_instantiate,sleeping_apply,total_time,time_tuples,time_instantiate,time_extract,time_broadcast,time_apply")
+        line = List(tuples_mode,input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition,
             sleeping_guard,sleeping_instantiate,sleeping_apply).mkString(",")
         println(line + "," + res._1 + "," + res._2.mkString(","))
 

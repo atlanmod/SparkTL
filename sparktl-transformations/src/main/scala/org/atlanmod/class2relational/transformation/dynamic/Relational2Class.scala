@@ -175,6 +175,10 @@ object Relational2Class {
         n2.indexOf("_") != -1 & !n2.equals(n1) & n2.startsWith(n1)
     }
 
+    def isNotPivot(m:RelationalModel, t: RelationalTable): Boolean = {
+        t.getName.indexOf("_") == -1
+    }
+
     def isPivot_n2(model:RelationalModel, town:RelationalTable, tattr:RelationalTable) : Boolean = {
         /*
             Goal: find cref, ttype, and cid such as
@@ -220,6 +224,77 @@ object Relational2Class {
 
     }
 
+    def isNotPivot_n2(model:RelationalModel, t:RelationalTable) : Boolean = {
+        /*
+            Goal: find cref, ttype, and cid such as
+            ```
+            tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) &
+              RelationalMetamodel.getColumnOwner(cref, model).contains(tattr) &
+              RelationalMetamodel.isKeyOf(cref, tattr, model) &
+              cref.getName.equals(ttype.getName) &
+              RelationalMetamodel.getColumnOwner(cid, model).contains(tattr) &
+              RelationalMetamodel.isKeyOf(cid, tattr, model) &
+              cid.getName.equals("Id")
+             ```
+             is respected
+             */
+        println("N2")
+        val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
+        val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
+
+        var g1 = false
+        for (cref <- columns){
+            // Find cref
+            val c1 = RelationalMetamodel.getColumnOwner(cref, model).contains(t)
+            val c2 = RelationalMetamodel.isKeyOf(cref, t, model)
+            var g2 = false
+            for (ttype <- typables) {
+                // Find ttype
+                val c3 = cref.getName.equals(ttype.getName)
+                g2 = g2 || c3
+            }
+            g1 = g1 || (c1 && c2 && g2)
+        }
+
+        var g3 = false
+        for (cid <- columns){
+            // Find cid
+            val c1 = RelationalMetamodel.getColumnOwner(cid, model).contains(t)
+            val c2 = RelationalMetamodel.isKeyOf(cid, t, model)
+            val c3 = cid.getName.equals("Id")
+            g3 = g3 || (c1 && c2 && c3)
+        }
+
+        t.getName.indexOf('_') == -1
+
+    }
+
+    def isNotPivot_complex(model:RelationalModel, t:RelationalTable) : Boolean ={
+
+        println("complex")
+        val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
+        val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
+        val tables: List[RelationalTypable] = RelationalMetamodel.getAllTable(model)
+
+        var result = true
+        for (town <- tables) {
+            for (cref <- columns) {
+                for (ttype <- typables) {
+                    for (cid <- columns) {
+                        if (t.getName.indexOf("_") != -1 & town != t & t.getName.startsWith(town.getName) &
+                          RelationalMetamodel.getColumnOwner(cref, model).contains(t) &
+                          RelationalMetamodel.isKeyOf(cref, t, model) &
+                          cref.getName.equals(ttype.getName) &
+                          RelationalMetamodel.getColumnOwner(cid, model).contains(t) &
+                          RelationalMetamodel.isKeyOf(cid, t, model) &
+                          cid.getName.equals("Id"))
+                            result = true
+                    }
+                }
+            }
+        }
+        result
+    }
     def isPivot_complex(model:RelationalModel, town:RelationalTable, tattr:RelationalTable) : Boolean = {
         /*
         Goal: find cref, ttype, and cid such as
@@ -234,7 +309,7 @@ object Relational2Class {
          ```
          is respected
          */
-
+        println("complex")
         val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
         val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
 
@@ -257,7 +332,8 @@ object Relational2Class {
     }
 
     def relational2class(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0,
-                         foo_pivot: (RelationalModel, RelationalTable, RelationalTable) => Boolean = isPivot)
+                         foo_pivot: (RelationalModel, RelationalTable, RelationalTable) => Boolean = isPivot,
+                         foo_notpivot: (RelationalModel, RelationalTable) => Boolean = isNotPivot)
     : Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
             List(
@@ -283,9 +359,9 @@ object Relational2Class {
                 new RuleImpl(
                     name = "Table2Class",
                     types = List(RelationalMetamodel.TABLE),
-                    from = (_, l) => {
+                    from = (m, l) => {
                         my_sleep(sleeping_guard, random.nextInt())
-                        Some(l.head.asInstanceOf[RelationalTable].getName.indexOf('_') == -1)
+                        Some(foo_notpivot(m.asInstanceOf[RelationalModel], l.head.asInstanceOf[RelationalTable]))
                     },
                     to = List(
                         new OutputPatternElementImpl(
