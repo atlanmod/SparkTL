@@ -4,6 +4,7 @@ import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicM
 
 object MovieMetamodel {
 
+
     final val MOVIE = "Movie"
     final val GROUP = "Group"
     final val COUPLE = "Couple"
@@ -25,6 +26,12 @@ object MovieMetamodel {
         links.find(l => l.isInstanceOf[MovieToPersons] && l.getSource.equals(movie)) match {
             case Some(l: MovieToPersons) => Some(l.getTarget)
             case _ => None
+        }
+
+    def getPersonsOfMovieAsList(model: MovieModel, movie: MovieMovie): List[MoviePerson] =
+        getPersonsOfMovie(model, movie) match {
+            case Some(persons) => persons
+            case _ => List()
         }
 
     def getPersonsOfMovie(model: MovieModel, movie: MovieMovie): Option[List[MoviePerson]] =
@@ -74,4 +81,5 @@ object MovieMetamodel {
 
     def getPersonP2OfCouple(model: MovieModel, couple: MovieCouple): Option[MoviePerson] =
         getPersonP2OfCoupleOnLinks(model.allModelLinks, couple)
+
 }
