@@ -1,0 +1,19 @@
+-- @path MM=/DBLP_CaseStudy/DBLP.ecore
+-- @path MM1=/DBLP_CaseStudy/AuthorInfo.ecore
+
+module DBLPv2;
+create OUT : MM1 from IN : MM;
+
+
+helper context MM!InProceedings def : booktitle() : String = self.bootitle;
+
+
+rule icmt {
+	from
+		a : MM!Author (a.records->select(r | r.oclIsTypeOf(MM!InProceedings))->exists(ip | ip.booktitle().indexOf('ICMT')>=0))
+	to
+		out : MM1!Author (
+			name <- a.name,
+			numOfPapers <-  a.records->select(r | r.oclIsTypeOf(MM!InProceedings))->select(ip | ip.booktitle().indexOf('ICMT')>=0)->size()
+		)
+}

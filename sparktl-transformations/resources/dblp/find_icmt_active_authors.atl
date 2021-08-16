@@ -1,0 +1,22 @@
+-- @path MM=/DBLP_CaseStudy/DBLP.ecore
+-- @path MM1=/DBLP_CaseStudy/AuthorInfo.ecore
+
+module DBLPv2;
+create OUT : MM1 from IN : MM;
+
+helper context MM!InProceedings def : booktitle() : String = self.bootitle;
+
+helper context MM!InProceedings def : year() : String = self.year;
+
+helper context MM!Author def : active() : Boolean =
+	self.records->select(r | r.oclIsTypeOf(MM!InProceedings))->select(ip | ip.booktitle().indexOf('ICMT')>=0 and ip.year()>2008)->size()>0;
+
+rule icmt {
+	from
+		a : MM!Author (a.records->select(r | r.oclIsTypeOf(MM!InProceedings))->exists(ip | ip.booktitle().indexOf('ICMT')>=0))
+	to
+		out : MM1!Author (
+			name <- a.name,
+			active <- a.active()
+		)
+}

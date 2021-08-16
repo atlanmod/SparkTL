@@ -1,0 +1,50 @@
+-- @path MM=/DBLP_CaseStudy/DBLP.ecore
+-- @path MM1=/DBLP_CaseStudy/AuthorInfo.ecore
+
+module DBLPv2;
+create OUT : MM1 from IN : MM;
+
+helper context MM!Article def : journal() : String = if self.journal.oclIsUndefined() then '' else self.journal.name endif;
+
+helper context MM!Article def : year() : String = self.year;
+
+helper def : journals : Map(String, MM1!Journal) = Map{};
+
+helper context MM!Author def : active() : Boolean =
+	self.records->select(r | r.oclIsTypeOf(MM!Article))->select(a | a.journal().indexOf('Information & Software Technology')>=0 and a.year()>2005)->size()>0;
+
+helper context MM!Author def : nowPublishingIn() : Sequence(String) =
+	self.records->select(r | r.oclIsTypeOf(MM!Article))->select(a | a.journal().indexOf('Information & Software Technology')<0 and a.year()>2005)->collect(r | r.journal());
+
+rule icmt {
+	from
+		a : MM!Author (a.records->select(r | r.oclIsTypeOf(MM!Article))->exists(a | a.journal().indexOf('Information & Software Technology')>=0) and a.active())
+	to
+		out : MM1!Author (
+			name <- a.name,
+			active <- a.active()
+		)
+	do {
+		for (jName in a.nowPublishingIn()) {
+			if (jName<>''){
+				if (thisModule.journals.get(jName).oclIsUndefined()){
+					thisModule.jour(jName);
+				}
+				out.publishesInJ <- out.publishesInJ->append(thisModule.journals.get(jName));
+			}
+		}
+	}
+}
+
+rule jour(jName : String) {
+	to
+		c : MM1!Journal (
+			name <- jName
+		)
+	do {
+		thisModule.journals.put(jName, c);
+	}
+}
+
+
+
