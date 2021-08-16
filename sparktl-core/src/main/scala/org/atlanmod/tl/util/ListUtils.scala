@@ -96,4 +96,11 @@ object ListUtils {
         }
     }
 
+    def sum_list_option[A] (a1 : Option[List[A]], a2 : Option[List[A]]): Option[List[A]] = {
+        (a1, a2) match {
+            case (Some(l1), Some(l2)) => Some (l1 ++ l2)
+            case _ => None
+        }
+    }
+
 }

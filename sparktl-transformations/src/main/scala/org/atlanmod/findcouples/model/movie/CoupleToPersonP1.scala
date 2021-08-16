@@ -6,5 +6,7 @@ class CoupleToPersonP1 (source: MovieCouple,  target: MoviePerson)
     override def getSource: MovieCouple = source
     override def getTarget: List[MoviePerson] = List(target)
 
+    def getPersonP1: MoviePerson = target
+
     override def toString: String = source.toString + ": " + target.getName
 }
