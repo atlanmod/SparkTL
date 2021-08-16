@@ -1,6 +1,8 @@
 package org.atlanmod.findcouples.transformation.dynamic
 
 import org.atlanmod.findcouples.model.movie._
+import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieActress, MovieMovie, MoviePerson}
+import org.atlanmod.findcouples.model.movie.link.{MovieToPersons, PersonToMovies}
 import org.atlanmod.tl.engine.Resolve
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}

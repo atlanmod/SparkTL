@@ -1,9 +1,11 @@
-package org.atlanmod.findcouples.model.movie
+package org.atlanmod.findcouples.model.movie.element
 
 object MovieType extends Enumeration {
-    protected case class MovieTypeVal(name: String) extends super.Val{}
+
+    protected case class MovieTypeVal(name: String) extends super.Val {}
 
     import scala.language.implicitConversions
+
     implicit def valueToMovieTypeVal(x: Value): MovieTypeVal = x.asInstanceOf[MovieTypeVal]
 
     //type MovieType = Value

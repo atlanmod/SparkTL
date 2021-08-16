@@ -1,4 +1,6 @@
-package org.atlanmod.findcouples.model.movie
+package org.atlanmod.findcouples.model.movie.element
+
+import org.atlanmod.findcouples.model.movie.{MovieElement, MovieMetamodel}
 
 class MovieMovie extends MovieElement (MovieMetamodel.MOVIE) {
 

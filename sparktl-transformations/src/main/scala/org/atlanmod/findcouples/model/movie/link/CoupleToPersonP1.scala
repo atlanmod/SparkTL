@@ -1,4 +1,7 @@
-package org.atlanmod.findcouples.model.movie
+package org.atlanmod.findcouples.model.movie.link
+
+import org.atlanmod.findcouples.model.movie.element.{MovieCouple, MoviePerson}
+import org.atlanmod.findcouples.model.movie.{MovieLink, MovieMetamodel}
 
 class CoupleToPersonP1 (source: MovieCouple,  target: MoviePerson)
   extends MovieLink(MovieMetamodel.COUPLE_PERSON_P1, source, List(target)){
