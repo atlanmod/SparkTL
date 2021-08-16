@@ -6,6 +6,9 @@ import org.atlanmod.findcouples.model.movie.{MovieLink, MovieMetamodel}
 class CliqueToPersons (source: MovieClique, target: List[MoviePerson])
   extends MovieLink(MovieMetamodel.CLIQUE_PERSONS, source, target){
 
+    def this(source: MovieClique, target: MoviePerson) =
+        this(source, List(target))
+
     override def getSource: MovieClique = source
     override def getTarget: List[MoviePerson] = target
 
