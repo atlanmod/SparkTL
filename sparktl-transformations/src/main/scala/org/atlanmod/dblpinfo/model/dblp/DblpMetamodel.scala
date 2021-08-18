@@ -1,6 +1,9 @@
 package org.atlanmod.dblpinfo.model.dblp
 
+import org.atlanmod.dblpinfo.model.dblp.element.{DblpAuthor, DblpRecord}
+
 object DblpMetamodel {
+
 
     final val AUTHOR: String = "Author"
     final val RECORD: String = "Record"
@@ -35,5 +38,8 @@ object DblpMetamodel {
     final val MASTERSTHESIS_SCHOOL: String = "school"
     final val PHDTHESIS_SCHOOL: String = "school"
     final val WWW_EDITORS: String = "editors"
+
+
+    def getRecordsOfAuthor(model: DblpModel, author: DblpAuthor): List[DblpRecord] = List() // TODO
 
 }

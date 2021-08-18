@@ -4,7 +4,7 @@ import org.atlanmod.dblpinfo.model.authorinfo.{AuthorInfoElement, AuthorInfoMeta
 
 class AuthorInfoAuthor extends AuthorInfoElement(AuthorInfoMetamodel.AUTHOR){
 
-    def this(name: String, numOfPapers: Int, active: Boolean) = {
+    def this(name: String, numOfPapers: Int = 0, active: Boolean = false) = {
         this()
         super.eSetProperty("name", name)
         super.eSetProperty("numOfPapers", numOfPapers)
