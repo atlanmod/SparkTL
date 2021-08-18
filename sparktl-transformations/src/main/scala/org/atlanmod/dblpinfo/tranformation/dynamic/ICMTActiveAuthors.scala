@@ -15,8 +15,17 @@ object ICMTActiveAuthors {
 
     def helper_year(model: DblpModel, ip: DblpInProceedings) : Int = ip.getYear
 
-    def helper_active(model: DblpModel, author: DblpAuthor) : Boolean = true
-    // TODO  author.records->select(r | r.oclIsTypeOf(MM!InProceedings))->select(ip | ip.booktitle().indexOf('ICMT')>=0 and ip.year()>2008)->size()>0;
+    def helper_active(model: DblpModel, author: DblpAuthor) : Boolean =
+        DblpMetamodel.getRecordsOfAuthor(model, author)
+          .filter(r => r.isInstanceOf[DblpInProceedings])
+          .map(r => r.asInstanceOf[DblpInProceedings])
+          .exists(ip => helper_booktitle(model, ip).indexOf("ICMT") > 0 && helper_year(model, ip) > 2008)
+
+    def helper_hasPapersICMT(model: DblpModel, author: DblpAuthor) : Boolean =
+        DblpMetamodel.getRecordsOfAuthor(model, author)
+          .filter(r => r.isInstanceOf[DblpInProceedings])
+          .map(r => r.asInstanceOf[DblpInProceedings])
+          .exists(ip => helper_booktitle(model, ip).indexOf("ICMT") > 0)
 
 
     def find: Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] =
@@ -24,7 +33,8 @@ object ICMTActiveAuthors {
             new RuleImpl(
                 name = "icmt",
                 types = List(DblpMetamodel.AUTHOR),
-                from = (_, _) => Some(true), // TODO (a.records->select(r | r.oclIsTypeOf(MM!InProceedings))->exists(ip | ip.booktitle().indexOf('ICMT')>=0))
+                from = (model, pattern) =>
+                    Some(helper_hasPapersICMT(model.asInstanceOf[DblpModel], pattern.head.asInstanceOf[DblpAuthor])),
                 to = List(
                     new OutputPatternElementImpl(name = PATTERN_AUTHOR_ICMT,
                         elementExpr = (_,model,pattern) => {

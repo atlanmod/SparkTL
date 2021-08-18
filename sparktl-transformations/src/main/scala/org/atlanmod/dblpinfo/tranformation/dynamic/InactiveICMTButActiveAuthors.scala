@@ -1,7 +1,7 @@
 package org.atlanmod.dblpinfo.tranformation.dynamic
 
 import org.atlanmod.dblpinfo.model.authorinfo.element.AuthorInfoConference
-import org.atlanmod.dblpinfo.model.dblp.DblpModel
+import org.atlanmod.dblpinfo.model.dblp.{DblpMetamodel, DblpModel}
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpAuthor, DblpInProceedings}
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.{RuleImpl, TransformationImpl}
@@ -17,13 +17,18 @@ object InactiveICMTButActiveAuthors {
 
     def helper_year(model: DblpModel, ip: DblpInProceedings) : Int = ip.getYear
 
-    def helper_active(model: DblpModel, author: DblpAuthor) : Boolean = true
-    // TODO get from ICMTActiveAuthors.scala
+    def helper_active(model: DblpModel, author: DblpAuthor) : Boolean =
+        DblpMetamodel.getRecordsOfAuthor(model, author)
+          .filter(r => r.isInstanceOf[DblpInProceedings])
+          .map(r => r.asInstanceOf[DblpInProceedings])
+          .exists(ip => helper_booktitle(model, ip).indexOf("ICMT") > 0 && helper_year(model, ip) > 2008)
 
-    def helper_nowPublishingIn(model: DblpModel, author: DblpAuthor) : Seq[String] = List()
-    // TODO author.records->select(r | r.oclIsTypeOf(MM!InProceedings))
-    //                    ->select(ip | ip.booktitle().indexOf('ICMT')<0 and ip.year()>2008)
-    //                    ->collect(r | r.booktitle());
+    def helper_nowPublishingIn(model: DblpModel, author: DblpAuthor) : Seq[String] =
+        DblpMetamodel.getRecordsOfAuthor(model, author)
+          .filter(r => r.isInstanceOf[DblpInProceedings])
+          .map(r => r.asInstanceOf[DblpInProceedings])
+          .filter(ip => helper_booktitle(model, ip).indexOf("ICMT") > 0 && helper_year(model, ip) > 2008)
+          .map(ip => helper_booktitle(model, ip))
 
     def find: Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] =
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](List(
