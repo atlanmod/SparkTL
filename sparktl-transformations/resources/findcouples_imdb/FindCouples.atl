@@ -29,13 +29,6 @@ rule actor {
 			name <- p1.name,
 			movies <- p1.movies
 		)
-	do {
-		for (coauthor in thisModule.coactor(p1)){
-			if (thisModule.areCouple(p1, coauthor) and p1.name.compareTo(coauthor.name)<0){
-				thisModule.createCouple(p1, coauthor);
-			}
-		}
-	}
 }
 
 rule actress {
@@ -46,19 +39,45 @@ rule actress {
 			name <- p1.name,
 			movies <- p1.movies
 		)
-	do {
-		for (coauthor in thisModule.coactor(p1)){
-			if (thisModule.areCouple(p1, coauthor)  and p1.name.compareTo(coauthor.name)<0){
-				thisModule.createCouple(p1, coauthor);
-			}
-		}
-	}
 }
 
-rule createCouple(person1 : MM!Person, person2 : MM!Person) {
+rule couple_actor_actor{
+	from
+		p1 :  MM!Actor
+		p2 :  MM!Actor (areCouple(p1,p2))
 	to
 		c : MM1!Couple (
 			p1 <- person1,
 			p2 <- person2
-		)
+		)		
 }
+
+rule couple_actress_actor{
+	from
+		p1 :  MM!Actress
+		p2 :  MM!Actress (areCouple(p1,p2))
+	to
+		c : MM1!Couple (
+			p1 <- person1,
+			p2 <- person2
+		)		
+}
+
+rule couple_actress_actress{
+	from
+		p1 :  MM!Actress
+		p2 :  MM!Actress (areCouple(p1,p2))
+	to
+		c : MM1!Couple (
+			p1 <- person1,
+			p2 <- person2
+		)		
+}
+
+--do {
+--  		for (coauthor in thisModule.coactor(p1)){
+--  			if (thisModule.areCouple(p1, coauthor) and p1.name.compareTo(coauthor.name)<0){
+--  				thisModule.createCouple(p1, coauthor);
+--  			}
+--  		}
+--  	}

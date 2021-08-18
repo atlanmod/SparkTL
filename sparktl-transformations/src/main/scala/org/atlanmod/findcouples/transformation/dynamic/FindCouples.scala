@@ -1,8 +1,8 @@
 package org.atlanmod.findcouples.transformation.dynamic
 
 import org.atlanmod.findcouples.model.movie._
-import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieActress, MovieMovie, MoviePerson}
-import org.atlanmod.findcouples.model.movie.link.{MovieToPersons, PersonToMovies}
+import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieActress, MovieCouple, MovieMovie, MoviePerson}
+import org.atlanmod.findcouples.model.movie.link.{CoupleToPersonP1, CoupleToPersonP2, MovieToPersons, PersonToMovies}
 import org.atlanmod.tl.engine.Resolve
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
@@ -15,20 +15,11 @@ object FindCouples {
     final val PATTERN_MOVIE = "movie"
     final val PATTERN_ACTOR = "actor"
     final val PATTERN_ACTRESS = "actress"
-    final val PATTERN_COUPLE = "couple"
+    final val PATTERN_COUPLE_ACTOR_ACTOR = "couple_actor_actor"
+    final val PATTERN_COUPLE_ACTRESS_ACTRESS = "couple_actress_actress"
+    final val PATTERN_COUPLE_ACTRESS_ACTOR = "couple_actress_actor"
 
     val mm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
-
-    /* TODO add a such block to actors and actress rules
-        do {
-            for (coauthor in thisModule.coactor(p1)){
-                if (thisModule.areCouple(p1, coauthor) and p1.name.compareTo(coauthor.name)<0){
-                    thisModule.createCouple(p1, coauthor);
-                }
-            }
-        }
-    */
-
 
     def helper_coactor(model: MovieModel, p: MoviePerson): List[MoviePerson] =
         MovieMetamodel.getMoviesOfPerson(model, p) match {
@@ -38,9 +29,12 @@ object FindCouples {
         }
 
     def helper_areCouple(model: MovieModel, p1: MoviePerson, p2: MoviePerson): Boolean =
+        helper_commonMovies(model, p1, p2).size > 3
+
+    def helper_commonMovies(model: MovieModel, p1: MoviePerson, p2: MoviePerson): List[MovieMovie] =
         (MovieMetamodel.getMoviesOfPerson(model, p1), MovieMetamodel.getMoviesOfPerson(model, p2)) match {
-            case (Some(movies1), Some(movies2)) => movies1.intersect(movies2).size > 3
-            case _ => false
+            case (Some(movies1), Some(movies2)) => movies1.intersect(movies2)
+            case _ => List()
         }
 
     def makePersonMovies (tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel,
@@ -60,13 +54,13 @@ object FindCouples {
             case Some(persons) => {
                 var actors: Option[List[MoviePerson]] = None
                 // First we get output actors
-                Resolve.resolveAll(tls, model, mm, PATTERN_ACTOR, MovieMetamodel.PERSON, ListUtils.singletons(persons)) match {
+                Resolve.resolveAll(tls, model, mm, PATTERN_ACTOR, MovieMetamodel.ACTOR, ListUtils.singletons(persons)) match {
                     case Some(l_act: List[MovieActor]) =>  actors = Some(l_act.asInstanceOf[List[MoviePerson]])
                     case _ => None
                 }
                 // Then we get output actresses
                 var actress: Option[List[MoviePerson]] = None
-                Resolve.resolveAll(tls, model, mm, PATTERN_ACTRESS, MovieMetamodel.PERSON, ListUtils.singletons(persons) ) match {
+                Resolve.resolveAll(tls, model, mm, PATTERN_ACTRESS, MovieMetamodel.ACTRESS, ListUtils.singletons(persons) ) match {
                     case Some(l_act: List[MovieActor]) =>  actress = Some(l_act.asInstanceOf[List[MoviePerson]])
                     case _ => None
                 }
@@ -78,6 +72,23 @@ object FindCouples {
             }
             case _ => None
         }
+
+    def makeCoupleToPerson(tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel, person: MoviePerson,
+                           couple: MovieCouple, pattern: String, i: Int): Option[DynamicLink] = {
+        val type_ : String = {
+            pattern match {
+                case PATTERN_ACTOR => MovieMetamodel.ACTOR
+                case PATTERN_ACTRESS => MovieMetamodel.ACTRESS
+                case _ => ""
+            }}
+        Resolve.resolve(tls, model, mm, pattern, type_, List(person)) match {
+            case Some(act: MoviePerson) =>
+                if(i == 1) Some(new CoupleToPersonP1(couple, act))
+                if(i == 2) Some(new CoupleToPersonP2(couple, act))
+                None
+            case _ => None
+        }
+    }
 
     def findcouples_imdb: Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] =
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
@@ -136,6 +147,111 @@ object FindCouples {
                                     (tls, _, sm, pattern, output) =>
                                         makePersonMovies(tls, sm.asInstanceOf[MovieModel],
                                             pattern.head.asInstanceOf[MovieActress], output.asInstanceOf[MovieActress])
+                                )
+                            )
+                        )
+                    )
+                ),
+                new RuleImpl(
+                    name = "couple_actor_actor",
+                    types = List(MovieMetamodel.ACTOR, MovieMetamodel.ACTOR),
+                    from = (model, pattern) => {
+                        val p1 = pattern.head.asInstanceOf[MovieActor]
+                        val p2 = pattern(1).asInstanceOf[MovieActor]
+                        Some(helper_areCouple(model.asInstanceOf[MovieModel], p1, p2))
+                    },
+                    to = List(
+                        new OutputPatternElementImpl(name = PATTERN_COUPLE_ACTOR_ACTOR,
+                            elementExpr = (_, model, l) =>
+                              if (l.size < 2) None else {
+                                  val p1 = l.head.asInstanceOf[MovieActor]
+                                  val p2 = l(1).asInstanceOf[MovieActor]
+                                  val movies = helper_commonMovies(model.asInstanceOf[MovieModel], p1, p2)
+                                  val avgRating = movies.map(m => m.getRating).sum / movies.size
+                                  Some(new MovieCouple(avgRating))
+                              },
+                            outputElemRefs = List(
+                                new OutputPatternElementReferenceImpl(
+                                    (tls, _, sm, pattern, output) =>
+                                        makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
+                                            pattern.head.asInstanceOf[MovieActor], output.asInstanceOf[MovieCouple],
+                                            PATTERN_ACTOR, 1)
+                                ),
+                                new OutputPatternElementReferenceImpl(
+                                    (tls, _, sm, pattern, output) =>
+                                        makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
+                                            pattern(1).asInstanceOf[MovieActor], output.asInstanceOf[MovieCouple],
+                                            PATTERN_ACTOR, 2)
+                                )
+                            )
+                        )
+                    )
+                ),
+                new RuleImpl(
+                    name = "couple_actress_actor",
+                    types = List(MovieMetamodel.ACTRESS, MovieMetamodel.ACTOR),
+                    from = (model, pattern) => {
+                        val p1 = pattern.head.asInstanceOf[MovieActress]
+                        val p2 = pattern(1).asInstanceOf[MovieActor]
+                        Some(helper_areCouple(model.asInstanceOf[MovieModel], p1, p2))
+                    },
+                    to = List(
+                        new OutputPatternElementImpl(name = PATTERN_COUPLE_ACTRESS_ACTOR,
+                            elementExpr = (_, model, l) =>
+                                if (l.size < 2) None else {
+                                    val p1 = l.head.asInstanceOf[MovieActress]
+                                    val p2 = l(1).asInstanceOf[MovieActor]
+                                    val movies = helper_commonMovies(model.asInstanceOf[MovieModel], p1, p2)
+                                    val avgRating = movies.map(m => m.getRating).sum / movies.size
+                                    Some(new MovieCouple(avgRating))
+                                },
+                            outputElemRefs = List(
+                                new OutputPatternElementReferenceImpl(
+                                    (tls, _, sm, pattern, output) =>
+                                        makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
+                                            pattern.head.asInstanceOf[MovieActress], output.asInstanceOf[MovieCouple],
+                                            PATTERN_ACTRESS, 1)
+                                ),
+                                new OutputPatternElementReferenceImpl(
+                                    (tls, _, sm, pattern, output) =>
+                                        makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
+                                            pattern(1).asInstanceOf[MovieActor], output.asInstanceOf[MovieCouple],
+                                            PATTERN_ACTOR, 2)
+                                )
+                            )
+                        )
+                    )
+                ),
+                new RuleImpl(
+                    name = "couple_actress_actress",
+                    types = List(MovieMetamodel.ACTRESS, MovieMetamodel.ACTRESS),
+                    from = (model, pattern) => {
+                        val p1 = pattern.head.asInstanceOf[MovieActress]
+                        val p2 = pattern(1).asInstanceOf[MovieActress]
+                        Some(helper_areCouple(model.asInstanceOf[MovieModel], p1, p2))
+                    },
+                    to = List(
+                        new OutputPatternElementImpl(name = PATTERN_COUPLE_ACTRESS_ACTRESS,
+                            elementExpr = (_, model, l) =>
+                                if (l.size < 2) None else {
+                                    val p1 = l.head.asInstanceOf[MovieActress]
+                                    val p2 = l(1).asInstanceOf[MovieActress]
+                                    val movies = helper_commonMovies(model.asInstanceOf[MovieModel], p1, p2)
+                                    val avgRating = movies.map(m => m.getRating).sum / movies.size
+                                    Some(new MovieCouple(avgRating))
+                                },
+                            outputElemRefs = List(
+                                new OutputPatternElementReferenceImpl(
+                                    (tls, _, sm, pattern, output) =>
+                                        makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
+                                            pattern.head.asInstanceOf[MovieActress], output.asInstanceOf[MovieCouple],
+                                            PATTERN_ACTRESS, 1)
+                                ),
+                                new OutputPatternElementReferenceImpl(
+                                    (tls, _, sm, pattern, output) =>
+                                        makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
+                                            pattern(1).asInstanceOf[MovieActress], output.asInstanceOf[MovieCouple],
+                                            PATTERN_ACTRESS, 2)
                                 )
                             )
                         )
