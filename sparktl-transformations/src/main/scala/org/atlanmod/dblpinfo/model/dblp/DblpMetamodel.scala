@@ -1,6 +1,6 @@
 package org.atlanmod.dblpinfo.model.dblp
 
-import org.atlanmod.dblpinfo.model.dblp.element.{DblpAuthor, DblpRecord}
+import org.atlanmod.dblpinfo.model.dblp.element.{DblpArticle, DblpAuthor, DblpJournal, DblpRecord}
 
 object DblpMetamodel {
 
@@ -42,4 +42,7 @@ object DblpMetamodel {
 
     def getRecordsOfAuthor(model: DblpModel, author: DblpAuthor): List[DblpRecord] = List() // TODO
 
+    def getAuthorsOfRecord(m: DblpModel, ip: DblpRecord): List[DblpAuthor] = List() // TODO
+
+    def getJournalOfArticle(model: DblpModel, a: DblpArticle): Option[DblpJournal] = ??? // TODO
 }

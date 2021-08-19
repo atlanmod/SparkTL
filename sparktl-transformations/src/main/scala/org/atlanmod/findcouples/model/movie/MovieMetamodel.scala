@@ -6,7 +6,6 @@ import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicM
 
 object MovieMetamodel {
 
-
     final val MOVIE = "Movie"
     final val GROUP = "Group"
     final val COUPLE = "Couple"
