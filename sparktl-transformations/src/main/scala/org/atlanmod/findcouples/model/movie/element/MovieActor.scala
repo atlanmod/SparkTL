@@ -13,4 +13,14 @@ class MovieActor extends MoviePerson (MovieMetamodel.ACTOR) {
 
     override def toString: String = getName
 
+    override def equals(o: Any): Boolean = {
+        o match {
+            case obj: MovieActor =>
+                this.getName.equals(obj.getName)
+            case _ => false
+        }
+    }
+
+    override def weak_equals(o: Any): Boolean = equals(o)
+
 }

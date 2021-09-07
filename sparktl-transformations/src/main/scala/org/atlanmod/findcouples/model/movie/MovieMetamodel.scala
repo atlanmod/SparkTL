@@ -66,7 +66,7 @@ object MovieMetamodel {
         getPersonsOfCliqueOnLinks(model.allModelLinks, clique)
 
     def getPersonP1OfCoupleOnLinks(links: List[MovieLink], couple: MovieCouple): Option[MoviePerson] =
-        links.find(l => !(l.isInstanceOf[CoupleToPersonP1] && l.getSource.equals(couple))) match {
+        links.find(l => l.isInstanceOf[CoupleToPersonP1] && l.getSource.asInstanceOf[MovieCouple] == couple) match {
             case Some(l: CoupleToPersonP1) => Some(l.getPersonP1)
             case _ => None
         }
@@ -75,12 +75,24 @@ object MovieMetamodel {
         getPersonP1OfCoupleOnLinks(model.allModelLinks, couple)
 
     def getPersonP2OfCoupleOnLinks(links: List[MovieLink], couple: MovieCouple): Option[MoviePerson] =
-        links.find(l => !(l.isInstanceOf[CoupleToPersonP2] && l.getSource.equals(couple))) match {
+        links.find(l => l.isInstanceOf[CoupleToPersonP2] && l.getSource.asInstanceOf[MovieCouple] == couple) match {
             case Some(l: CoupleToPersonP2) => Some(l.getPersonP2)
             case _ => None
         }
 
     def getPersonP2OfCouple(model: MovieModel, couple: MovieCouple): Option[MoviePerson] =
         getPersonP2OfCoupleOnLinks(model.allModelLinks, couple)
+
+    def getAllCouple(model: MovieModel): List[MovieCouple] =
+        model.allModelElements.filter(e => e.isInstanceOf[MovieCouple]).map(e => e.asInstanceOf[MovieCouple])
+
+    def getAllCoupleTriplets(model: MovieModel): List[(MovieCouple, MoviePerson, MoviePerson)] =
+        getAllCouple(model).flatMap(couple =>
+            (getPersonP1OfCouple(model, couple),getPersonP2OfCouple(model, couple)) match {
+                case (Some(p1), Some(p2)) => List((couple, p1, p2))
+                case _ => List()
+            }
+        )
+
 
 }

@@ -1,7 +1,7 @@
 package org.atlanmod.findcouples.transformation.dynamic
 
 import org.atlanmod.findcouples.model.movie._
-import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieActress, MovieCouple, MovieMovie, MoviePerson}
+import org.atlanmod.findcouples.model.movie.element._
 import org.atlanmod.findcouples.model.movie.link.{CoupleToPersonP1, CoupleToPersonP2, MovieToPersons, PersonToMovies}
 import org.atlanmod.tl.engine.Resolve
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
@@ -29,7 +29,8 @@ object FindCouples {
         }
 
     def helper_areCouple(model: MovieModel, p1: MoviePerson, p2: MoviePerson): Boolean =
-        helper_commonMovies(model, p1, p2).size > 3
+        helper_commonMovies(model, p1, p2).size >= 3 & !p1.equals(p2) &
+          (if (p1.isInstanceOf[MovieActor] & p2.isInstanceOf[MovieActor]) p1.getName <= p2.getName else true)
 
     def helper_commonMovies(model: MovieModel, p1: MoviePerson, p2: MoviePerson): List[MovieMovie] =
         (MovieMetamodel.getMoviesOfPerson(model, p1), MovieMetamodel.getMoviesOfPerson(model, p2)) match {
@@ -41,7 +42,7 @@ object FindCouples {
                           input_person: MoviePerson, output_person: MoviePerson): Option[MovieLink] =
         MovieMetamodel.getMoviesOfPerson(model, input_person) match {
             case Some(movies) =>
-                Resolve.resolveAll(tls, model, mm, PATTERN_MOVIE, MovieMetamodel.MOVIE, ListUtils.singleton(movies)) match {
+                Resolve.resolveAll(tls, model, mm, PATTERN_MOVIE, MovieMetamodel.MOVIE, ListUtils.listToListList(movies)) match {
                     case Some(output_movies: List[MovieMovie]) => Some(new PersonToMovies(output_person, output_movies))
                     case _ => None
                 }
@@ -53,21 +54,18 @@ object FindCouples {
         MovieMetamodel.getPersonsOfMovie(model, input_movie) match {
             case Some(persons) => {
                 var actors: Option[List[MoviePerson]] = None
+                var actress: Option[List[MoviePerson]] = None
                 // First we get output actors
                 Resolve.resolveAll(tls, model, mm, PATTERN_ACTOR, MovieMetamodel.ACTOR, ListUtils.singletons(persons)) match {
-                    case Some(l_act: List[MovieActor]) =>  actors = Some(l_act.asInstanceOf[List[MoviePerson]])
-                    case _ => None
+                    case Some(l_act: List[MovieActor]) => actors = Some(l_act.asInstanceOf[List[MoviePerson]])
                 }
                 // Then we get output actresses
-                var actress: Option[List[MoviePerson]] = None
-                Resolve.resolveAll(tls, model, mm, PATTERN_ACTRESS, MovieMetamodel.ACTRESS, ListUtils.singletons(persons) ) match {
-                    case Some(l_act: List[MovieActor]) =>  actress = Some(l_act.asInstanceOf[List[MoviePerson]])
-                    case _ => None
+                Resolve.resolveAll(tls, model, mm, PATTERN_ACTRESS, MovieMetamodel.ACTRESS, ListUtils.singletons(persons)) match {
+                    case Some(l_act: List[MovieActress]) =>  actress = Some(l_act.asInstanceOf[List[MoviePerson]])
                 }
                 // We make the sum actors + actresses
                 ListUtils.sum_list_option(actors, actress) match {
                     case Some(people: List[MoviePerson]) => Some(new MovieToPersons(output_movie, people))
-                    case None => None
                 }
             }
             case _ => None
@@ -81,11 +79,9 @@ object FindCouples {
                 case PATTERN_ACTRESS => MovieMetamodel.ACTRESS
                 case _ => ""
             }}
-        Resolve.resolve(tls, model, mm, pattern, type_, List(person)) match {
-            case Some(act: MoviePerson) =>
-                if(i == 1) Some(new CoupleToPersonP1(couple, act))
-                if(i == 2) Some(new CoupleToPersonP2(couple, act))
-                None
+        (Resolve.resolve(tls, model, mm, pattern, type_, List(person)), i) match {
+            case (Some(act: MoviePerson), 1) => Some(new CoupleToPersonP1(couple, act))
+            case (Some(act: MoviePerson), 2) => Some(new CoupleToPersonP2(couple, act))
             case _ => None
         }
     }
@@ -140,7 +136,7 @@ object FindCouples {
                             elementExpr = (_,_,l) =>
                                 if (l.isEmpty) None else {
                                     val actress = l.head.asInstanceOf[MovieActress]
-                                    Some(new MovieActor(actress.getName))
+                                    Some(new MovieActress(actress.getName))
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
@@ -168,7 +164,7 @@ object FindCouples {
                                   val p2 = l(1).asInstanceOf[MovieActor]
                                   val movies = helper_commonMovies(model.asInstanceOf[MovieModel], p1, p2)
                                   val avgRating = movies.map(m => m.getRating).sum / movies.size
-                                  Some(new MovieCouple(avgRating))
+                                  Some(new MovieCouple(p1.getName + " & " +  p2.getName, avgRating))
                               },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
@@ -203,7 +199,7 @@ object FindCouples {
                                     val p2 = l(1).asInstanceOf[MovieActor]
                                     val movies = helper_commonMovies(model.asInstanceOf[MovieModel], p1, p2)
                                     val avgRating = movies.map(m => m.getRating).sum / movies.size
-                                    Some(new MovieCouple(avgRating))
+                                    Some(new MovieCouple(p1.getName + " & " +  p2.getName, avgRating))
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
@@ -238,7 +234,7 @@ object FindCouples {
                                     val p2 = l(1).asInstanceOf[MovieActress]
                                     val movies = helper_commonMovies(model.asInstanceOf[MovieModel], p1, p2)
                                     val avgRating = movies.map(m => m.getRating).sum / movies.size
-                                    Some(new MovieCouple(avgRating))
+                                    Some(new MovieCouple(p1.getName + " & " +  p2.getName, avgRating))
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(

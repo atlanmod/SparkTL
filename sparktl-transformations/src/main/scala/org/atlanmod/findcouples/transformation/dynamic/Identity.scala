@@ -19,42 +19,54 @@ object Identity {
 
     val mm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
 
+
+    def makePersonMovies (tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel,
+                          input_person: MoviePerson, output_person: MoviePerson): Option[MovieLink] =
+        MovieMetamodel.getMoviesOfPerson(model, input_person) match {
+            case Some(movies) =>
+                Resolve.resolveAll(tls, model, mm, PATTERN_MOVIE, MovieMetamodel.MOVIE, ListUtils.listToListList(movies)) match {
+                    case Some(output_movies: List[MovieMovie]) => Some(new PersonToMovies(output_person, output_movies))
+                    case _ => None
+                }
+            case None => None
+        }
+
     def makeMoviePersons (tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel,
                           input_movie: MovieMovie, output_movie: MovieMovie): Option[MovieLink] =
         MovieMetamodel.getPersonsOfMovie(model, input_movie) match {
             case Some(persons) => {
                 var actors: Option[List[MoviePerson]] = None
+                var actress: Option[List[MoviePerson]] = None
                 // First we get output actors
-                Resolve.resolveAll(tls, model, mm, PATTERN_ACTOR, MovieMetamodel.PERSON, ListUtils.singletons(persons)) match {
-                    case Some(l_act: List[MovieActor]) =>  actors = Some(l_act.asInstanceOf[List[MoviePerson]])
-                    case _ => None
+                Resolve.resolveAll(tls, model, mm, PATTERN_ACTOR, MovieMetamodel.ACTOR, ListUtils.singletons(persons)) match {
+                    case Some(l_act: List[MovieActor]) => actors = Some(l_act.asInstanceOf[List[MoviePerson]])
                 }
                 // Then we get output actresses
-                var actress: Option[List[MoviePerson]] = None
-                Resolve.resolveAll(tls, model, mm, PATTERN_ACTRESS, MovieMetamodel.PERSON, ListUtils.singletons(persons) ) match {
-                    case Some(l_act: List[MovieActor]) =>  actress = Some(l_act.asInstanceOf[List[MoviePerson]])
-                    case _ => None
+                Resolve.resolveAll(tls, model, mm, PATTERN_ACTRESS, MovieMetamodel.ACTRESS, ListUtils.singletons(persons)) match {
+                    case Some(l_act: List[MovieActress]) =>  actress = Some(l_act.asInstanceOf[List[MoviePerson]])
                 }
                 // We make the sum actors + actresses
                 ListUtils.sum_list_option(actors, actress) match {
                     case Some(people: List[MoviePerson]) => Some(new MovieToPersons(output_movie, people))
-                    case None => None
                 }
             }
             case _ => None
         }
 
-
-    def makePersonMovies (tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel,
-                         input_person: MoviePerson, output_person: MoviePerson): Option[MovieLink] =
-        MovieMetamodel.getMoviesOfPerson(model, input_person) match {
-            case Some(movies) =>
-                Resolve.resolveAll(tls, model, mm, PATTERN_MOVIE, MovieMetamodel.MOVIE, ListUtils.singleton(movies)) match {
-                    case Some(output_movies: List[MovieMovie]) => Some(new PersonToMovies(output_person, output_movies))
-                    case _ => None
-            }
-            case None => None
+    def makeCoupleToPerson(tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel, person: MoviePerson,
+                           couple: MovieCouple, pattern: String, i: Int): Option[DynamicLink] = {
+        val type_ : String = {
+            pattern match {
+                case PATTERN_ACTOR => MovieMetamodel.ACTOR
+                case PATTERN_ACTRESS => MovieMetamodel.ACTRESS
+                case _ => ""
+            }}
+        (Resolve.resolve(tls, model, mm, pattern, type_, List(person)), i) match {
+            case (Some(act: MoviePerson), 1) => Some(new CoupleToPersonP1(couple, act))
+            case (Some(act: MoviePerson), 2) => Some(new CoupleToPersonP2(couple, act))
+            case _ => None
         }
+    }
 
     def makeGroupMovies(tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel,
                         input_group: MovieGroup, output_group: MovieGroup) : Option[MovieLink] = {
@@ -192,7 +204,7 @@ object Identity {
                             elementExpr = (_,_,l) =>
                                 if (l.isEmpty) None else {
                                     val clique = l.head.asInstanceOf[MovieClique]
-                                    Some(new MovieClique(clique.getAvgRating))
+                                    Some(new MovieClique(clique.getId, clique.getAvgRating))
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
@@ -217,7 +229,7 @@ object Identity {
                             elementExpr = (_,_,l) =>
                                 if (l.isEmpty) None else {
                                     val couple = l.head.asInstanceOf[MovieCouple]
-                                    Some(new MovieCouple(couple.getAvgRating))
+                                    Some(new MovieCouple(couple.getId, couple.getAvgRating))
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
