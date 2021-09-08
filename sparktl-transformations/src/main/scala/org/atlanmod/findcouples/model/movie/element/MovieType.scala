@@ -11,9 +11,15 @@ object MovieType extends Enumeration {
     implicit def stringToMovieTypeVal(x: String): MovieTypeVal =
         x match {
             case "movie" => MOVIE
+            case "MOVIE" => MOVIE
             case "video" => VIDEO
+            case "VIDEO" => VIDEO
             case "tv" => TV
+            case "TV" => TV
             case "video-game" => VIDEOGAME
+            case "videogame" => VIDEOGAME
+            case "VIDEOGAME" => VIDEOGAME
+            case _ => MOVIE
         }
 
     //type MovieType = Value
