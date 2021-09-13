@@ -1,0 +1,21 @@
+plugins {
+    id 'com.github.maiflai.scalatest' version '0.30'
+}
+
+group 'atlanmod'
+version '1.0-SNAPSHOT'
+
+dependencies {
+    implementation project(":sparktl-core")
+    implementation project(":sparktl-transformations")
+    implementation group: 'org.apache.spark', name: 'spark-graphx_2.12', version: '3.0.1'
+    implementation group: 'org.apache.spark', name: 'spark-sql_2.12', version: '3.0.1'
+}
+
+jar {
+    zip64 = true
+    archivesBaseName = 'SparkTE'
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
