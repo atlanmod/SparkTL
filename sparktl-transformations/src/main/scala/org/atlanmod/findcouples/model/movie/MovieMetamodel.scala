@@ -1,6 +1,6 @@
 package org.atlanmod.findcouples.model.movie
 
-import org.atlanmod.findcouples.model.movie.element.{MovieClique, MovieCouple, MovieGroup, MovieMovie, MoviePerson}
+import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieClique, MovieCouple, MovieGroup, MovieMovie, MoviePerson}
 import org.atlanmod.findcouples.model.movie.link.{CliqueToPersons, CoupleToPersonP1, CoupleToPersonP2, GroupToMovies, MovieToPersons, PersonToMovies}
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 
@@ -94,5 +94,9 @@ object MovieMetamodel {
             }
         )
 
+    def getAllActors(model: MovieModel): List[MovieActor] =
+        model.allModelElements.filter(m => m.isInstanceOf[MovieActor]).map(m => m.asInstanceOf[MovieActor])
 
+    def getAllMovies(model: MovieModel): List[MovieMovie] =
+        model.allModelElements.filter(m => m.isInstanceOf[MovieMovie]).map(m => m.asInstanceOf[MovieMovie])
 }

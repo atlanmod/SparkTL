@@ -1,21 +1,20 @@
 package org.atlanmod.findcouples.model.movie
 
-import java.io.File
+import java.io.{File, PrintWriter}
 
 import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieActress, MovieClique, MovieCouple, MovieMovie, MoviePerson, MovieType}
 import org.atlanmod.findcouples.model.movie.link.{CliqueToPersons, CoupleToPersonP1, CoupleToPersonP2, MovieToPersons, PersonToMovies}
 import org.eclipse.emf.common.util.{EList, URI}
+import org.eclipse.emf.ecore.{EAttribute, EClass, EObject, EPackage, EReference}
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.resource.{Resource, ResourceSet}
 import org.eclipse.emf.ecore.xmi.impl.{EcoreResourceFactoryImpl, XMIResourceFactoryImpl}
-import org.eclipse.emf.ecore._
 
 import scala.collection.mutable
 
-object MovieLoader{
-
+object MovieXMItoJSON{
     private var resSet : ResourceSet = null
-
+//
     private def instantiateRS():Unit =  {
         if (resSet != null) return
         val reg = Resource.Factory.Registry.INSTANCE
@@ -165,6 +164,78 @@ object MovieLoader{
         val elements_and_map: (List[MovieElement], mutable.Map[Int, MovieElement]) = load_elements(resource)
         val elements_and_links: (List[MovieElement], List[MovieLink]) = load_links(resource, elements_and_map._2)
         new MovieModel(elements_and_map._1 ++ elements_and_links._1, elements_and_links._2)
+    }
+
+    def write_actors(model: MovieModel, filename: String): (mutable.Map[MovieElement, Int], Int) = {
+        val pw = new PrintWriter(new File("actors_"+filename+".json" ))
+        val map: mutable.Map[MovieElement, Int] = new mutable.HashMap[MovieElement, Int]()
+        var id = 0
+        val movieActors = MovieMetamodel.getAllActors(model)
+        var res: String = "[\n"
+        for(actor <- movieActors){
+            map.put(actor, id)
+            val line = "\t{\"id:\":"+id+",\"name\":\""+actor.getName+"\"}\n"
+            id = id + 1
+            pw.write(line)
+            res = res + line + "\n"
+        }
+        pw.write("]")
+        pw.close()
+        (map, id)
+    }
+
+    def write_movies(model: MovieModel, map: mutable.Map[MovieElement, Int], start: Int, filename: String): mutable.Map[MovieElement, Int] = {
+        val pw = new PrintWriter(new File("movies_"+filename+".json"))
+        var id = start
+        val movieMovies = MovieMetamodel.getAllMovies(model)
+        pw.write("[\n")
+        for(movie: MovieMovie <- movieMovies){
+            map.put(movie, id)
+            val line = "\t{\"id\": \""+id+"\", \"title\": \""+ movie.getTitle +"\", \"rating\": "+ movie.getRating +", \"year\":"+ movie.getYear +", \"movieType\": \""+ movie.getRating +"\"}\n"
+            id = id + 1
+            pw.write(line)
+        }
+        pw.write("]")
+        pw.close()
+        map
+    }
+
+   def remove_some(maybeInts: List[Option[Int]]): List[Int] = {
+       maybeInts match {
+           case h :: t =>
+               h match {
+                   case Some(n) => n :: remove_some(t)
+                   case None => remove_some(t)
+               }
+           case List() => List()
+       }
+   }
+
+    def write_links(movieModel: MovieModel, map: mutable.Map[MovieElement, Int], filename: String): Unit = {
+        val pw = new PrintWriter(new File("links_"+filename+".txt"))
+        for (link: MovieLink <- movieModel.allModelLinks){
+            val source: String = map.get(link.getSource.asInstanceOf[MovieElement]).getOrElse(-1).toString
+            val target_option : List[Option[Int]] = link.getTarget.map(e => map.get(e.asInstanceOf[MovieElement]))
+            val target: String = remove_some(target_option).mkString("[",",","]")
+            val label: String = link.getType
+            val line = source + "\t" + target + "\t" + label + "\n"
+            pw.write(line)
+        }
+        pw.close()
+    }
+
+    def write(movieModel: MovieModel, filename: String): Unit = {
+        val res_1 = write_actors(movieModel, filename)
+        val res_2 = write_movies(movieModel, res_1._1, res_1._2, filename)
+        write_links(movieModel, res_2, filename)
+    }
+
+    def main(args: Array[String]) : Unit = {
+        val files = List("imdb-0.1","imdb-0.2","imdb-0.5","imdb-1.0")
+        for(file <- files) {
+            val m = load("/home/jolan/Scala/SparkTL/SparkTL/deployment/g5k/" + file + ".xmi", "/home/jolan/Scala/SparkTL/SparkTL/deployment/g5k/movies.ecore")
+            write(m, file)
+        }
     }
 
 }
