@@ -1,0 +1,13 @@
+0	[11,12]	movies
+1	[7,8,9]	movies
+2	[7,8,9]	movies
+3	[8,9]	movies
+4	[10,11,12]	movies
+5	[10,11,12]	movies
+6	[10,11,12]	movies
+7	[1,2]	persons
+8	[1,2,3]	persons
+9	[1,2,3]	persons
+10	[4,5,6]	persons
+11	[4,5,6]	persons
+12	[4,5,6,0]	persons

@@ -1,0 +1,8 @@
+[
+	{"id":7,"title":"The Phantom Menace","rating":6.5,"year":1999,"movieType":"MOVIE"},
+	{"id":8,"title":"Attack of the Clones","rating":6.0,"year":1995,"movieType":"MOVIE"},
+	{"id":9,"title":"Revenge of the Sith","rating":9.0,"year":1995,"movieType":"MOVIE"},
+	{"id":10,"title":"A New Hope","rating":8.0,"year":1995,"movieType":"MOVIE"},
+	{"id":11,"title":"The Empire Strikes Back","rating":9.0,"year":1995,"movieType":"MOVIE"},
+	{"id":12,"title":"The Return of the Jedi","rating":9.5,"year":1995,"movieType":"MOVIE"}
+]
