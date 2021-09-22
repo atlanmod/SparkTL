@@ -33,10 +33,12 @@ object InactiveICMTButActiveAuthors {
           .exists(ip => helper_booktitle(model, ip).indexOf("ICMT") > 0 && helper_year(model, ip) > 2008)
 
     def helper_nowPublishingIn(model: DblpModel, author: DblpAuthor) : List[DblpInProceedings] =
-        DblpMetamodel.getRecordsOfAuthor(model, author)
-          .filter(r => r.isInstanceOf[DblpInProceedings])
-          .map(r => r.asInstanceOf[DblpInProceedings])
-          .filter(ip => helper_booktitle(model, ip).indexOf("ICMT") > 0 && helper_year(model, ip) > 2008)
+        DblpMetamodel.getRecordsOfAuthor(model, author) match {
+            case Some(records) => records.filter(r => r.isInstanceOf[DblpInProceedings])
+              .map(r => r.asInstanceOf[DblpInProceedings])
+              .filter(ip => helper_booktitle(model, ip).indexOf("ICMT") > 0 && helper_year(model, ip) > 2008)
+            case _ => List()
+        }
 
     def helper_hasPapersICMT(model: DblpModel, author: DblpAuthor) : Boolean =
         DblpMetamodel.getRecordsOfAuthor(model, author)

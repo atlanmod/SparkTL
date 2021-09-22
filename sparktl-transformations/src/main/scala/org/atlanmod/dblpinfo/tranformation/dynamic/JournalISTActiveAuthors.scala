@@ -40,10 +40,12 @@ object JournalISTActiveAuthors {
         DblpMetamodel.getAuthorsOfRecord(m, ip)
 
     def helper_nowPublishingIn(model: DblpModel, author: DblpAuthor): List[DblpArticle] =
-        DblpMetamodel.getRecordsOfAuthor(model, author)
-          .filter(r => r.isInstanceOf[DblpArticle])
-          .map(r => r.asInstanceOf[DblpArticle])
-          .filter(article => helper_journal(model, article).indexOf("Information & Software Technology") < 0 && helper_year(model, article) > 2005)
+        DblpMetamodel.getRecordsOfAuthor(model, author) match {
+            case Some(records) => records.filter(r => r.isInstanceOf[DblpArticle])
+              .map(r => r.asInstanceOf[DblpArticle])
+              .filter(article => helper_journal(model, article).indexOf("Information & Software Technology") < 0 && helper_year(model, article) > 2005)
+            case _ => List()
+        }
 
     def makeAuthorToJournal(tls: TraceLinks[DynamicElement, DynamicElement], model: DblpModel,
                                input_author: DblpAuthor, authorinfo: AuthorInfoAuthor): Option[DynamicLink] = {

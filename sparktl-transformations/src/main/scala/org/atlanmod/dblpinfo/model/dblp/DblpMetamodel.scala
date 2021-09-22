@@ -1,9 +1,9 @@
 package org.atlanmod.dblpinfo.model.dblp
 
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpArticle, DblpAuthor, DblpJournal, DblpRecord}
+import org.atlanmod.dblpinfo.model.dblp.link.{AuthorToRecords, JournalToArticles}
 
 object DblpMetamodel {
-
 
     final val AUTHOR: String = "Author"
     final val RECORD: String = "Record"
@@ -40,9 +40,29 @@ object DblpMetamodel {
     final val WWW_EDITORS: String = "editors"
 
 
-    def getRecordsOfAuthor(model: DblpModel, author: DblpAuthor): List[DblpRecord] = List() // TODO
+    private def getRecordsOfAuthorOnLinks(links: List[DblpLink], author: DblpAuthor): Option[List[DblpRecord]] = {
+        links.find(l => l.isInstanceOf[AuthorToRecords] && l.getSource.equals(author)) match {
+            case Some(l: AuthorToRecords) => Some(l.getTarget)
+            case _ => None
+        }
+    }
 
-    def getAuthorsOfRecord(m: DblpModel, ip: DblpRecord): List[DblpAuthor] = List() // TODO
+    def getRecordsOfAuthor(model: DblpModel, author: DblpAuthor): Option[List[DblpRecord]] =
+        getRecordsOfAuthorOnLinks(model.allModelLinks, author)
 
-    def getJournalOfArticle(model: DblpModel, a: DblpArticle): Option[DblpJournal] = ??? // TODO
+    private def getAuthorsOfRecordOnLinks(links: List[DblpLink], record: DblpRecord): List[DblpAuthor] =
+        links.filter(l => l.isInstanceOf[AuthorToRecords] && l.getTarget.contains(record))
+          .map(l => l.getSource.asInstanceOf[DblpAuthor])
+
+    def getAuthorsOfRecord(m: DblpModel, r: DblpRecord): List[DblpAuthor] =
+        getAuthorsOfRecordOnLinks(m.allModelLinks, r)
+
+    private def getJournalOfArticleOnLinks(links: List[DblpLink], a: DblpArticle): Option[DblpJournal] =
+        links.find(l => l.isInstanceOf[JournalToArticles] && l.getTarget.contains(a)) match {
+            case Some(l: JournalToArticles) => Some(l.getSource)
+            case _ => None
+        }
+
+    def getJournalOfArticle(model: DblpModel, a: DblpArticle): Option[DblpJournal] =
+        getJournalOfArticleOnLinks(model.allModelLinks, a)
 }
