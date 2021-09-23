@@ -35,7 +35,7 @@ class DblpInProceedings extends DblpRecord(DblpMetamodel.INPROCEEDINGS) {
 
     override def equals(o: Any): Boolean = {
         o match {
-            case obj: DblpInCollection =>
+            case obj: DblpInProceedings =>
                 super.equals(o) & obj.getBookTitle.equals(getBookTitle) & obj.getYear.equals(getYear) &
                   obj.getFromPage.equals(getFromPage) &  obj.getToPage.equals(getToPage) & obj.getMonth.equals(getMonth)
             case _ => false

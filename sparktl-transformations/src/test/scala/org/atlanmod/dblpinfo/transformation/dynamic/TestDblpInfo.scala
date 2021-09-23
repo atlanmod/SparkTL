@@ -1,38 +1,52 @@
 package org.atlanmod.dblpinfo.transformation.dynamic
 
+import org.atlanmod.dblpinfo.model.authorinfo.{AuthorInfoElement, AuthorInfoLink, AuthorInfoModel}
+import org.atlanmod.dblpinfo.model.authorinfo.element.AuthorInfoAuthor
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpArticle, DblpAuthor, DblpInProceedings, DblpJournal}
 import org.atlanmod.dblpinfo.model.dblp.link.{ArticleToJournal, AuthorToRecords, JournalToArticles, RecordToAuthors}
-import org.atlanmod.dblpinfo.model.dblp.{DblpElement, DblpLink, DblpModel}
+import org.atlanmod.dblpinfo.model.dblp.{DblpElement, DblpLink, DblpMetamodel, DblpModel}
+import org.atlanmod.dblpinfo.tranformation.dynamic.ICMTAuthors
+import org.atlanmod.tl.model.Transformation
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
+import org.scalatest.funsuite.AnyFunSuite
 
-class TestDblpInfo {
+class TestDblpInfo extends AnyFunSuite {
 
-    def getModel: DblpModel = {
-        val loli = new DblpAuthor("Loli")
-        val antonio = new DblpAuthor("Antonio")
-        val manuel = new DblpAuthor("Manuel")
-        val javi = new DblpAuthor("Javi")
-        val martin = new DblpAuthor("Martin")
+    def metamodel = DblpMetamodel
+
+    def makeAuthorInfoModel: (List[DynamicElement], List[DynamicLink]) => AuthorInfoModel = (e: List[DynamicElement], l: List[DynamicLink])
+    => new AuthorInfoModel(e.asInstanceOf[List[AuthorInfoElement]], l.asInstanceOf[List[AuthorInfoLink]])
+
+
+    val loli = new DblpAuthor("Loli")
+    val antonio = new DblpAuthor("Antonio")
+    val manuel = new DblpAuthor("Manuel")
+    val javi = new DblpAuthor("Javi")
+    val martin = new DblpAuthor("Martin")
+
+    val inproc1 = new DblpInProceedings("", "", "inproc1", "", "ICMT 2005", 2005, 0, 0, "" )
+    val inproc2 = new DblpInProceedings("", "", "inproc2", "", "ICMT 2013", 2013, 0, 0, "" )
+    val inproc3 = new DblpInProceedings("", "", "inproc3", "", "ICMT 2000", 2000, 0, 0, "" )
+    val inproc4 = new DblpInProceedings("", "", "inproc4", "", "MODELS", 2013, 0, 0, "" )
+    val inproc2_1 = new DblpInProceedings("", "", "inproc2", "", "ICSE", 2014, 0, 0, "" )
+    val inproc5 = new DblpInProceedings("", "", "inproc5", "", "TOOLS", 2006, 0, 0, "" )
+
+    val art1 = new DblpArticle("", "", "art1", "", "art1", 0, 0, 0, "", "", 2006)
+    val art2 = new DblpArticle("", "", "art2", "", "art2", 0, 0, 0, "", "", 2014)
+    val art3 = new DblpArticle("", "", "art3", "", "", 0, 0, 0, "", "", 2010)
+    val art4 = new DblpArticle("", "", "art4", "", "", 0, 0, 0, "", "", 2009)
+    val art5 = new DblpArticle("", "", "art5", "", "", 0, 0, 0, "", "", 2000)
+    val art6 = new DblpArticle("", "", "art6", "", "", 0, 0, 0, "", "", 2013)
+
+    val j1 = new DblpJournal("Information & Software Technology")
+    val j2 = new DblpJournal("Transactions on Software Engineering")
+    val j3 = new DblpJournal("Computer Standards & Interface")
+
+    def model: DblpModel = {
+
         val authors = List(loli, antonio, manuel, javi, martin)
-
-        val inproc1 = new DblpInProceedings("", "", "inproc1", "", "ICMT 2005", 2005, 0, 0, "" )
-        val inproc2 = new DblpInProceedings("", "", "inproc2", "", "ICMT 2013", 2013, 0, 0, "" )
-        val inproc3 = new DblpInProceedings("", "", "inproc3", "", "ICMT 2000", 2000, 0, 0, "" )
-        val inproc4 = new DblpInProceedings("", "", "inproc4", "", "MODELS", 2013, 0, 0, "" )
-        val inproc2_1 = new DblpInProceedings("", "", "inproc2", "", "ICSE", 2014, 0, 0, "" )
-        val inproc5 = new DblpInProceedings("", "", "inproc5", "", "TOOLS", 2006, 0, 0, "" )
         val ips = List(inproc1, inproc2, inproc2_1, inproc3, inproc4, inproc5)
-
-        val art1 = new DblpArticle("", "", "art1", "", "art1", 0, 0, 0, "", "", 2006)
-        val art2 = new DblpArticle("", "", "art2", "", "art2", 0, 0, 0, "", "", 2014)
-        val art3 = new DblpArticle("", "", "art3", "", "", 0, 0, 0, "", "", 2010)
-        val art4 = new DblpArticle("", "", "art4", "", "", 0, 0, 0, "", "", 2009)
-        val art5 = new DblpArticle("", "", "art5", "", "", 0, 0, 0, "", "", 2000)
-        val art6 = new DblpArticle("", "", "art6", "", "", 0, 0, 0, "", "", 2013)
         val articles = List(art1, art2, art3, art4, art5, art6)
-
-        val j1 = new DblpJournal("Information & Software Technology")
-        val j2 = new DblpJournal("Transactions on Software Engineering")
-        val j3 = new DblpJournal("Computer Standards & Interface")
         val journals = List(j1, j2, j3)
 
         val loli_records = new AuthorToRecords(loli, List(inproc1, inproc2, inproc2_1, art2, art4))
@@ -40,6 +54,7 @@ class TestDblpInfo {
         val manuel_records = new AuthorToRecords(manuel, List(inproc3, inproc4, inproc2_1, art4))
         val javi_records = new AuthorToRecords(javi, List(art1, art3))
         val martin_records = new AuthorToRecords(martin, List(art5, art6))
+
         val author_records = List(loli_records, antonio_records, manuel_records, javi_records, martin_records)
 
         val inproc1_authors = new RecordToAuthors(inproc1, List(loli))
@@ -74,6 +89,70 @@ class TestDblpInfo {
         val elements : List[DblpElement] = authors ++ ips ++ articles ++ journals
         val links : List[DblpLink] = author_records ++ inproc_authors ++ article_authors ++ article_journal ++ journal_articles
         new DblpModel(elements, links)
+    }
+
+    def run_(tr: Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink]): AuthorInfoModel =
+        org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhase.execute(ICMTAuthors.find, model,
+            DblpMetamodel.metamodel, makeModel = makeAuthorInfoModel).asInstanceOf[AuthorInfoModel]
+
+
+    test("test getRecordsOfAuthor loli"){
+        val exp = Some(List(inproc1, inproc2, inproc2_1, art2, art4))
+        val res = metamodel.getRecordsOfAuthor(model, loli)
+        assert(exp.equals(res))
+    }
+
+    test("test getRecordsOfAuthor manuel"){
+        val exp = Some(List(inproc3, inproc4, inproc2_1, art4))
+        val res = metamodel.getRecordsOfAuthor(model, manuel)
+        assert(exp.equals(res))
+    }
+
+
+    test("test getRecordsOfAuthor error"){
+        val jolan = new DblpAuthor("Jolan")
+        val exp = None
+        val res = metamodel.getRecordsOfAuthor(model, jolan)
+        assert(res.equals(exp))
+    }
+
+    test("test getAuthorOfRecords inProceeding"){
+        val exp = Some(List(loli))
+        val res = metamodel.getAuthorsOfRecord(model, inproc1)
+        assert(res.equals(exp))
+    }
+
+
+    test("test getAuthorOfRecords Articles"){
+        val exp = Some(List(javi))
+        val res = metamodel.getAuthorsOfRecord(model, art1)
+        assert(res.equals(exp))
+    }
+
+
+    test("test getJournalOfArticle"){
+        val exp = Some(j1)
+        val res = metamodel.getJournalOfArticle(model, art1)
+    }
+
+    test("test helper_numOfPapers"){
+        assert(ICMTAuthors.helper_numOfPapers(model, loli).equals(2))
+        assert(ICMTAuthors.helper_numOfPapers(model, antonio).equals(1))
+        assert(ICMTAuthors.helper_numOfPapers(model, manuel).equals(1))
+        assert(ICMTAuthors.helper_numOfPapers(model, javi).equals(0))
+        assert(ICMTAuthors.helper_numOfPapers(model, martin).equals(0))
+    }
+
+    test("test ICMT Authors"){
+        val exp = List(loli,manuel,antonio).map(a => new AuthorInfoAuthor(a.getName, ICMTAuthors.helper_numOfPapers(model, a)))
+        val res = run_(ICMTAuthors.find).allModelElements
+        for (e <- exp) assert(res.contains(e))
+    }
+
+    test("test ICMT Active Authors"){
+        val exp = List(loli,manuel).map(a => new AuthorInfoAuthor(a.getName, active=true))
+        val res = run_(ICMTAuthors.find).allModelElements
+        for (e <- exp) assert(res.contains(e))
     }
 
 }

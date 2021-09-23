@@ -16,16 +16,23 @@ object ICMTActiveAuthors {
     def helper_year(model: DblpModel, ip: DblpInProceedings) : Int = ip.getYear
 
     def helper_active(model: DblpModel, author: DblpAuthor) : Boolean =
-        DblpMetamodel.getRecordsOfAuthor(model, author)
-          .filter(r => r.isInstanceOf[DblpInProceedings])
-          .map(r => r.asInstanceOf[DblpInProceedings])
-          .exists(ip => helper_booktitle(model, ip).indexOf("ICMT") > 0 && helper_year(model, ip) > 2008)
+        DblpMetamodel.getRecordsOfAuthor(model, author) match {
+            case Some(records) =>
+                records.filter(r => r.isInstanceOf[DblpInProceedings])
+                  .map(r => r.asInstanceOf[DblpInProceedings])
+                  .exists(ip => helper_booktitle(model, ip).indexOf("ICMT") >= 0 && helper_year(model, ip) > 2008)
+            case _ => false
+        }
+
 
     def helper_hasPapersICMT(model: DblpModel, author: DblpAuthor) : Boolean =
-        DblpMetamodel.getRecordsOfAuthor(model, author)
-          .filter(r => r.isInstanceOf[DblpInProceedings])
-          .map(r => r.asInstanceOf[DblpInProceedings])
-          .exists(ip => helper_booktitle(model, ip).indexOf("ICMT") > 0)
+        DblpMetamodel.getRecordsOfAuthor(model, author) match {
+            case Some(records) =>
+                records.filter(r => r.isInstanceOf[DblpInProceedings])
+                  .map(r => r.asInstanceOf[DblpInProceedings])
+                  .exists(ip => helper_booktitle(model, ip).indexOf("ICMT") >= 0)
+            case _ => false
+        }
 
 
     def find: Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] =

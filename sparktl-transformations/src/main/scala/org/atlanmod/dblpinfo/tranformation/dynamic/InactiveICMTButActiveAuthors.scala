@@ -47,7 +47,10 @@ object InactiveICMTButActiveAuthors {
           .exists(ip => helper_booktitle(model, ip).indexOf("ICMT") > 0)
 
     def helper_getAuthors(m: DblpModel, ip: DblpRecord): List[DblpAuthor] =
-        DblpMetamodel.getAuthorsOfRecord(m, ip)
+        DblpMetamodel.getAuthorsOfRecord(m, ip) match {
+            case Some(res) => res
+            case None => List()
+        }
 
     def makeAuthorToConference(tls: TraceLinks[DynamicElement, DynamicElement], model: DblpModel,
                                input_author: DblpAuthor, authorinfo: AuthorInfoAuthor): Option[DynamicLink] = {

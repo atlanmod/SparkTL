@@ -1,7 +1,8 @@
 package org.atlanmod.dblpinfo.model.dblp
 
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpArticle, DblpAuthor, DblpJournal, DblpRecord}
-import org.atlanmod.dblpinfo.model.dblp.link.{AuthorToRecords, JournalToArticles}
+import org.atlanmod.dblpinfo.model.dblp.link.{AuthorToRecords, JournalToArticles, RecordToAuthors}
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 
 object DblpMetamodel {
 
@@ -39,6 +40,7 @@ object DblpMetamodel {
     final val PHDTHESIS_SCHOOL: String = "school"
     final val WWW_EDITORS: String = "editors"
 
+    def metamodel : DynamicMetamodel[DynamicElement, DynamicLink] = new DynamicMetamodel[DynamicElement, DynamicLink]()
 
     private def getRecordsOfAuthorOnLinks(links: List[DblpLink], author: DblpAuthor): Option[List[DblpRecord]] = {
         links.find(l => l.isInstanceOf[AuthorToRecords] && l.getSource.equals(author)) match {
@@ -50,11 +52,14 @@ object DblpMetamodel {
     def getRecordsOfAuthor(model: DblpModel, author: DblpAuthor): Option[List[DblpRecord]] =
         getRecordsOfAuthorOnLinks(model.allModelLinks, author)
 
-    private def getAuthorsOfRecordOnLinks(links: List[DblpLink], record: DblpRecord): List[DblpAuthor] =
-        links.filter(l => l.isInstanceOf[AuthorToRecords] && l.getTarget.contains(record))
-          .map(l => l.getSource.asInstanceOf[DblpAuthor])
+    private def getAuthorsOfRecordOnLinks(links: List[DblpLink], record: DblpRecord): Option[List[DblpAuthor]] = {
+        links.find(l => l.isInstanceOf[RecordToAuthors] && l.getSource.equals(record)) match {
+            case Some(l: RecordToAuthors) => Some(l.getTarget)
+            case _ => None
+        }
+    }
 
-    def getAuthorsOfRecord(m: DblpModel, r: DblpRecord): List[DblpAuthor] =
+    def getAuthorsOfRecord(m: DblpModel, r: DblpRecord): Option[List[DblpAuthor]] =
         getAuthorsOfRecordOnLinks(m.allModelLinks, r)
 
     private def getJournalOfArticleOnLinks(links: List[DblpLink], a: DblpArticle): Option[DblpJournal] =

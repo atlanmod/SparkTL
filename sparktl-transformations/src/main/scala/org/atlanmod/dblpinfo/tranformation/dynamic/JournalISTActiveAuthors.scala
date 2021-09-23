@@ -37,7 +37,10 @@ object JournalISTActiveAuthors {
         }
 
     def helper_getAuthors(m: DblpModel, ip: DblpRecord): List[DblpAuthor] =
-        DblpMetamodel.getAuthorsOfRecord(m, ip)
+        DblpMetamodel.getAuthorsOfRecord(m, ip) match {
+            case Some(res) => res
+            case None => List()
+        }
 
     def helper_nowPublishingIn(model: DblpModel, author: DblpAuthor): List[DblpArticle] =
         DblpMetamodel.getRecordsOfAuthor(model, author) match {
