@@ -31,4 +31,15 @@ class DblpProceedings extends DblpRecord(DblpMetamodel.PROCEEDINGS) {
     override def toString: String =
         getTitle + ". (" + getMdate + ") " + getYear + "." + " <" + getUrl +">. <" + getKey + "> " + getIsbn
 
+    override def equals(o: Any): Boolean = {
+        o match {
+            case obj: DblpProceedings =>
+                super.equals(o) & obj.getTitle.equals(getTitle) & obj.getYear.equals(getYear) &
+                  obj.getMonth.equals(getMonth) & obj.getMonth.equals(getMonth)
+            case _ => false
+        }
+    }
+
+    override def weak_equals(o: Any): Boolean = equals(o)
+
 }

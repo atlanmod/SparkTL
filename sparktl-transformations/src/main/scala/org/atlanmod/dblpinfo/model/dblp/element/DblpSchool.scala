@@ -15,4 +15,14 @@ class DblpSchool extends DblpElement(DblpMetamodel.SCHOOL) {
 
     override def toString: String = getName + "(" + getAddress + ")"
 
+    override def equals(o: Any): Boolean = {
+        o match {
+            case obj: DblpSchool =>
+                super.equals(o) & obj.getName.equals(getName)
+            case _ => false
+        }
+    }
+
+    override def weak_equals(o: Any): Boolean = equals(o)
+
 }

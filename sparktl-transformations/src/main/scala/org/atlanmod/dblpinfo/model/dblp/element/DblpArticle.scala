@@ -38,4 +38,16 @@ class DblpArticle extends DblpRecord(DblpMetamodel.ARTICLE) {
         getTitle + ". " + getVolume + " (" + getMdate + ", " + getNumber + ") " + getYear + ", pp." + getFromPage +
           "--" + getToPage + " ." + " <" + getUrl +">. <" + getKey + ">"
 
+    override def equals(o: Any): Boolean = {
+        o match {
+            case obj: DblpArticle =>
+                super.equals(o) & obj.getTitle.equals(getTitle) &  obj.getFromPage.equals(getFromPage) &  obj.getToPage.equals(getToPage) &
+                  obj.getNumber.equals(getNumber) &  obj.getVolume.equals(getVolume) &  obj.getMonth.equals(getMonth) &
+                  obj.getYear.equals(getYear)
+            case _ => false
+        }
+    }
+
+    override def weak_equals(o: Any): Boolean = equals(o)
+
 }

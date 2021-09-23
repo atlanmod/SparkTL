@@ -27,4 +27,14 @@ class DblpMastersThesis extends DblpRecord(DblpMetamodel.MASTERSTHESIS) {
 
     override def toString: String = getName + "(" + getMonth + "/" + getYear + ")"
 
+    override def equals(o: Any): Boolean = {
+        o match {
+            case obj: DblpMastersThesis =>
+                super.equals(o) & obj.getName.equals(getName) & obj.getYear.equals(getYear) & obj.getMonth.equals(getMonth)
+            case _ => false
+        }
+    }
+
+    override def weak_equals(o: Any): Boolean = equals(o)
+
 }

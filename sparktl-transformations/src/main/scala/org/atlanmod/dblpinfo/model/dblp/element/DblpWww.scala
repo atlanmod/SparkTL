@@ -26,4 +26,16 @@ class DblpWww extends DblpRecord(DblpMetamodel.WWW) {
     def getMonth: String = super.eGetProperty("month").asInstanceOf[String]
 
     override def toString: String = getName + "(" + getMonth + "/" + getYear + ")"
+
+    override def equals(o: Any): Boolean = {
+        o match {
+            case obj: DblpWww =>
+                super.equals(o) & obj.getName.equals(getName) & obj.getYear.equals(getYear) &
+                  obj.getMonth.equals(getMonth)
+            case _ => false
+        }
+    }
+
+    override def weak_equals(o: Any): Boolean = equals(o)
+
 }
