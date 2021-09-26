@@ -40,8 +40,11 @@ object ICMTActiveAuthors {
             new RuleImpl(
                 name = "icmt",
                 types = List(DblpMetamodel.AUTHOR),
-                from = (model, pattern) =>
-                    Some(helper_hasPapersICMT(model.asInstanceOf[DblpModel], pattern.head.asInstanceOf[DblpAuthor])),
+                from = (model, pattern) =>{
+                    val m = model.asInstanceOf[DblpModel]
+                    val author = pattern.head.asInstanceOf[DblpAuthor]
+                    Some(helper_hasPapersICMT(m, author) && helper_active(m, author))
+                },
                 to = List(
                     new OutputPatternElementImpl(name = PATTERN_AUTHOR_ICMT,
                         elementExpr = (_,model,pattern) => {
