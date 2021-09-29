@@ -5,15 +5,12 @@ dependencies {
     implementation project(":sparktl-transformations")
     implementation project(":sparktl-core")
     implementation group: 'org.apache.spark', name: 'spark-graphx_2.12', version: '3.0.1'
-
+    implementation group: 'org.apache.spark', name: 'spark-sql_2.12', version: '3.0.1'
 }
 
 jar {
     zip64 = true
-    manifest {
-        attributes 'Main-Class': 'org.atlanmod.MainIMDB'
-    }
-    archivesBaseName = 'SparkIMDB'
+    archivesBaseName = 'SparkTE'
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
