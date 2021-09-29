@@ -11,12 +11,15 @@ class DynamicModel(elements: List[DynamicElement] = List(), links: List[DynamicL
 
     override def allModelLinks: List[DynamicLink] = links
 
+    def numberOfElements : Int = elements.size
+    def numberOfLinks : Int = links.map(l => l.getTarget.size).sum
+
     override def toString: String = {
         var res = ""
-        res += "elements (size=" + elements.size + "):\n------------------------\n"
+        res += "elements (size=" + numberOfElements + "):\n------------------------\n"
         res += elements.mkString("\n")
         res += "\n\n"
-        res += "links (size=" + links.size + "):\n------------------------\n"
+        res += "links (size=" + numberOfLinks + "):\n------------------------\n"
         res += links.mkString("\n")
         res
     }
