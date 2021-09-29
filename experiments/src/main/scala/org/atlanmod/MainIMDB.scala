@@ -18,9 +18,9 @@ object MainIMDB {
     final val DEFAULT_NPARTITION: Int = -1
     var npartition: Int = DEFAULT_NPARTITION
 
-    var json_actors: String = "/home/jolan/actors_imdb-0.1.json"
-    var json_movies: String = "/home/jolan/movies_imdb-0.1.json"
-    var txt_links: String = "/home/jolan/links_imdb-0.1.txt"
+    var json_actors: String = "/home/jolan/Scala/SparkTL/SparkTL_working/deployment/g5k/actors_imdb-0.1.json"
+    var json_movies: String = "/home/jolan/Scala/SparkTL/SparkTL_working/deployment/g5k/movies_imdb-0.1.json"
+    var txt_links: String = "/home/jolan/Scala/SparkTL/SparkTL_working/deployment/g5k/links_imdb-0.1.txt"
 
     def parseArgs(args: List[String]): Unit = {
         args match {
@@ -59,8 +59,6 @@ object MainIMDB {
 
     def getContext(): SparkContext = {
         val conf = new SparkConf()
-        conf.setMaster("local[2]")
-        conf.setAppName("Test")
         new SparkContext(conf)
     }
 

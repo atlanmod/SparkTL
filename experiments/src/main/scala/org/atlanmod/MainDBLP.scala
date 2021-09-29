@@ -6,6 +6,7 @@ import org.atlanmod.dblpinfo.model.dblp.{DblpMetamodel, DblpModel}
 import org.atlanmod.dblpinfo.tranformation.dynamic.{ICMTActiveAuthors, ICMTAuthors, InactiveICMTButActiveAuthors, JournalISTActiveAuthors}
 import org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseByRule
 
+
 object MainDBLP {
 
     final val DEFAULT_NCORE: Int = 1
@@ -46,7 +47,7 @@ object MainDBLP {
                 parseArgs(args)
             }
             case _ :: args => parseArgs(args)
-            case List() => if (npartition == DEFAULT_NPARTITION) npartition = ncore * nexecutor
+            case List() => if (npartition == DEFAULT_NPARTITION) npartition = ncore * nexecutor * 4
         }
     }
 
