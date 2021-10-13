@@ -1,5 +1,6 @@
 package org.atlanmod
 
+import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 import org.atlanmod.findcouples.model.movie.{MovieJSONLoader, MovieMetamodel, MovieModel}
 import org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseByRule
@@ -17,6 +18,10 @@ object MainIMDB {
 
     final val DEFAULT_NPARTITION: Int = -1
     var npartition: Int = DEFAULT_NPARTITION
+
+    final val DEFAULT_STORAGE: StorageLevel = StorageLevel.MEMORY_AND_DISK
+    var storage:  StorageLevel = DEFAULT_STORAGE
+    var storage_string:  String = DEFAULT_STORAGE.toString()
 
     var json_actors: String = "/home/jolan/Scala/SparkTL/SparkTL_working/deployment/g5k/actors_imdb-0.1.json"
     var json_movies: String = "/home/jolan/Scala/SparkTL/SparkTL_working/deployment/g5k/movies_imdb-0.1.json"
@@ -52,8 +57,12 @@ object MainIMDB {
                 txt_links = file
                 parseArgs(args)
             }
+            case "-persist" :: level :: args =>{
+                storage = StorageLevel.fromString(level)
+                parseArgs(args)
+            }
             case _ :: args => parseArgs(args)
-            case List() => if (npartition == DEFAULT_NPARTITION) npartition = ncore * nexecutor
+            case List() => if (npartition == DEFAULT_NPARTITION) npartition = ncore * nexecutor * 4
         }
     }
 

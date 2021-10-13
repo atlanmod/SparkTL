@@ -3,6 +3,7 @@ package org.atlanmod.transformation.parallel
 import org.apache.spark.SparkContext
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
+import org.apache.spark.storage.StorageLevel
 import org.atlanmod.tl.engine.Trace.tracePattern
 import org.atlanmod.tl.engine.Utils.allTuplesByRule
 import org.atlanmod.tl.engine.{Apply, Trace}
@@ -39,7 +40,7 @@ object TransformationEngineTwoPhaseByRule extends ExperimentalTransformationEngi
 
     def execute_bystep[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
     (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-     npartition: Int, sc: SparkContext, nstep: Int = 5): (Double, List[Double]) = {
+     npartition: Int, sc: SparkContext, nstep: Int = 5, persistanceLevel : StorageLevel = StorageLevel.MEMORY_AND_DISK): (Double, List[Double]) = {
         // 1.Instantiate the trace + output element
 
         var t1_start : Long = 0
@@ -70,7 +71,7 @@ object TransformationEngineTwoPhaseByRule extends ExperimentalTransformationEngi
         if (nstep >= 1) {
             // 1.Create the tuples
             t1_start = System.nanoTime
-            tuples = sc.parallelize(allTuplesByRule(tr, sm, mm), npartition)
+            tuples = sc.parallelize(allTuplesByRule(tr, sm, mm), npartition).persist(persistanceLevel)
 //            println(tuples.count() + " tuples")
             t1_end = System.nanoTime
         }
@@ -96,7 +97,7 @@ object TransformationEngineTwoPhaseByRule extends ExperimentalTransformationEngi
             // 4.Broad cast tls, and assign a subpart to compute via a RDD
             t4_start = System.nanoTime
             tls_broad = sc.broadcast(tls)
-            sps_rdd = sc.parallelize(allSourcePatterns(tls), npartition)
+            sps_rdd = sc.parallelize(allSourcePatterns(tls), npartition).persist(persistanceLevel)
             t4_end = System.nanoTime
         }
 
