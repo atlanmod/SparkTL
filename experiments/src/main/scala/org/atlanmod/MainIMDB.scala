@@ -21,7 +21,8 @@ object MainIMDB {
 
     final val DEFAULT_STORAGE: StorageLevel = StorageLevel.MEMORY_AND_DISK
     var storage:  StorageLevel = DEFAULT_STORAGE
-    var storage_string:  String = DEFAULT_STORAGE.toString()
+    final val DEFAULT_STORAGE_STRING: String = "MEMORY_AND_DISK"
+    var storage_string:  String = DEFAULT_STORAGE_STRING
 
     var json_actors: String = "/home/jolan/Scala/SparkTL/SparkTL_working/deployment/g5k/actors_imdb-0.1.json"
     var json_movies: String = "/home/jolan/Scala/SparkTL/SparkTL_working/deployment/g5k/movies_imdb-0.1.json"
@@ -59,6 +60,7 @@ object MainIMDB {
             }
             case "-persist" :: level :: args =>{
                 storage = StorageLevel.fromString(level)
+                storage_string = level
                 parseArgs(args)
             }
             case _ :: args => parseArgs(args)
@@ -78,9 +80,8 @@ object MainIMDB {
            val transformation = org.atlanmod.findcouples.transformation.dynamic.FindCouples.findcouples_imdb
            val input_model : MovieModel = MovieJSONLoader.load(json_actors,json_movies,txt_links)
            val input_metamodel = MovieMetamodel.metamodel
-           var line = List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition).mkString(",")
+           var line = List(storage_string,input_model.numberOfElements, input_model.numberOfLinks, nexecutor, ncore, npartition).mkString(",")
            val res = TransformationEngineTwoPhaseByRule.execute_bystep(transformation, input_model, input_metamodel, npartition, sc, nstep)
-           line = List(input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition).mkString(",")
            println(line + "," + res._1 + "," + res._2.mkString(","))
 //       } catch {
 //           case e: Exception => println(e.getLocalizedMessage)
