@@ -138,6 +138,8 @@ object Class2Relational {
                             if (l.isEmpty) None else {
                                 val class_ = l.head.asInstanceOf[ClassClass]
                                 Some(new RelationalTable(class_.getId, class_.getName))
+                                //  Some( (ids.next(), new RelationalTable(class_.getId, class_.getName)) )
+                                //  tls : Tracelinks[SME,TME] -> Tracelinks[(VertexId, SME),(VertexId, TME)]
                             },
                         outputElemRefs = List(
                             new OutputPatternElementReferenceImpl(

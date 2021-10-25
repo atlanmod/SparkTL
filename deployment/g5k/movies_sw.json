@@ -1,8 +1,20 @@
 [
-	{"id":7,"title":"The Phantom Menace","rating":6.5,"year":1999,"movieType":"MOVIE"},
-	{"id":8,"title":"Attack of the Clones","rating":6.0,"year":1995,"movieType":"MOVIE"},
-	{"id":9,"title":"Revenge of the Sith","rating":9.0,"year":1995,"movieType":"MOVIE"},
-	{"id":10,"title":"A New Hope","rating":8.0,"year":1995,"movieType":"MOVIE"},
-	{"id":11,"title":"The Empire Strikes Back","rating":9.0,"year":1995,"movieType":"MOVIE"},
-	{"id":12,"title":"The Return of the Jedi","rating":9.5,"year":1995,"movieType":"MOVIE"}
+	{"id":733,"title":"The Phantom Menace","rating":6.5,"year":1999,"movieType":"MOVIE"},
+	{"id":734,"title":"Attack Of The Clones","rating":6.5,"year":2002,"movieType":"MOVIE"},
+	{"id":735,"title":"Revenge Of The Sith", "rating":7.5,"year":2005,"movieType":"MOVIE"},
+	{"id":736,"title":"A New Hope","rating":8.6,"year":1977,"movieType":"MOVIE"},
+	{"id":737,"title":"The Empire Strikes Back","rating":8.7,"year":1980,"movieType":"MOVIE"},
+	{"id":738,"title":"Return Of The Jedi","rating":8.3,"year":1983,"movieType":"MOVIE"},
+	{"id":739,"title":"The Force Awakens","rating":7.8,"year":2015,"movieType":"MOVIE"},
+	{"id":740,"title":"The Last Jedi","rating":7.0,"year":2017,"movieType":"MOVIE"},
+	{"id":741,"title":"The Rise Of Skywalker","rating":6.5,"year":2019,"movieType":"MOVIE"},
+	{"id":742,"title":"Rogue One","rating":7.8,"year":2016,"movieType":"MOVIE"},
+	{"id":743,"title":"Solo","rating":6.9,"year":2018,"movieType":"MOVIE"},
+	{"id":744,"title":"The Clone Wars","rating":8.3,"year":2008,"movieType":"TV"},
+	{"id":745,"title":"The Bad Batch","rating":8.0,"year":2021,"movieType":"TV"},
+	{"id":746,"title":"Rebels","rating":8.0,"year":2014,"movieType":"TV"}, 
+	{"id":747,"title":"Resistance","rating":5.0,"year":2018,"movieType":"TV"}, 
+	{"id":748,"title":"The Clone Wars","rating":5.9,"year":2008,"movieType":"MOVIE"},
+	{"id":749,"title":"Clone Wars","rating":7.8,"year":2003,"movieType":"TV"}, 
+	{"id":750,"title":"Holiday Special","rating":2.2,"year":1978,"movieType":"MOVIE"}
 ]

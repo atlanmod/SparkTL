@@ -24,9 +24,12 @@ object MainIMDB {
     final val DEFAULT_STORAGE_STRING: String = "MEMORY_AND_DISK"
     var storage_string:  String = DEFAULT_STORAGE_STRING
 
-    var json_actors: String = "/home/jolan/Scala/SparkTL/SparkTL_working/deployment/g5k/actors_imdb-0.1.json"
-    var json_movies: String = "/home/jolan/Scala/SparkTL/SparkTL_working/deployment/g5k/movies_imdb-0.1.json"
-    var txt_links: String = "/home/jolan/Scala/SparkTL/SparkTL_working/deployment/g5k/links_imdb-0.1.txt"
+//    var json_actors: String = "/home/jolan/Scala/SparkTL/deployment/g5k/actors_imdb-0.1.json"
+//    var json_movies: String = "/home/jolan/Scala/SparkTL/deployment/g5k/movies_imdb-0.1.json"
+//    var txt_links: String = "/home/jolan/Scala/SparkTL/deployment/g5k/links_imdb-0.1.txt"
+    var json_actors: String = "/home/jolan/Scala/SparkTL/deployment/g5k/actors_sw.json"
+    var json_movies: String = "/home/jolan/Scala/SparkTL/deployment/g5k/movies_sw.json"
+    var txt_links: String = "/home/jolan/Scala/SparkTL/deployment/g5k/links_sw.txt"
 
     def parseArgs(args: List[String]): Unit = {
         args match {
@@ -70,6 +73,8 @@ object MainIMDB {
 
     def getContext(): SparkContext = {
         val conf = new SparkConf()
+//        conf.setMaster("local")
+//        conf.setAppName("Test")
         new SparkContext(conf)
     }
 
@@ -81,7 +86,7 @@ object MainIMDB {
            val input_model : MovieModel = MovieJSONLoader.load(json_actors,json_movies,txt_links)
            val input_metamodel = MovieMetamodel.metamodel
            var line = List(storage_string,input_model.numberOfElements, input_model.numberOfLinks, nexecutor, ncore, npartition).mkString(",")
-           val res = TransformationEngineTwoPhaseByRule.execute_bystep(transformation, input_model, input_metamodel, npartition, sc, nstep)
+           val res = TransformationEngineTwoPhaseByRule.execute_bystep(transformation, input_model, input_metamodel, npartition, sc, nstep, storage)
            println(line + "," + res._1 + "," + res._2.mkString(","))
 //       } catch {
 //           case e: Exception => println(e.getLocalizedMessage)

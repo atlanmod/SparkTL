@@ -90,7 +90,7 @@ object FindCouples {
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
             List(
                 new RuleImpl(
-                    name = "movie",
+                    name = "movie2movie",
                     types = List(MovieMetamodel.MOVIE),
                     to = List(
                         new OutputPatternElementImpl(name = PATTERN_MOVIE,
@@ -109,7 +109,7 @@ object FindCouples {
                     )
                 ),
                 new RuleImpl(
-                    name = "actor",
+                    name = "actor2actor",
                     types = List(MovieMetamodel.ACTOR),
                     to = List(
                         new OutputPatternElementImpl(name = PATTERN_ACTOR,
@@ -129,7 +129,7 @@ object FindCouples {
                     )
                 ),
                 new RuleImpl(
-                    name = "actress",
+                    name = "actress2actress",
                     types = List(MovieMetamodel.ACTRESS),
                     to = List(
                         new OutputPatternElementImpl(name = PATTERN_ACTRESS,
