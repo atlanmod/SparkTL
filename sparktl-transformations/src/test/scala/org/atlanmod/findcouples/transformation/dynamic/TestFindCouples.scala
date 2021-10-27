@@ -99,8 +99,9 @@ class TestFindCouples  extends AnyFunSuite {
     }
 
     test("find couples sw") {
-        def match_(entry : (MovieCouple, MoviePerson, MoviePerson), p1: MoviePerson, p2: MoviePerson): Boolean =
-            (entry._1.equals(p1) && entry._2.equals(p2)) || (entry._2.equals(p1) && entry._1.equals(p2))
+        def match_(entry : (MovieCouple, MoviePerson, MoviePerson), p1: MoviePerson, p2: MoviePerson): Boolean = {
+            (entry._2.equals(p1) && entry._3.equals(p2)) || (entry._3.equals(p1) && entry._2.equals(p2))
+        }
 
         val metamodel = MovieMetamodel.metamodel
         val findcouples = FindCouples.findcouples_imdb
