@@ -27,9 +27,9 @@ object MainIMDB {
 //    var json_actors: String = "/home/jolan/Scala/SparkTL/deployment/g5k/actors_imdb-0.1.json"
 //    var json_movies: String = "/home/jolan/Scala/SparkTL/deployment/g5k/movies_imdb-0.1.json"
 //    var txt_links: String = "/home/jolan/Scala/SparkTL/deployment/g5k/links_imdb-0.1.txt"
-    var json_actors: String = "/home/jolan/Scala/SparkTL/deployment/g5k/actors_sw.json"
-    var json_movies: String = "/home/jolan/Scala/SparkTL/deployment/g5k/movies_sw.json"
-    var txt_links: String = "/home/jolan/Scala/SparkTL/deployment/g5k/links_sw.txt"
+    var json_actors: String = "deployment/g5k/actors_sw.json"
+    var json_movies: String = "deployment/g5k/movies_sw.json"
+    var txt_links: String = "deployment/g5k/links_sw.txt"
 
     def parseArgs(args: List[String]): Unit = {
         args match {
