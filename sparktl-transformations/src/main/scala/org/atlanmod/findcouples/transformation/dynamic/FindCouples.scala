@@ -1,5 +1,6 @@
 package org.atlanmod.findcouples.transformation.dynamic
 
+import org.atlanmod.Utils.my_sleep
 import org.atlanmod.findcouples.model.movie._
 import org.atlanmod.findcouples.model.movie.element._
 import org.atlanmod.findcouples.model.movie.link.{CoupleToPersonP1, CoupleToPersonP2, MovieToPersons, PersonToMovies}
@@ -20,6 +21,7 @@ object FindCouples {
     final val PATTERN_COUPLE_ACTRESS_ACTOR = "couple_actress_actor"
 
     val mm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
+    val random = scala.util.Random
 
     def helper_coactor(model: MovieModel, p: MoviePerson): List[MoviePerson] =
         MovieMetamodel.getMoviesOfPerson(model, p) match {
@@ -86,24 +88,32 @@ object FindCouples {
         }
     }
 
-    def findcouples_imdb: Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] =
+    def findcouples_imdb(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0)
+    : Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] =
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
             List(
                 new RuleImpl(
                     name = "movie2movie",
                     types = List(MovieMetamodel.MOVIE),
+                    from = (m, l) => {
+                        my_sleep(sleeping_guard, random.nextInt())
+                        Some(true)
+                    },
                     to = List(
                         new OutputPatternElementImpl(name = PATTERN_MOVIE,
                             elementExpr = (_,_,l) =>
                                 if (l.isEmpty) None else {
+                                    my_sleep(sleeping_instantiate, random.nextInt)
                                     val movie = l.head.asInstanceOf[MovieMovie]
                                     Some(new MovieMovie(movie.getTitle, movie.getRating, movie.getYear, movie.getMovieType))
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
-                                    (tls, _, sm, pattern, output) =>
+                                    (tls, _, sm, pattern, output) => {
+                                        my_sleep(sleeping_apply, random.nextInt())
                                         makeMoviePersons(tls, sm.asInstanceOf[MovieModel],
                                             pattern.head.asInstanceOf[MovieMovie], output.asInstanceOf[MovieMovie])
+                                    }
                                 ))
                         )
                     )
@@ -111,18 +121,25 @@ object FindCouples {
                 new RuleImpl(
                     name = "actor2actor",
                     types = List(MovieMetamodel.ACTOR),
+                    from = (m, l) => {
+                        my_sleep(sleeping_guard, random.nextInt())
+                        Some(true)
+                    },
                     to = List(
                         new OutputPatternElementImpl(name = PATTERN_ACTOR,
                             elementExpr = (_,_,l) =>
                                 if (l.isEmpty) None else {
+                                    my_sleep(sleeping_instantiate, random.nextInt)
                                     val actor = l.head.asInstanceOf[MovieActor]
                                     Some(new MovieActor(actor.getName))
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
-                                    (tls, _, sm, pattern, output) =>
+                                    (tls, _, sm, pattern, output) => {
+                                        my_sleep(sleeping_apply, random.nextInt())
                                         makePersonMovies(tls, sm.asInstanceOf[MovieModel],
                                             pattern.head.asInstanceOf[MovieActor], output.asInstanceOf[MovieActor])
+                                    }
                                 )
                             )
                         )
@@ -131,18 +148,25 @@ object FindCouples {
                 new RuleImpl(
                     name = "actress2actress",
                     types = List(MovieMetamodel.ACTRESS),
+                    from = (m, l) => {
+                        my_sleep(sleeping_guard, random.nextInt())
+                        Some(true)
+                    },
                     to = List(
                         new OutputPatternElementImpl(name = PATTERN_ACTRESS,
                             elementExpr = (_,_,l) =>
                                 if (l.isEmpty) None else {
+                                    my_sleep(sleeping_instantiate, random.nextInt)
                                     val actress = l.head.asInstanceOf[MovieActress]
                                     Some(new MovieActress(actress.getName))
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
-                                    (tls, _, sm, pattern, output) =>
+                                    (tls, _, sm, pattern, output) => {
+                                        my_sleep(sleeping_apply, random.nextInt())
                                         makePersonMovies(tls, sm.asInstanceOf[MovieModel],
                                             pattern.head.asInstanceOf[MovieActress], output.asInstanceOf[MovieActress])
+                                    }
                                 )
                             )
                         )
@@ -152,6 +176,7 @@ object FindCouples {
                     name = "couple_actor_actor",
                     types = List(MovieMetamodel.ACTOR, MovieMetamodel.ACTOR),
                     from = (model, pattern) => {
+                        my_sleep(sleeping_guard, random.nextInt())
                         val p1 = pattern.head.asInstanceOf[MovieActor]
                         val p2 = pattern(1).asInstanceOf[MovieActor]
                         Some(helper_areCouple(model.asInstanceOf[MovieModel], p1, p2))
@@ -160,6 +185,7 @@ object FindCouples {
                         new OutputPatternElementImpl(name = PATTERN_COUPLE_ACTOR_ACTOR,
                             elementExpr = (_, model, l) =>
                               if (l.size < 2) None else {
+                                  my_sleep(sleeping_instantiate, random.nextInt)
                                   val p1 = l.head.asInstanceOf[MovieActor]
                                   val p2 = l(1).asInstanceOf[MovieActor]
                                   val movies = helper_commonMovies(model.asInstanceOf[MovieModel], p1, p2)
@@ -168,16 +194,20 @@ object FindCouples {
                               },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
-                                    (tls, _, sm, pattern, output) =>
+                                    (tls, _, sm, pattern, output) => {
+                                        my_sleep(sleeping_apply, random.nextInt())
                                         makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
                                             pattern.head.asInstanceOf[MovieActor], output.asInstanceOf[MovieCouple],
                                             PATTERN_ACTOR, 1)
+                                    }
                                 ),
                                 new OutputPatternElementReferenceImpl(
-                                    (tls, _, sm, pattern, output) =>
+                                    (tls, _, sm, pattern, output) => {
+                                        my_sleep(sleeping_apply, random.nextInt())
                                         makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
                                             pattern(1).asInstanceOf[MovieActor], output.asInstanceOf[MovieCouple],
                                             PATTERN_ACTOR, 2)
+                                    }
                                 )
                             )
                         )
@@ -187,6 +217,7 @@ object FindCouples {
                     name = "couple_actress_actor",
                     types = List(MovieMetamodel.ACTRESS, MovieMetamodel.ACTOR),
                     from = (model, pattern) => {
+                        my_sleep(sleeping_guard, random.nextInt())
                         val p1 = pattern.head.asInstanceOf[MovieActress]
                         val p2 = pattern(1).asInstanceOf[MovieActor]
                         Some(helper_areCouple(model.asInstanceOf[MovieModel], p1, p2))
@@ -195,6 +226,7 @@ object FindCouples {
                         new OutputPatternElementImpl(name = PATTERN_COUPLE_ACTRESS_ACTOR,
                             elementExpr = (_, model, l) =>
                                 if (l.size < 2) None else {
+                                    my_sleep(sleeping_instantiate, random.nextInt)
                                     val p1 = l.head.asInstanceOf[MovieActress]
                                     val p2 = l(1).asInstanceOf[MovieActor]
                                     val movies = helper_commonMovies(model.asInstanceOf[MovieModel], p1, p2)
@@ -203,16 +235,20 @@ object FindCouples {
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
-                                    (tls, _, sm, pattern, output) =>
+                                    (tls, _, sm, pattern, output) => {
+                                        my_sleep(sleeping_apply, random.nextInt())
                                         makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
                                             pattern.head.asInstanceOf[MovieActress], output.asInstanceOf[MovieCouple],
                                             PATTERN_ACTRESS, 1)
+                                    }
                                 ),
                                 new OutputPatternElementReferenceImpl(
-                                    (tls, _, sm, pattern, output) =>
+                                    (tls, _, sm, pattern, output) => {
+                                        my_sleep(sleeping_apply, random.nextInt())
                                         makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
                                             pattern(1).asInstanceOf[MovieActor], output.asInstanceOf[MovieCouple],
                                             PATTERN_ACTOR, 2)
+                                    }
                                 )
                             )
                         )
@@ -222,6 +258,7 @@ object FindCouples {
                     name = "couple_actress_actress",
                     types = List(MovieMetamodel.ACTRESS, MovieMetamodel.ACTRESS),
                     from = (model, pattern) => {
+                        my_sleep(sleeping_guard, random.nextInt())
                         val p1 = pattern.head.asInstanceOf[MovieActress]
                         val p2 = pattern(1).asInstanceOf[MovieActress]
                         Some(helper_areCouple(model.asInstanceOf[MovieModel], p1, p2))
@@ -230,6 +267,7 @@ object FindCouples {
                         new OutputPatternElementImpl(name = PATTERN_COUPLE_ACTRESS_ACTRESS,
                             elementExpr = (_, model, l) =>
                                 if (l.size < 2) None else {
+                                    my_sleep(sleeping_instantiate, random.nextInt)
                                     val p1 = l.head.asInstanceOf[MovieActress]
                                     val p2 = l(1).asInstanceOf[MovieActress]
                                     val movies = helper_commonMovies(model.asInstanceOf[MovieModel], p1, p2)
@@ -238,16 +276,20 @@ object FindCouples {
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
-                                    (tls, _, sm, pattern, output) =>
+                                    (tls, _, sm, pattern, output) => {
+                                        my_sleep(sleeping_apply, random.nextInt())
                                         makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
                                             pattern.head.asInstanceOf[MovieActress], output.asInstanceOf[MovieCouple],
                                             PATTERN_ACTRESS, 1)
+                                    }
                                 ),
                                 new OutputPatternElementReferenceImpl(
-                                    (tls, _, sm, pattern, output) =>
+                                    (tls, _, sm, pattern, output) => {
+                                        my_sleep(sleeping_apply, random.nextInt())
                                         makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
                                             pattern(1).asInstanceOf[MovieActress], output.asInstanceOf[MovieCouple],
                                             PATTERN_ACTRESS, 2)
+                                    }
                                 )
                             )
                         )
