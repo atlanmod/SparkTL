@@ -3,7 +3,7 @@ package org.atlanmod
 import org.apache.spark.{SparkConf, SparkContext}
 import org.atlanmod.dblpinfo.model.ModelSamples
 import org.atlanmod.dblpinfo.model.dblp.{DblpMetamodel, DblpModel}
-import org.atlanmod.dblpinfo.tranformation.dynamic.{ICMTActiveAuthors, ICMTAuthors, InactiveICMTButActiveAuthors, JournalISTActiveAuthors}
+import org.atlanmod.dblpinfo.tranformation.{ICMTActiveAuthors, ICMTAuthors, InactiveICMTButActiveAuthors, JournalISTActiveAuthors}
 import org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseByRule
 
 
@@ -63,10 +63,10 @@ object MainDBLP {
         val input_model: DblpModel = ModelSamples.getReplicatedSimple(size)
         val input_metamodel = DblpMetamodel.metamodel
 
-        val q1 = ICMTAuthors.find
-        val q2 = ICMTActiveAuthors.find
-        val q3 = InactiveICMTButActiveAuthors.find
-        val q4 = JournalISTActiveAuthors.find
+        val q1 = ICMTAuthors.find()
+        val q2 = ICMTActiveAuthors.find()
+        val q3 = InactiveICMTButActiveAuthors.find()
+        val q4 = JournalISTActiveAuthors.find()
 
         val line_1 = List("q1",input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition).mkString(",")
         val line_2 = List("q2",input_model.allModelElements.length, input_model.allModelLinks.length, nexecutor, ncore, npartition).mkString(",")

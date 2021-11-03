@@ -4,7 +4,7 @@ import org.apache.spark.SparkContext
 import org.atlanmod.class2relational.model.ModelSamples.getClassModelSingle
 import org.atlanmod.class2relational.model.classmodel.ClassMetamodel
 import org.atlanmod.class2relational.model.relationalmodel.{RelationalElement, RelationalLink, RelationalModel}
-import org.atlanmod.class2relational.transformation.dynamic.Class2Relational
+import org.atlanmod.class2relational.transformation.Class2Relational
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.atlanmod.tl.util.SparkUtils
 import org.scalatest.funsuite.AnyFunSuite

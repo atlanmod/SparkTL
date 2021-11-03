@@ -5,7 +5,7 @@ import org.atlanmod.dblpinfo.model.authorinfo.{AuthorInfoElement, AuthorInfoLink
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpArticle, DblpAuthor, DblpInProceedings, DblpJournal}
 import org.atlanmod.dblpinfo.model.dblp.link.{ArticleToJournal, AuthorToRecords, JournalToArticles, RecordToAuthors}
 import org.atlanmod.dblpinfo.model.dblp.{DblpElement, DblpLink, DblpMetamodel, DblpModel}
-import org.atlanmod.dblpinfo.tranformation.dynamic.{ICMTActiveAuthors, ICMTAuthors, InactiveICMTButActiveAuthors, JournalISTActiveAuthors}
+import org.atlanmod.dblpinfo.tranformation.{ICMTActiveAuthors, ICMTAuthors, InactiveICMTButActiveAuthors, JournalISTActiveAuthors}
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.scalatest.funsuite.AnyFunSuite
@@ -145,27 +145,27 @@ class TestDblpInfo extends AnyFunSuite {
 
     test("test ICMT Authors"){
         val exp = List(loli,manuel,antonio).map(a => new AuthorInfoAuthor(a.getName, ICMTAuthors.helper_numOfPapers(model, a)))
-        val res = run_(ICMTAuthors.find).allModelElements
+        val res = run_(ICMTAuthors.find()).allModelElements
         for (e <- exp) assert(res.contains(e))
     }
 
     test("test ICMT Active Authors"){
         val exp = List(loli,antonio).map(a => new AuthorInfoAuthor(a.getName, active=true))
-        val res = run_(ICMTActiveAuthors.find).allModelElements
+        val res = run_(ICMTActiveAuthors.find()).allModelElements
         for (e <- exp) assert(res.contains(e))
     }
 
     test("test InactiveICMTButActiveAuthors"){
         val exp: List[AuthorInfoElement] = List(manuel).map(a => new AuthorInfoAuthor(a.getName, active=true)) ++
           List(inproc4, inproc2_1).map(ip => new AuthorInfoConference(ip.getBookTitle))
-        val res = run_(InactiveICMTButActiveAuthors.find)
+        val res = run_(InactiveICMTButActiveAuthors.find())
         for (e <- exp) assert(res.allModelElements.contains(e))
     }
 
     test("test JournalUISTActiveAuthors"){
         val exp = List(javi,manuel,loli).map(a => new AuthorInfoAuthor(a.getName, active=true)) ++
           List(j2, j3).map(j => new AuthorInfoJournal(j.getName))
-        val res = run_(JournalISTActiveAuthors.find)
+        val res = run_(JournalISTActiveAuthors.find())
         for (e <- exp) assert(res.allModelElements.contains(e))
     }
 

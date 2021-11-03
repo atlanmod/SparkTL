@@ -1,4 +1,4 @@
-package org.atlanmod.dblpinfo.tranformation.dynamic
+package org.atlanmod.dblpinfo.tranformation
 
 import org.atlanmod.Utils.my_sleep
 import org.atlanmod.dblpinfo.model.authorinfo.element.{AuthorInfoAuthor, AuthorInfoJournal}

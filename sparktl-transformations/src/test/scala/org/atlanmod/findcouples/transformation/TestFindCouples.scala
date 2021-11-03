@@ -1,9 +1,9 @@
-package org.atlanmod.findcouples.transformation.dynamic
+package org.atlanmod.findcouples.transformation
 
 import org.atlanmod.findcouples.model.movie.element._
 import org.atlanmod.findcouples.model.movie.link.{MovieToPersons, PersonToMovies}
 import org.atlanmod.findcouples.model.movie.{MovieElement, MovieLink, MovieMetamodel, MovieModel}
-import org.atlanmod.findcouples.transformation.dynamic.FindCouples.{helper_areCouple, helper_commonMovies}
+import FindCouples.{helper_areCouple, helper_commonMovies}
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -104,7 +104,7 @@ class TestFindCouples  extends AnyFunSuite {
         }
 
         val metamodel = MovieMetamodel.metamodel
-        val findcouples = FindCouples.findcouples_imdb
+        val findcouples = FindCouples.findcouples_imdb()
         val res: MovieModel =  org.atlanmod.tl.engine.sequential.TransformationEngineTwoPhase.execute(findcouples,
             StarWarsModel, metamodel, makeModel = makeMovieModel).asInstanceOf[MovieModel]
         val triplets: List[(MovieCouple, MoviePerson, MoviePerson)] = MovieMetamodel.getAllCoupleTriplets(res)

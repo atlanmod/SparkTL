@@ -1,4 +1,4 @@
-package org.atlanmod.class2relational.transformation.dynamic
+package org.atlanmod.class2relational.transformation
 
 import org.atlanmod.Utils.my_sleep
 import org.atlanmod.class2relational.model.classmodel._

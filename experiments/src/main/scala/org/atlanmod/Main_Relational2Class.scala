@@ -2,7 +2,7 @@ package org.atlanmod
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.atlanmod.class2relational.model.relationalmodel.{RelationalMetamodel, RelationalModel, RelationalTable}
-import org.atlanmod.class2relational.transformation.dynamic.Relational2Class
+import org.atlanmod.class2relational.transformation.Relational2Class
 import org.atlanmod.transformation.parallel.{TransformationEngineImpl, TransformationEngineTwoPhase, TransformationEngineTwoPhaseByRule}
 import org.atlanmod.util.R2CUtil
 
@@ -118,7 +118,7 @@ object Main_Relational2Class {
                foo_notpivot = Relational2Class.isNotPivot_n2
             }
 
-            val transformation = org.atlanmod.class2relational.transformation.dynamic.Relational2Class.relational2class(sleeping_guard, sleeping_instantiate, sleeping_apply,foo_pivot,foo_notpivot)
+            val transformation = class2relational.transformation.Relational2Class.relational2class(sleeping_guard, sleeping_instantiate, sleeping_apply,foo_pivot,foo_notpivot)
             val input_model = R2CUtil.get_model_from_n_patterns(model_size)
             val input_metamodel = RelationalMetamodel.metamodel
 

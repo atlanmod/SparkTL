@@ -1,9 +1,9 @@
-package org.atlanmod.class2relational.transformation.dynamic
+package org.atlanmod.class2relational.transformation
 
 import org.atlanmod.Utils.my_sleep
 import org.atlanmod.class2relational.model.classmodel._
 import org.atlanmod.class2relational.model.relationalmodel._
-import org.atlanmod.class2relational.transformation.dynamic.Relational2Class._
+import Relational2Class._
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}

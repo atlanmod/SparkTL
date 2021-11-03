@@ -1,6 +1,7 @@
 package org.atlanmod.transformation
 
 import org.atlanmod.class2relational.model.classmodel.ClassMetamodel
+import org.atlanmod.class2relational.transformation.Class2RelationalSimple
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.util._
@@ -91,7 +92,7 @@ object Main_Class2Relational_Simple {
 
     def run_experiment_sizes_csv_files(sizes: List[Int], times: Int, ncore: Int): List[String] = {
         val methods = TransformationUtil.get_methods(method)
-        val transformation = org.atlanmod.class2relational.transformation.dynamic.Class2Relational.class2relational_simple()
+        val transformation = Class2RelationalSimple.class2relational()
         val metamodel = ClassMetamodel.metamodel
         var filenames : List[String] = List()
         try {

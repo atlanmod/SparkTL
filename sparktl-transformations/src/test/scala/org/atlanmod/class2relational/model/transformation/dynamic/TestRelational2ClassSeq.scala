@@ -3,8 +3,8 @@ package org.atlanmod.class2relational.model.transformation.dynamic
 import org.atlanmod.class2relational.model.ModelSamples.getRelationalModelSample
 import org.atlanmod.class2relational.model.classmodel.{ClassElement, ClassLink, ClassModel}
 import org.atlanmod.class2relational.model.relationalmodel.{RelationalElement, RelationalLink, RelationalMetamodel, RelationalModel}
-import org.atlanmod.class2relational.transformation.dynamic.Relational2Class
-import org.atlanmod.class2relational.transformation.dynamic.Relational2Class.isPivot_complex
+import org.atlanmod.class2relational.transformation.Relational2Class
+import Relational2Class.isPivot_complex
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.scalatest.funsuite.AnyFunSuite
 

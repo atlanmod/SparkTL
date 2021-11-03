@@ -3,6 +3,7 @@ package org.atlanmod
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 import org.atlanmod.findcouples.model.movie.{MovieJSONLoader, MovieMetamodel, MovieModel}
+import org.atlanmod.findcouples.transformation.FindCouples
 import org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseByRule
 
 object MainIMDB {
@@ -24,9 +25,9 @@ object MainIMDB {
     final val DEFAULT_STORAGE_STRING: String = "MEMORY_AND_DISK"
     var storage_string:  String = DEFAULT_STORAGE_STRING
 
-//    var json_actors: String = "/home/jolan/Scala/SparkTL/deployment/g5k/actors_imdb-0.1.json"
-//    var json_movies: String = "/home/jolan/Scala/SparkTL/deployment/g5k/movies_imdb-0.1.json"
-//    var txt_links: String = "/home/jolan/Scala/SparkTL/deployment/g5k/links_imdb-0.1.txt"
+//    var json_actors: String = "deployment/g5k/actors_imdb-0.1.json"
+//    var json_movies: String = "deployment/g5k/movies_imdb-0.1.json"
+//    var txt_links: String = "deployment/g5k/links_imdb-0.1.txt"
     var json_actors: String = "deployment/g5k/actors_sw.json"
     var json_movies: String = "deployment/g5k/movies_sw.json"
     var txt_links: String = "deployment/g5k/links_sw.txt"
@@ -82,7 +83,7 @@ object MainIMDB {
 //       try {
            parseArgs(args.toList)
            val sc = getContext()
-           val transformation = org.atlanmod.findcouples.transformation.dynamic.FindCouples.findcouples_imdb
+           val transformation = FindCouples.findcouples_imdb()
            val input_model : MovieModel = MovieJSONLoader.load(json_actors,json_movies,txt_links)
            val input_metamodel = MovieMetamodel.metamodel
            var line = List(storage_string,input_model.numberOfElements, input_model.numberOfLinks, nexecutor, ncore, npartition).mkString(",")
