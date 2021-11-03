@@ -1,5 +1,6 @@
 package org.atlanmod.dblpinfo.tranformation.dynamic
 
+import org.atlanmod.Utils.my_sleep
 import org.atlanmod.dblpinfo.model.authorinfo.element.AuthorInfoAuthor
 import org.atlanmod.dblpinfo.model.dblp.{DblpMetamodel, DblpModel}
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpAuthor, DblpInProceedings}
@@ -10,6 +11,8 @@ import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, RuleImpl, Transform
 object ICMTActiveAuthors {
 
     final val PATTERN_AUTHOR_ICMT: String = "author_ICMT"
+
+    val random = scala.util.Random
 
     def helper_booktitle(model: DblpModel, ip: DblpInProceedings) : String = ip.getBookTitle
 
@@ -35,12 +38,14 @@ object ICMTActiveAuthors {
         }
 
 
-    def find: Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] =
+    def find(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0)
+    : Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] =
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](List(
             new RuleImpl(
                 name = "icmt",
                 types = List(DblpMetamodel.AUTHOR),
-                from = (model, pattern) =>{
+                from = (model, pattern) => {
+                    my_sleep(sleeping_guard, random.nextInt)
                     val m = model.asInstanceOf[DblpModel]
                     val author = pattern.head.asInstanceOf[DblpAuthor]
                     Some(helper_hasPapersICMT(m, author) && helper_active(m, author))
@@ -49,6 +54,7 @@ object ICMTActiveAuthors {
                     new OutputPatternElementImpl(name = PATTERN_AUTHOR_ICMT,
                         elementExpr = (_,model,pattern) => {
                             if (pattern.isEmpty) None else {
+                                my_sleep(sleeping_instantiate, random.nextInt)
                                 val author = pattern.head.asInstanceOf[DblpAuthor]
                                 val active = helper_active(model.asInstanceOf[DblpModel], author)
                                 Some(new AuthorInfoAuthor(author.getName, active = active))

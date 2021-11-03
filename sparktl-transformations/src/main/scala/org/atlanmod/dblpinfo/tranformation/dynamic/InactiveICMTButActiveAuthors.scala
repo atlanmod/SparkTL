@@ -1,5 +1,6 @@
 package org.atlanmod.dblpinfo.tranformation.dynamic
 
+import org.atlanmod.Utils.my_sleep
 import org.atlanmod.dblpinfo.model.authorinfo.element.{AuthorInfoAuthor, AuthorInfoConference}
 import org.atlanmod.dblpinfo.model.authorinfo.link.AuthorToConferences
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpAuthor, DblpInProceedings, DblpRecord}
@@ -15,6 +16,7 @@ object InactiveICMTButActiveAuthors {
     final val PATTERN_AUTHOR_ICMT: String = "author_ICMT"
     final val PATTERN_IP_ICMT: String = "ip_ICMT"
 
+    val random = scala.util.Random
     val mm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
 
     val conferences: mutable.HashMap[String, AuthorInfoConference] = new mutable.HashMap[String, AuthorInfoConference]()
@@ -68,12 +70,14 @@ object InactiveICMTButActiveAuthors {
         Some(new AuthorToConferences(authorinfo, confs))
     }
 
-    def find: Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] =
+    def find(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0)
+    : Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] =
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](List(
             new RuleImpl(
                 name = "icmt",
                 types = List(DblpMetamodel.AUTHOR),
                 from = (m, pattern) => {
+                    my_sleep(sleeping_guard, random.nextInt)
                     val author = pattern.head.asInstanceOf[DblpAuthor]
                     val model = m.asInstanceOf[DblpModel]
                     Some(helper_hasPapersICMT(model, author) && !helper_active(model, author))
@@ -82,6 +86,7 @@ object InactiveICMTButActiveAuthors {
                     new OutputPatternElementImpl(name = PATTERN_AUTHOR_ICMT,
                         elementExpr = (_,model,pattern) => {
                             if (pattern.isEmpty) None else {
+                                my_sleep(sleeping_instantiate, random.nextInt)
                                 val author = pattern.head.asInstanceOf[DblpAuthor]
                                 val active = helper_active(model.asInstanceOf[DblpModel], author)
                                 Some(new AuthorInfoAuthor(author.getName, active = active))
@@ -90,6 +95,7 @@ object InactiveICMTButActiveAuthors {
                         outputElemRefs = List(
                             new OutputPatternElementReferenceImpl(
                                 (tls, _, sm, pattern, output) => {
+                                    my_sleep(sleeping_apply, random.nextInt)
                                     val author = pattern.head.asInstanceOf[DblpAuthor]
                                     val model = sm.asInstanceOf[DblpModel]
                                     val authorinfo = output.asInstanceOf[AuthorInfoAuthor]
@@ -105,6 +111,7 @@ object InactiveICMTButActiveAuthors {
                 name = "conf",
                 types = List(DblpMetamodel.INPROCEEDINGS),
                 from = (model, pattern) => {
+                    my_sleep(sleeping_guard, random.nextInt)
                     val ip = pattern.head.asInstanceOf[DblpInProceedings]
                     val m = model.asInstanceOf[DblpModel]
                     Some(
@@ -117,6 +124,7 @@ object InactiveICMTButActiveAuthors {
                     new OutputPatternElementImpl(name=PATTERN_IP_ICMT,
                         elementExpr = (_, model, pattern) => {
                             if (pattern.isEmpty) None else {
+                                my_sleep(sleeping_apply, random.nextInt)
                                 val ip = pattern.head.asInstanceOf[DblpInProceedings]
                                 val res = new AuthorInfoConference(helper_booktitle(model.asInstanceOf[DblpModel], ip))
                                 conferences.put(ip.getBookTitle, res)
