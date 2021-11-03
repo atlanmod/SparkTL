@@ -1,5 +1,6 @@
 package org.atlanmod.class2relational.transformation.dynamic
 
+import org.atlanmod.Utils.my_sleep
 import org.atlanmod.class2relational.model.classmodel._
 import org.atlanmod.class2relational.model.relationalmodel._
 import org.atlanmod.tl.engine.Resolve
@@ -10,6 +11,7 @@ import org.atlanmod.tl.util.ListUtils
 
 object Relational2Class {
 
+    val random = scala.util.Random
 
     final val PATTERN_TYPE : String = "type"
     final val PATTERN_CLASS : String = "class"
@@ -17,10 +19,7 @@ object Relational2Class {
     final val PATTERN_MVATTRIBUTE : String = "mvatt"
     final val PATTERN_MVATTRIBUTE_TYPECLASS : String = "mvatt_tc"
     final val PATTERN_MVATTRIBUTE_DATATYPE : String = "mvatt_dt"
-
     final val TIME_SLEEP : Int = 10
-
-    val random = scala.util.Random
 
     val dynamic_mm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
 
@@ -125,8 +124,6 @@ object Relational2Class {
             case Some(class_) => Some(new AttributeToClass(attribute, class_.asInstanceOf[ClassClass]))
             case _ => None
         }
-
-    
     
     def makeMVAttributeToType(tls: TraceLinks[DynamicElement, DynamicElement], model: RelationalModel,
                               ttype: RelationalType, attribute: ClassAttribute): Option[AttributeToType] =
@@ -158,17 +155,6 @@ object Relational2Class {
             case _ => None
         }
 
-    def my_sleep(millis: Int, rd: Int): Int = {
-        var d = rd.toDouble
-        val end = System.nanoTime() + millis * 1e6
-        var current = System.nanoTime
-        while(current < end){
-            current = System.nanoTime
-            d += 1.0
-        }
-        d.toInt
-    }
-
     def isPivot(m:RelationalModel, t1:RelationalTable, t2:RelationalTable) : Boolean = {
         val n1 = t1.getName
         val n2 = t2.getName
@@ -180,20 +166,7 @@ object Relational2Class {
     }
 
     def isPivot_n2(model:RelationalModel, town:RelationalTable, tattr:RelationalTable) : Boolean = {
-        /*
-            Goal: find cref, ttype, and cid such as
-            ```
-            tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) &
-              RelationalMetamodel.getColumnOwner(cref, model).contains(tattr) &
-              RelationalMetamodel.isKeyOf(cref, tattr, model) &
-              cref.getName.equals(ttype.getName) &
-              RelationalMetamodel.getColumnOwner(cid, model).contains(tattr) &
-              RelationalMetamodel.isKeyOf(cid, tattr, model) &
-              cid.getName.equals("Id")
-             ```
-             is respected
-             */
-
+        /* test if a tattr is a pivot for town, based on their attributes */
         val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
         val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
 
@@ -225,20 +198,7 @@ object Relational2Class {
     }
 
     def isNotPivot_n2(model:RelationalModel, t:RelationalTable) : Boolean = {
-        /*
-            Goal: find cref, ttype, and cid such as
-            ```
-            tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) &
-              RelationalMetamodel.getColumnOwner(cref, model).contains(tattr) &
-              RelationalMetamodel.isKeyOf(cref, tattr, model) &
-              cref.getName.equals(ttype.getName) &
-              RelationalMetamodel.getColumnOwner(cid, model).contains(tattr) &
-              RelationalMetamodel.isKeyOf(cid, tattr, model) &
-              cid.getName.equals("Id")
-             ```
-             is respected
-             */
-        println("N2")
+        /* test if a tattr is not a pivot for town, based on their attributes */
         val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
         val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
 
@@ -269,9 +229,31 @@ object Relational2Class {
 
     }
 
-    def isNotPivot_complex(model:RelationalModel, t:RelationalTable) : Boolean ={
+    def isPivot_complex(model:RelationalModel, town:RelationalTable, tattr:RelationalTable) : Boolean = {
+        /* test if a tattr is a pivot for town, based on their attributes, with a n^3 complexity */
+        val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
+        val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
 
-        println("complex")
+        var result = false
+        for (cref <- columns){
+            for (ttype <- typables) {
+                for (cid <- columns){
+                    if (tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) &
+                      RelationalMetamodel.getColumnOwner(cref, model).contains(tattr) &
+                      RelationalMetamodel.isKeyOf(cref, tattr, model) &
+                      cref.getName.equals(ttype.getName) &
+                      RelationalMetamodel.getColumnOwner(cid, model).contains(tattr) &
+                      RelationalMetamodel.isKeyOf(cid, tattr, model) &
+                      cid.getName.equals("Id"))
+                        result = true
+                }
+            }
+        }
+        result
+    }
+
+    def isNotPivot_complex(model:RelationalModel, t:RelationalTable) : Boolean ={
+        /* test if a tattr is not a pivot for town, based on their attributes, with a n^3 complexity */
         val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
         val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
         val tables: List[RelationalTypable] = RelationalMetamodel.getAllTable(model)
@@ -290,41 +272,6 @@ object Relational2Class {
                           cid.getName.equals("Id"))
                             result = true
                     }
-                }
-            }
-        }
-        result
-    }
-    def isPivot_complex(model:RelationalModel, town:RelationalTable, tattr:RelationalTable) : Boolean = {
-        /*
-        Goal: find cref, ttype, and cid such as
-        ```
-        tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) &
-          RelationalMetamodel.getColumnOwner(cref, model).contains(tattr) &
-          RelationalMetamodel.isKeyOf(cref, tattr, model) &
-          cref.getName.equals(ttype.getName) &
-          RelationalMetamodel.getColumnOwner(cid, model).contains(tattr) &
-          RelationalMetamodel.isKeyOf(cid, tattr, model) &
-          cid.getName.equals("Id")
-         ```
-         is respected
-         */
-        println("complex")
-        val columns: List[RelationalColumn] = RelationalMetamodel.getAllColumns(model)
-        val typables: List[RelationalTypable] = RelationalMetamodel.getAllTypable(model)
-
-        var result = false
-        for (cref <- columns){
-            for (ttype <- typables) {
-                for (cid <- columns){
-                    if (tattr.getName.indexOf("_") != -1 & town != tattr & tattr.getName.startsWith(town.getName) &
-                    RelationalMetamodel.getColumnOwner(cref, model).contains(tattr) &
-                    RelationalMetamodel.isKeyOf(cref, tattr, model) &
-                    cref.getName.equals(ttype.getName) &
-                    RelationalMetamodel.getColumnOwner(cid, model).contains(tattr) &
-                    RelationalMetamodel.isKeyOf(cid, tattr, model) &
-                    cid.getName.equals("Id"))
-                        result = true
                 }
             }
         }
@@ -367,8 +314,8 @@ object Relational2Class {
                         new OutputPatternElementImpl(
                             name = PATTERN_CLASS,
                             elementExpr = (_, _, l) => if (l.isEmpty) None else {
-                                val table = l.head.asInstanceOf[RelationalTable]
                                 my_sleep(sleeping_instantiate, random.nextInt())
+                                val table = l.head.asInstanceOf[RelationalTable]
                                 Some(new ClassClass(table.getId, table.getName, false))
                             },
                             outputElemRefs = List(
