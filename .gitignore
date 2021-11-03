@@ -44,3 +44,6 @@ buildNumber.properties
 bin/
 c2r_results/*
 h2x_results/*
+
+/deployment/
+/sparktl-io/
