@@ -1,6 +1,5 @@
 package org.atlanmod.class2relational.model.relationalmodel
 
-import org.atlanmod.tl.model.Metamodel
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 
 import scala.annotation.tailrec
@@ -34,7 +33,7 @@ object RelationalMetamodel {
     }
 
 
-    def metamodel : Metamodel[DynamicElement, DynamicLink, String, String]
+    def metamodel : DynamicMetamodel[DynamicElement, DynamicLink]
     = new DynamicMetamodel[DynamicElement, DynamicLink]()
 
 

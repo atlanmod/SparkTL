@@ -44,7 +44,6 @@ object ModelSamples {
         new RelationalModel(elements, links)
     }
 
-
     def getClassModelDummy: ClassModel = {
         val family = new ClassClass("0", "Family")
         val family_name = new ClassAttribute("1", "name", false)
@@ -253,6 +252,121 @@ object ModelSamples {
             //, person_id__to__type_int, family_id__to__type_int, family_members_id__to__type_int,
             // person_emailAddresses_id__to__type_int
         )
+
+        new RelationalModel(elements, links)
+    }
+
+    def getReplicatedClassSimple(size: Int): ClassModel = {
+        val type_string = new ClassDatatype("string","String")
+        val type_int = new ClassDatatype("int","Integer")
+
+        var elements: List[ClassElement] = List(type_string, type_int)
+        var links: List[ClassLink] = List()
+
+        val mod: Double = (size - 2) % 7
+        val loop: Int = scala.math.max(1, if (mod >= 4) ((size-2) / 7) + 1 else (size-2) / 7)
+
+        for(i <- 1 to loop){
+            val basis_id = (i - 1) * 7
+
+            val family = new ClassClass((basis_id + 0).toString,"Family_"+i)
+            val family_name = new ClassAttribute((basis_id + 1).toString, "name_"+i, false)
+            val family_members = new ClassAttribute((basis_id + 2).toString,"members_"+i, true)
+            val person = new ClassClass((basis_id + 3).toString,"Person_"+i)
+            val person_firstName = new ClassAttribute((basis_id + 4).toString,"firstName_"+i, false)
+            val person_closestFriend = new ClassAttribute((basis_id + 5).toString,"closestFriend_"+i, false)
+            val person_emailAddresses = new ClassAttribute((basis_id + 6).toString,"emailAddresses_"+i, true)
+            val classes = List(family, person)
+            val attributes = List(family_name, family_members, person_firstName, person_closestFriend, person_emailAddresses)
+            elements = classes ++ attributes ++ elements
+
+            val family__to__attributes = new ClassToAttributes(family, List(family_name, family_members))
+            val person__to__attributes = new ClassToAttributes(person, List(person_firstName, person_closestFriend,
+                person_emailAddresses))
+            val family_name__owner = new AttributeToClass(family_name, family)
+            val family_members__owner = new AttributeToClass(family_members, family)
+            val person_firstName__owner = new AttributeToClass(person_firstName, person)
+            val person_closestFriend__owner = new AttributeToClass(person_closestFriend, person)
+            val person_emailAddresses__owner = new AttributeToClass(person_emailAddresses, person)
+            val family_name__to__type_string = new AttributeToType(family_name, type_string)
+            val firstName__to__type_string = new AttributeToType(person_firstName, type_string)
+            val closestFriend__to__type_person = new AttributeToType(person_closestFriend, person)
+            val members__to__type_person = new AttributeToType(family_members, person)
+            val emailAddresses__to__type_string = new AttributeToType(person_emailAddresses, type_string)
+            val typesOfAttributes = List(family_name__to__type_string, firstName__to__type_string,
+                closestFriend__to__type_person,members__to__type_person, emailAddresses__to__type_string)
+            val attributesOfClass = List(family__to__attributes, person__to__attributes)
+            val attributeToClass = List(family_name__owner, family_members__owner, person_firstName__owner,
+                person_closestFriend__owner, person_emailAddresses__owner)
+            links = attributesOfClass ++ attributeToClass ++ typesOfAttributes ++ links
+        }
+        new ClassModel(elements, links)
+    }
+
+    def getReplicatedRelationalSimple(size: Int): RelationalModel = {
+        val type_string = new RelationalType("string", "String")
+        val type_int = new RelationalType("int", "Integer")
+
+        var elements: List[RelationalElement] = List(type_string, type_int)
+        var links: List[RelationalLink] = List()
+
+        val mod: Double = (size - 2) % 13
+        val loop: Int = scala.math.max(1, if (mod >= 7) ((size-2) / 13) + 1 else (size-2) / 13)
+
+        for(i <- 1 to loop) {
+            val basis_id = (i - 1) * 7
+
+            val family = new RelationalTable((basis_id + 0).toString, "Family")
+            val person = new RelationalTable((basis_id + 4).toString, "Person")
+            val family_members = new RelationalTable((basis_id + 3)+"pivot", "Family_members")
+            val person_emailAddresses = new RelationalTable((basis_id + 7)+"pivot", "Person_emailAddresses")
+            val family_name = new RelationalColumn((basis_id + 2).toString, "name")
+            val family_id = new RelationalColumn((basis_id + 1)+"Id", "Id")
+            val person_firstname = new RelationalColumn((basis_id + 5).toString, "firstName")
+            val person_closestFriend = new RelationalColumn((basis_id + 6).toString, "closestFriend")
+            val person_id = new RelationalColumn((basis_id + 4)+"Id", "Id")
+            val family_members_id = new RelationalColumn((basis_id + 3)+"psrc", "Id")
+            val family_members_type = new RelationalColumn((basis_id + 3)+"ptrg", "Person")
+            val person_emailAddresses_id = new RelationalColumn((basis_id + 7)+"psrc", "Id")
+            val person_emailAddresses_type = new RelationalColumn((basis_id + 7)+"ptrg", "String")
+            val tables = List(family, person, family_members, person_emailAddresses)
+            val columns = List(family_name, family_id, family_name, family_id, person_firstname, person_closestFriend,
+                person_id, family_members_id, family_members_type, person_emailAddresses_id, person_emailAddresses_type)
+            elements = tables ++ columns ++ elements
+
+            val family__to__columns = new TableToColumns(family, List(family_name, family_id))
+            val person__to__columns = new TableToColumns(person, List(person_firstname, person_closestFriend, person_id))
+            val family_members__to__columns = new TableToColumns(family_members, List(family_members_id, family_members_type))
+            val person_emailAddresses__to__columns = new TableToColumns(person_emailAddresses, List(person_emailAddresses_id, person_emailAddresses_type))
+            val family_name__to__family = new ColumnToTable(family_name, family)
+            val family_id__to__family = new ColumnToTable(family_id, family)
+            val person_firstname__to__person = new ColumnToTable(person_firstname, person)
+            val person_closestFriend__to__person = new ColumnToTable(person_closestFriend, person)
+            val person_id__to__person = new ColumnToTable(person_id, person)
+            val family_members_id__to__family_members = new ColumnToTable(family_members_id, family_members)
+            val family_members_type__to__family_members = new ColumnToTable(family_members_type, family_members)
+            val person_emailAddresses_id__to__person_emailAddresses = new ColumnToTable(person_emailAddresses_id, person_emailAddresses)
+            val person_emailAddresses_type__to__person_emailAddresses = new ColumnToTable(person_emailAddresses_type, person_emailAddresses)
+            val family__to__key = new TableToKeys(family, family_id)
+            val person__to__key = new TableToKeys(person, person_id)
+            val family_members__to__keys = new TableToKeys(family_members, List(family_members_id, family_members_type))
+            val person_emailAddresses__to__keys = new TableToKeys(person_emailAddresses, List(person_emailAddresses_id, person_emailAddresses_type))
+            val family_name__to__type_string = new ColumnToType(family_name, type_string)
+            val person_firstname__to__type_string = new ColumnToType(person_firstname, type_string)
+            val person_closestFriend__to__type_person = new ColumnToType(person_closestFriend, person)
+            val family_members_type__to__type_person = new ColumnToType(family_members_type, person)
+            val person_emailAddresses_type__to__type_string = new ColumnToType(person_emailAddresses_type, type_string)
+            val tableToColumns = List(family__to__columns, person__to__columns, family_members__to__columns,
+                person_emailAddresses__to__columns)
+            val columnOwner = List(family_name__to__family, family_id__to__family, person_firstname__to__person,
+                person_closestFriend__to__person, person_id__to__person, family_members_id__to__family_members,
+                family_members_type__to__family_members, person_emailAddresses_id__to__person_emailAddresses,
+                person_emailAddresses_type__to__person_emailAddresses)
+            val keysOfTable = List(family__to__key, person__to__key, family_members__to__keys, person_emailAddresses__to__keys)
+            val typesOfColumns = List(family_name__to__type_string, person_firstname__to__type_string,
+                person_closestFriend__to__type_person, family_members_type__to__type_person, person_emailAddresses_type__to__type_string)
+            links = tableToColumns ++ columnOwner ++ keysOfTable ++ typesOfColumns ++ links
+        }
 
         new RelationalModel(elements, links)
     }
