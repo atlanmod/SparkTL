@@ -27,7 +27,7 @@ object TransformationEngineTwoPhaseHM extends ExperimentalTransformationEngine {
     override def execute[SME:ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                            sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                                     npartition: Int = 0, sc: SparkContext = null)
-    : (Double, List[Double]) = {
+    : (Double, List[Double], (Int, Int)) = {
         val t1 = System.nanoTime
         val elements_and_tls = instantiateTraces(tr, sm, mm)
         val t2 = System.nanoTime
@@ -43,6 +43,6 @@ object TransformationEngineTwoPhaseHM extends ExperimentalTransformationEngine {
         val t2_to_t3 = (t3 - t2) * 1000 / 1e9d
         val t1_to_t3 = (t3 - t1) * 1000 / 1e9d
 
-        (t1_to_t3, List(t1_to_t2, t2_to_t3))
+        (t1_to_t3, List(t1_to_t2, t2_to_t3), (elements.size, links.size))
     }
 }

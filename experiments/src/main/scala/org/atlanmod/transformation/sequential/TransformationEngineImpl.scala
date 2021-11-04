@@ -12,7 +12,7 @@ object TransformationEngineImpl extends ExperimentalTransformationEngine {
     override def execute[SME:ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                            sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                                     npartition: Int= 0, sc: SparkContext = null)
-    : (Double, List[Double]) = {
+    : (Double, List[Double], (Int, Int)) = {
         val t1 = System.nanoTime
         val tuples = allTuples(tr, sm)
         val t2 = System.nanoTime
@@ -26,6 +26,6 @@ object TransformationEngineImpl extends ExperimentalTransformationEngine {
         val t3_to_t4 = (t4 - t3) * 1000 / 1e9d
         val t1_to_t4 = (t4 - t1) * 1000 / 1e9d
 
-        (t1_to_t4, List(t1_to_t2, t2_to_t3, t3_to_t4))
+        (t1_to_t4, List(t1_to_t2, t2_to_t3, t3_to_t4), (elements.size, links.size))
     }
 }
