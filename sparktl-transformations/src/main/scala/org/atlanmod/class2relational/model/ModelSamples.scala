@@ -310,7 +310,7 @@ object ModelSamples {
         var elements: List[RelationalElement] = List(type_string, type_int)
         var links: List[RelationalLink] = List()
 
-        val mod: Double = (size - 2) % 13
+        val mod: Int = (size - 2) % 13
         val loop: Int = scala.math.max(1, if (mod >= 7) ((size-2) / 13) + 1 else (size-2) / 13)
 
         for(i <- 1 to loop) {
@@ -330,7 +330,7 @@ object ModelSamples {
             val person_emailAddresses_id = new RelationalColumn((basis_id + 7)+"psrc", "Id")
             val person_emailAddresses_type = new RelationalColumn((basis_id + 7)+"ptrg", "String")
             val tables = List(family, person, family_members, person_emailAddresses)
-            val columns = List(family_name, family_id, family_name, family_id, person_firstname, person_closestFriend,
+            val columns = List(family_name, family_id, person_firstname, person_closestFriend,
                 person_id, family_members_id, family_members_type, person_emailAddresses_id, person_emailAddresses_type)
             elements = tables ++ columns ++ elements
 
