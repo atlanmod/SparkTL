@@ -140,7 +140,7 @@ object Identity {
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
             List(
                 new RuleImpl(
-                    name = "movie",
+                    name = "movie2movie",
                     types = List(MovieMetamodel.MOVIE),
                     from = (m, l) => {
                         my_sleep(sleeping_guard, random.nextInt())
@@ -150,23 +150,23 @@ object Identity {
                         new OutputPatternElementImpl(name = PATTERN_MOVIE,
                             elementExpr = (_,_,l) =>
                                 if (l.isEmpty) None else {
-                                    my_sleep(sleeping_instantiate, random.nextInt())
+                                    my_sleep(sleeping_instantiate, random.nextInt)
                                     val movie = l.head.asInstanceOf[MovieMovie]
                                     Some(new MovieMovie(movie.getTitle, movie.getRating, movie.getYear, movie.getMovieType))
                                 },
                             outputElemRefs = List(
-                              new OutputPatternElementReferenceImpl(
-                                  (tls, _, sm, pattern, output) => {
-                                      my_sleep(sleeping_apply, random.nextInt())
-                                      makeMoviePersons(tls, sm.asInstanceOf[MovieModel],
-                                          pattern.head.asInstanceOf[MovieMovie], output.asInstanceOf[MovieMovie])
-                                  }
-                              ))
+                                new OutputPatternElementReferenceImpl(
+                                    (tls, _, sm, pattern, output) => {
+                                        my_sleep(sleeping_apply, random.nextInt())
+                                        makeMoviePersons(tls, sm.asInstanceOf[MovieModel],
+                                            pattern.head.asInstanceOf[MovieMovie], output.asInstanceOf[MovieMovie])
+                                    }
+                                ))
                         )
                     )
                 ),
                 new RuleImpl(
-                    name = "actor",
+                    name = "actor2actor",
                     types = List(MovieMetamodel.ACTOR),
                     from = (m, l) => {
                         my_sleep(sleeping_guard, random.nextInt())
@@ -193,7 +193,7 @@ object Identity {
                     )
                 ),
                 new RuleImpl(
-                    name = "actress",
+                    name = "actress2actress",
                     types = List(MovieMetamodel.ACTRESS),
                     from = (m, l) => {
                         my_sleep(sleeping_guard, random.nextInt())
@@ -205,7 +205,7 @@ object Identity {
                                 if (l.isEmpty) None else {
                                     my_sleep(sleeping_instantiate, random.nextInt)
                                     val actress = l.head.asInstanceOf[MovieActress]
-                                    Some(new MovieActor(actress.getName))
+                                    Some(new MovieActress(actress.getName))
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
