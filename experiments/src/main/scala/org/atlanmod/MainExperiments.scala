@@ -34,7 +34,7 @@ object MainExperiments {
     var partition = 4
 
     // Transformation
-    final val DEFAULT_TRANSFORMATION: String = "UNDEFINED"
+    final val DEFAULT_TRANSFORMATION: String = "Class2Relational"
     var tr_case: String = DEFAULT_TRANSFORMATION
 
     val DEFAULT_HEADER: Boolean = false
