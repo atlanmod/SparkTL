@@ -4,7 +4,7 @@ import org.atlanmod.Utils.my_sleep
 import org.atlanmod.class2relational.model.classmodel._
 import org.atlanmod.class2relational.model.relationalmodel._
 import org.atlanmod.tl.engine.Resolve
-import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.atlanmod.tl.model.{TraceLinks, Transformation}
 import org.atlanmod.tl.util.ListUtils
@@ -21,14 +21,14 @@ object Relational2Class {
     final val PATTERN_MVATTRIBUTE_DATATYPE : String = "mvatt_dt"
     final val TIME_SLEEP : Int = 10
 
-    val dynamic_mm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
+    val mm = RelationalMetamodel.metamodel
 
     def makeClassToAttributes_SV(tls: TraceLinks[DynamicElement, DynamicElement], model: RelationalModel,
                                  table: RelationalTable, class_ : ClassClass): List[ClassAttribute] = {
         var sv_attributes: List[ClassAttribute] = List()
         RelationalMetamodel.getSVColumnsOfTable(table, model) match {
             case Some(columns) =>
-                Resolve.resolveAll(tls, model, dynamic_mm, PATTERN_SVATTRIBUTE,
+                Resolve.resolveAll(tls, model, mm, PATTERN_SVATTRIBUTE,
                     ClassMetamodel.ATTRIBUTE, ListUtils.singletons(columns)) match {
                     case Some(attributes: List[ClassAttribute]) =>
                         sv_attributes = sv_attributes ++ attributes
@@ -45,7 +45,7 @@ object Relational2Class {
 
         RelationalMetamodel.getSVColumnsOfTable(table, model) match {
             case Some(columns) =>
-                Resolve.resolveAll(tls, model, dynamic_mm, PATTERN_SVATTRIBUTE,
+                Resolve.resolveAll(tls, model, mm, PATTERN_SVATTRIBUTE,
                     ClassMetamodel.ATTRIBUTE, ListUtils.singletons(columns)) match {
                     case Some(attributes: List[ClassAttribute]) =>
                         sv_mv_attributes = sv_mv_attributes ++ attributes
@@ -58,8 +58,8 @@ object Relational2Class {
             case Some(tables) =>
                 val sps = tls.filter(tl => tables.contains(tl.getSourcePattern.head)).getSourcePatterns
                 (
-                  Resolve.resolveAll(tls, model, dynamic_mm, PATTERN_MVATTRIBUTE_DATATYPE, ClassMetamodel.ATTRIBUTE, sps),
-                  Resolve.resolveAll(tls, model, dynamic_mm, PATTERN_MVATTRIBUTE_TYPECLASS, ClassMetamodel.ATTRIBUTE, sps),
+                  Resolve.resolveAll(tls, model, mm, PATTERN_MVATTRIBUTE_DATATYPE, ClassMetamodel.ATTRIBUTE, sps),
+                  Resolve.resolveAll(tls, model, mm, PATTERN_MVATTRIBUTE_TYPECLASS, ClassMetamodel.ATTRIBUTE, sps),
                 ) match {
                     case (Some(attributes_dt: List[ClassAttribute]), Some(attributes_tc: List[ClassAttribute])) =>
                         sv_mv_attributes = sv_mv_attributes ++ attributes_dt ++ attributes_tc
@@ -74,7 +74,7 @@ object Relational2Class {
         // TODO : check this function, to don't use getMVTablesOfTableOld anymore
         RelationalMetamodel.getMVTablesOfTableOld(table, model) match {
             case Some(tables) =>
-                Resolve.resolveAll(tls, model, dynamic_mm, PATTERN_MVATTRIBUTE,
+                Resolve.resolveAll(tls, model, mm, PATTERN_MVATTRIBUTE,
                     ClassMetamodel.ATTRIBUTE, tables) match {
                     case Some(attributes: List[ClassAttribute]) =>
                         sv_mv_attributes = sv_mv_attributes ++ attributes
@@ -90,13 +90,13 @@ object Relational2Class {
         RelationalMetamodel.getColumnType(column, model) match {
             // the type is a concrete type (e.g., Integer)
             case Some(type_ : RelationalType) =>
-                Resolve.resolve(tls, model, dynamic_mm, PATTERN_TYPE, ClassMetamodel.DATATYPE, List(type_)) match {
+                Resolve.resolve(tls, model, mm, PATTERN_TYPE, ClassMetamodel.DATATYPE, List(type_)) match {
                     case Some(datatype) => Some(new AttributeToType(attribute, datatype.asInstanceOf[ClassDatatype]))
                     case _ => None
                 }
             // the type is described by a table
             case Some(table: RelationalTable) =>
-                Resolve.resolve(tls, model, dynamic_mm, PATTERN_CLASS, ClassMetamodel.CLASS, List(table)) match {
+                Resolve.resolve(tls, model, mm, PATTERN_CLASS, ClassMetamodel.CLASS, List(table)) match {
                     case Some(class_) => Some(new AttributeToType(attribute, class_.asInstanceOf[ClassClass]))
                     case _ => None
                 }
@@ -110,7 +110,7 @@ object Relational2Class {
                                column: RelationalColumn, attribute: ClassAttribute): Option[DynamicLink] =
         RelationalMetamodel.getColumnOwner(column, model) match {
             case Some(owner) =>
-                Resolve.resolve(tls, model, dynamic_mm, PATTERN_CLASS, ClassMetamodel.CLASS, List(owner)) match {
+                Resolve.resolve(tls, model, mm, PATTERN_CLASS, ClassMetamodel.CLASS, List(owner)) match {
                     case Some(class_) =>
                         Some(new AttributeToClass(attribute, class_.asInstanceOf[ClassClass]))
                     case _ => None
@@ -120,35 +120,35 @@ object Relational2Class {
 
     def makeMVAttributeToOwner(tls: TraceLinks[DynamicElement, DynamicElement], model: RelationalModel,
                                owner_table: RelationalTable, attribute: ClassAttribute): Option[AttributeToClass] =
-        Resolve.resolve(tls, model, dynamic_mm, PATTERN_CLASS, ClassMetamodel.CLASS, List(owner_table)) match {
+        Resolve.resolve(tls, model, mm, PATTERN_CLASS, ClassMetamodel.CLASS, List(owner_table)) match {
             case Some(class_) => Some(new AttributeToClass(attribute, class_.asInstanceOf[ClassClass]))
             case _ => None
         }
-    
+
     def makeMVAttributeToType(tls: TraceLinks[DynamicElement, DynamicElement], model: RelationalModel,
                               ttype: RelationalType, attribute: ClassAttribute): Option[AttributeToType] =
-      Resolve.resolve(tls, model, dynamic_mm, PATTERN_TYPE, ClassMetamodel.DATATYPE, List(ttype)) match {
+      Resolve.resolve(tls, model, mm, PATTERN_TYPE, ClassMetamodel.DATATYPE, List(ttype)) match {
           case Some(datatype) => Some(new AttributeToType(attribute, datatype.asInstanceOf[ClassDatatype]))
           case _ => None
       }
 
     def makeMVAttributeToType(tls: TraceLinks[DynamicElement, DynamicElement], model: RelationalModel,
                               table: RelationalTable, attribute: ClassAttribute): Option[AttributeToType] =
-        Resolve.resolve(tls, model, dynamic_mm, PATTERN_CLASS, ClassMetamodel.CLASS, List(table)) match {
+        Resolve.resolve(tls, model, mm, PATTERN_CLASS, ClassMetamodel.CLASS, List(table)) match {
             case Some(class_) => Some(new AttributeToType(attribute, class_.asInstanceOf[ClassDatatype]))
             case _ => None
         }
-    
+
     def makeMVAttributeToTypeFromGotTable(tls: TraceLinks[DynamicElement, DynamicElement], model: RelationalModel,
                                           table: RelationalTable, attribute: ClassAttribute): Option[DynamicLink] =
         RelationalMetamodel.getMVTableType(table, model) match {
             case Some(type_ : RelationalType) =>
-                Resolve.resolve(tls, model, dynamic_mm, PATTERN_TYPE, ClassMetamodel.DATATYPE, List(type_)) match {
+                Resolve.resolve(tls, model, mm, PATTERN_TYPE, ClassMetamodel.DATATYPE, List(type_)) match {
                     case Some(datatype) => Some(new AttributeToType(attribute, datatype.asInstanceOf[ClassDatatype]))
                     case _ => None
                 }
             case Some(table: RelationalTable) =>
-                Resolve.resolve(tls, model, dynamic_mm, PATTERN_CLASS, ClassMetamodel.CLASS, List(table)) match {
+                Resolve.resolve(tls, model, mm, PATTERN_CLASS, ClassMetamodel.CLASS, List(table)) match {
                     case Some(class_) => Some(new AttributeToType(attribute, class_.asInstanceOf[ClassClass]))
                     case _ => None
                 }

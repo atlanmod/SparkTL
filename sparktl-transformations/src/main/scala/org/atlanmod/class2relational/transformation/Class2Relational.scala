@@ -4,7 +4,7 @@ import org.atlanmod.Utils.my_sleep
 import org.atlanmod.class2relational.model.classmodel._
 import org.atlanmod.class2relational.model.relationalmodel._
 import org.atlanmod.tl.engine.Resolve
-import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.atlanmod.tl.model.{Model, TraceLinks, Transformation}
 import org.atlanmod.tl.util.ListUtils
@@ -21,15 +21,15 @@ object Class2Relational {
     final val PATTERN_PIVOT_SOURCE: String = "psrc"
     final val PATTERN_PIVOT_TARGET: String = "ptrg"
 
-    final val dynamic_mm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
+    final val mm = ClassMetamodel.metamodel
 
     def makeTableToSVColumnsWithKey(tls: TraceLinks[DynamicElement, DynamicElement], model: ClassModel,
                                     class_ : ClassClass, table: RelationalTable): Option[TableToColumns] = {
         ClassMetamodel.getClassAttributes(class_, model) match {
             case Some(attributes) =>
-                val cols = Resolve.resolveAll(tls, model, dynamic_mm, PATTERN_SVCOLUMNS, RelationalMetamodel.COLUMN,
+                val cols = Resolve.resolveAll(tls, model, mm, PATTERN_SVCOLUMNS, RelationalMetamodel.COLUMN,
                     ListUtils.singletons(attributes))
-                val key = Resolve.resolve(tls, model, dynamic_mm, PATTERN_KEY, RelationalMetamodel.COLUMN, List(class_))
+                val key = Resolve.resolve(tls, model, mm, PATTERN_KEY, RelationalMetamodel.COLUMN, List(class_))
                 (cols, key) match {
                     case (Some(lcols), Some(k)) =>
                         Some(new TableToColumns(
@@ -43,7 +43,7 @@ object Class2Relational {
 
     def makeTableToKey(tls: TraceLinks[DynamicElement, DynamicElement], model: ClassModel, class_ : ClassClass, table: RelationalTable)
     : Option[TableToKeys] = {
-        Resolve.resolve(tls, model, dynamic_mm, PATTERN_KEY, RelationalMetamodel.COLUMN, List(class_)) match {
+        Resolve.resolve(tls, model, mm, PATTERN_KEY, RelationalMetamodel.COLUMN, List(class_)) match {
             case Some(k) =>
                 Some(new TableToKeys(table, k.asInstanceOf[RelationalColumn]))
             case _ => None
@@ -54,7 +54,7 @@ object Class2Relational {
                             column: RelationalColumn): Option[ColumnToTable] = {
         ClassMetamodel.getAttributeOwner(attribute, model) match {
             case Some(owner) =>
-                Resolve.resolve(tls, model, dynamic_mm, PATTERN_TABLE, RelationalMetamodel.TABLE, List(owner)) match {
+                Resolve.resolve(tls, model, mm, PATTERN_TABLE, RelationalMetamodel.TABLE, List(owner)) match {
                     case Some(table) =>
                         Some(new ColumnToTable(column, table.asInstanceOf[RelationalTable]))
                     case _ => None
@@ -67,12 +67,12 @@ object Class2Relational {
                          column: RelationalColumn): Option[ColumnToType] = {
         ClassMetamodel.getAttributeType(attribute, model) match {
             case Some(cl : ClassClass) =>
-                Resolve.resolve(tls, model, dynamic_mm, PATTERN_TABLE, RelationalMetamodel.TABLE, List(cl)) match {
+                Resolve.resolve(tls, model, mm, PATTERN_TABLE, RelationalMetamodel.TABLE, List(cl)) match {
                     case Some(table) => Some(new ColumnToType(column, table.asInstanceOf[RelationalTable]))
                     case _ => None
                 }
             case Some(dt : ClassDatatype) =>
-                Resolve.resolve(tls, model, dynamic_mm, PATTERN_TYPE, RelationalMetamodel.TYPE, List(dt)) match {
+                Resolve.resolve(tls, model, mm, PATTERN_TYPE, RelationalMetamodel.TYPE, List(dt)) match {
                     case Some(type_) => Some(new ColumnToType(column, type_.asInstanceOf[RelationalType]))
                     case _ => None
                 }
@@ -83,8 +83,8 @@ object Class2Relational {
     def findPivotSrcTrg(tls: TraceLinks[DynamicElement, DynamicElement], model: Model[DynamicElement, DynamicLink],
                         attribute: ClassAttribute)
     : Option[(RelationalColumn, RelationalColumn)] = {
-        val psrc = Resolve.resolve(tls, model, dynamic_mm, PATTERN_PIVOT_SOURCE, RelationalMetamodel.COLUMN, List(attribute))
-        val ptrg = Resolve.resolve(tls, model, dynamic_mm, PATTERN_PIVOT_TARGET, RelationalMetamodel.COLUMN, List(attribute))
+        val psrc = Resolve.resolve(tls, model, mm, PATTERN_PIVOT_SOURCE, RelationalMetamodel.COLUMN, List(attribute))
+        val ptrg = Resolve.resolve(tls, model, mm, PATTERN_PIVOT_TARGET, RelationalMetamodel.COLUMN, List(attribute))
         (psrc, ptrg) match {
             case (Some(src), Some(trg)) => Some((src.asInstanceOf[RelationalColumn], trg.asInstanceOf[RelationalColumn]))
             case _ => None
@@ -112,7 +112,7 @@ object Class2Relational {
 
     def makeColumnToMVTable(tls: TraceLinks[DynamicElement, DynamicElement], model: ClassModel,
                             attribute: ClassAttribute, column: RelationalColumn): Option[ColumnToTable] = {
-        Resolve.resolve(tls, model, dynamic_mm, PATTERN_PIVOT, RelationalMetamodel.TABLE, List(attribute)) match {
+        Resolve.resolve(tls, model, mm, PATTERN_PIVOT, RelationalMetamodel.TABLE, List(attribute)) match {
             case Some(table) => Some(new ColumnToTable(column, table.asInstanceOf[RelationalTable]))
             case _ => None
         }
@@ -181,7 +181,7 @@ object Class2Relational {
                             new OutputPatternElementReferenceImpl(
                                 (tls, _, sm, class_, column) => {
                                     my_sleep(sleeping_apply, random.nextInt())
-                                    Resolve.resolve(tls, sm, dynamic_mm, PATTERN_TABLE, RelationalMetamodel.TABLE,
+                                    Resolve.resolve(tls, sm, mm, PATTERN_TABLE, RelationalMetamodel.TABLE,
                                         List(class_.head)) match {
                                         case Some(table) =>
                                             Some(new ColumnToTable(column.asInstanceOf[RelationalColumn],

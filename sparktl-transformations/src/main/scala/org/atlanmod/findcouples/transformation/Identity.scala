@@ -2,10 +2,10 @@ package org.atlanmod.findcouples.transformation
 
 import org.atlanmod.Utils.my_sleep
 import org.atlanmod.findcouples.model.movie._
-import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieActress, MovieClique, MovieCouple, MovieGroup, MovieMovie, MoviePerson}
-import org.atlanmod.findcouples.model.movie.link.{CliqueToPersons, CoupleToPersonP1, CoupleToPersonP2, GroupToMovies, MovieToPersons, PersonToMovies}
+import org.atlanmod.findcouples.model.movie.element._
+import org.atlanmod.findcouples.model.movie.link._
 import org.atlanmod.tl.engine.Resolve
-import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.atlanmod.tl.model.{TraceLinks, Transformation}
 import org.atlanmod.tl.util.ListUtils
@@ -18,7 +18,7 @@ object Identity {
     final val PATTERN_CLIQUE = "clique"
     final val PATTERN_COUPLE = "couple"
 
-    val mm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
+    val mm = MovieMetamodel.metamodel
     val random = scala.util.Random
 
     def makePersonMovies (tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel,

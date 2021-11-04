@@ -5,7 +5,7 @@ import org.atlanmod.dblpinfo.model.authorinfo.element.{AuthorInfoAuthor, AuthorI
 import org.atlanmod.dblpinfo.model.authorinfo.link.AuthorToConferences
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpAuthor, DblpInProceedings, DblpRecord}
 import org.atlanmod.dblpinfo.model.dblp.{DblpMetamodel, DblpModel}
-import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.atlanmod.tl.model.{TraceLinks, Transformation}
 
@@ -17,7 +17,7 @@ object InactiveICMTButActiveAuthors {
     final val PATTERN_IP_ICMT: String = "ip_ICMT"
 
     val random = scala.util.Random
-    val mm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
+    val mm = DblpMetamodel.metamodel
 
     val conferences: mutable.HashMap[String, AuthorInfoConference] = new mutable.HashMap[String, AuthorInfoConference]()
 

@@ -5,7 +5,7 @@ import org.atlanmod.findcouples.model.movie._
 import org.atlanmod.findcouples.model.movie.element._
 import org.atlanmod.findcouples.model.movie.link.{CoupleToPersonP1, CoupleToPersonP2, MovieToPersons, PersonToMovies}
 import org.atlanmod.tl.engine.Resolve
-import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.atlanmod.tl.model.{TraceLinks, Transformation}
 import org.atlanmod.tl.util.ListUtils
@@ -20,7 +20,7 @@ object FindCouples {
     final val PATTERN_COUPLE_ACTRESS_ACTRESS = "couple_actress_actress"
     final val PATTERN_COUPLE_ACTRESS_ACTOR = "couple_actress_actor"
 
-    val mm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
+    val mm = MovieMetamodel.metamodel
     val random = scala.util.Random
 
     def helper_coactor(model: MovieModel, p: MoviePerson): List[MoviePerson] =

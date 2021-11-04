@@ -14,7 +14,7 @@ object ClassMetamodel {
     final val ATTRIBUTE_TYPE = "type"
 
     def metamodel : DynamicMetamodel[DynamicElement, DynamicLink]
-    = new DynamicMetamodel[DynamicElement, DynamicLink]()
+    = new DynamicMetamodel[DynamicElement, DynamicLink]("ClassMetamodel")
 
     @tailrec
     private def getAttributeTypeOnLinks(attr: ClassAttribute, l: List[ClassLink]): Option[ClassTypable] = {

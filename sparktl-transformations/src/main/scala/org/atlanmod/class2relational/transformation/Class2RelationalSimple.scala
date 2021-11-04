@@ -5,13 +5,13 @@ import org.atlanmod.class2relational.model.classmodel._
 import org.atlanmod.class2relational.model.relationalmodel._
 import org.atlanmod.tl.engine.Resolve
 import org.atlanmod.tl.model.Transformation
-import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.atlanmod.tl.util.ListUtils
 
 object Class2RelationalSimple {
 
-    final val dynamic_mm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
+    final val mm =  ClassMetamodel.metamodel
 
     val random = scala.util.Random
 
@@ -20,7 +20,6 @@ object Class2RelationalSimple {
 
     def class2relational(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0)
     :Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] = {
-        val rmm = new DynamicMetamodel[DynamicElement, DynamicLink]()
 
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
             List(
@@ -49,7 +48,7 @@ object Class2RelationalSimple {
                                         val class_ = c.head.asInstanceOf[ClassClass]
                                         ClassMetamodel.getClassAttributes(class_, sm.asInstanceOf[ClassModel]) match {
                                             case Some(attrs) =>
-                                                val cols = Resolve.resolveAll(tls, sm, rmm, PATTERN_COLUMN,
+                                                val cols = Resolve.resolveAll(tls, sm, mm, PATTERN_COLUMN,
                                                     RelationalMetamodel.COLUMN , ListUtils.singletons(attrs))
                                                 cols match {
                                                     case Some(columns) if columns.nonEmpty =>
@@ -91,7 +90,7 @@ object Class2RelationalSimple {
                                         val attribute = a.head.asInstanceOf[ClassAttribute]
                                         ClassMetamodel.getAttributeOwner(attribute, sm.asInstanceOf[ClassModel]) match {
                                             case Some(class_) =>
-                                                Resolve.resolve(tls, sm, rmm, PATTERN_TABLE, RelationalMetamodel.TABLE,
+                                                Resolve.resolve(tls, sm, mm, PATTERN_TABLE, RelationalMetamodel.TABLE,
                                                     List(class_)) match {
                                                     case Some(table) =>
                                                         Some(new ColumnToTable(

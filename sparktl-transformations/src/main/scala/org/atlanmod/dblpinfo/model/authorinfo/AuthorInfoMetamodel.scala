@@ -12,6 +12,6 @@ object AuthorInfoMetamodel {
     final val PUBLISHESINJ = "publishesInJ"
     final val PUBLISHESINC = "publishesInC"
     
-    def metamodel : DynamicMetamodel[DynamicElement, DynamicLink] = new DynamicMetamodel[DynamicElement, DynamicLink]()
+    def metamodel : DynamicMetamodel[DynamicElement, DynamicLink] = new DynamicMetamodel[DynamicElement, DynamicLink]("AuthorInfoMetamodel")
 
 }

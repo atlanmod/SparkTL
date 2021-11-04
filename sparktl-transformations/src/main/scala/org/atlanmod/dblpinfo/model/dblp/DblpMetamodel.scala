@@ -40,7 +40,7 @@ object DblpMetamodel {
     final val PHDTHESIS_SCHOOL: String = "school"
     final val WWW_EDITORS: String = "editors"
 
-    def metamodel : DynamicMetamodel[DynamicElement, DynamicLink] = new DynamicMetamodel[DynamicElement, DynamicLink]()
+    def metamodel : DynamicMetamodel[DynamicElement, DynamicLink] = new DynamicMetamodel[DynamicElement, DynamicLink]("DBLPMetamodel")
 
     private def getRecordsOfAuthorOnLinks(links: List[DblpLink], author: DblpAuthor): Option[List[DblpRecord]] = {
         links.find(l => l.isInstanceOf[AuthorToRecords] && l.getSource.equals(author)) match {

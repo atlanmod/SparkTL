@@ -6,8 +6,6 @@ import scala.annotation.tailrec
 
 object RelationalMetamodel {
 
-
-
     @tailrec
     private def getMVTablesOfTableOnElementsOld(table: RelationalTable, allModelElements: List[RelationalElement],
                                              acc: List[List[RelationalTable]] = List())
@@ -32,10 +30,8 @@ object RelationalMetamodel {
         }
     }
 
-
     def metamodel : DynamicMetamodel[DynamicElement, DynamicLink]
-    = new DynamicMetamodel[DynamicElement, DynamicLink]()
-
+    = new DynamicMetamodel[DynamicElement, DynamicLink]("RelationalMetamodel")
 
     final val TABLE = "Table"
     final val COLUMN = "Column"

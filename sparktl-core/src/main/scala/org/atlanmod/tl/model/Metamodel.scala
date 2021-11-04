@@ -14,6 +14,7 @@ trait Metamodel[ME, ML, MC, MR] extends Serializable {
     def toModelReference(sr: MR, sl: ML): Option[ML]
 
     def equals(that: Any): Boolean
+    def name(): String
 
     def hasType(t: MC, e: ME) : Boolean ={
         toModelClass(t, e) match {

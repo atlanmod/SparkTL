@@ -21,7 +21,7 @@ object MovieMetamodel {
     final val PERSON_MOVIES: String = "movies"
     final val MOVIE_PERSONS: String = "persons"
 
-    def metamodel : DynamicMetamodel[DynamicElement, DynamicLink] = new DynamicMetamodel[DynamicElement, DynamicLink]()
+    def metamodel : DynamicMetamodel[DynamicElement, DynamicLink] = new DynamicMetamodel[DynamicElement, DynamicLink]("MovieMetamodel")
 
     private def getActorsOfMovieOnLinks(links: List[MovieLink], movie: MovieMovie): Option[List[MoviePerson]] =
         links.find(l => l.isInstanceOf[MovieToPersons] && l.getSource.equals(movie)) match {

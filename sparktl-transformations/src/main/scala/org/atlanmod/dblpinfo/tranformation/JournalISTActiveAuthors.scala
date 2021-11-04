@@ -5,7 +5,7 @@ import org.atlanmod.dblpinfo.model.authorinfo.element.{AuthorInfoAuthor, AuthorI
 import org.atlanmod.dblpinfo.model.authorinfo.link.AuthorToJournals
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpArticle, DblpAuthor, DblpRecord}
 import org.atlanmod.dblpinfo.model.dblp.{DblpMetamodel, DblpModel}
-import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.atlanmod.tl.model.{TraceLinks, Transformation}
 
@@ -17,7 +17,7 @@ object JournalISTActiveAuthors {
     final val PATTERN_JOURNAL_IST = "journal_IST"
 
     val random = scala.util.Random
-    val mm =  new DynamicMetamodel[DynamicElement, DynamicLink]()
+    val mm = DblpMetamodel.metamodel
 
     val journals: mutable.HashMap[String, AuthorInfoJournal] = new mutable.HashMap[String, AuthorInfoJournal]()
 
