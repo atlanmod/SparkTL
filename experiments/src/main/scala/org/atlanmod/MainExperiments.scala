@@ -11,7 +11,7 @@ import org.atlanmod.findcouples.model.movie.{MovieJSONLoader, MovieMetamodel}
 import org.atlanmod.findcouples.transformation.{FindCouples, Identity}
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
-import org.atlanmod.transformation.parallel.TransformationEngineTwoPhaseByRule
+import org.atlanmod.transformation.parallel.{TransformationEngineOneParallelPhaseByRule, TransformationEngineTwoPhaseByRule}
 
 import scala.annotation.tailrec
 
@@ -189,7 +189,14 @@ object MainExperiments {
         val input_metamodel: DynamicMetamodel[DynamicElement, DynamicLink]  = getMetamodel(tr_case)
         val input_model: DynamicModel = getModel(input_metamodel, input_type, files)
 
-        val res = TransformationEngineTwoPhaseByRule.execute(transformation, input_model, input_metamodel, partition, sc)
+        var res : (Double, List[Double], (Int, Int)) = null
+
+        nstep match {
+            case 2 => res = TransformationEngineTwoPhaseByRule.execute(transformation, input_model, input_metamodel, partition, sc)
+            case 1 => res = TransformationEngineOneParallelPhaseByRule.execute(transformation, input_model, input_metamodel, partition, sc)
+            case _ => throw new Exception("The number of parallel phases must be specified for this specific main Scala object.")
+        }
+
         val line = List(
             tr_case, input_model.numberOfElements, input_model.numberOfLinks,
             num_executors, executor_cores, partition, storage_string,
