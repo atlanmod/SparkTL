@@ -1,6 +1,6 @@
 package org.atlanmod.tl.engine
 
-import org.atlanmod.tl.model.{Model, OutputPatternElement, OutputPatternElementReference, Rule, TraceLinks}
+import org.atlanmod.tl.model._
 
 object Eval {
 

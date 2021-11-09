@@ -41,13 +41,6 @@ object Trace {
         matchPattern(tr, sm, mm, sp).flatMap(r => traceRuleOnPattern(r, sm, sp))
     }
 
-
-    def trace[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
-                                            sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
-    : TraceLinks[SME, TME] = {
-            new TraceLinksList(allTuples(tr, sm).flatMap(tuple => tracePattern(tr, sm, mm, tuple)))
-    }
-
     def trace_HM[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
                                                sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
     : TraceLinks[SME, TME] = {

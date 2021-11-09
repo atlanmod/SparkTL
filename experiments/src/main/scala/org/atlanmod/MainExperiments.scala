@@ -96,7 +96,10 @@ object MainExperiments {
                 tr_case = c
                 parseArgs(args)
             case _ :: args => parseArgs(args)
-            case List() => partition = executor_cores * num_executors * 4
+            case List() => {
+                executor_cores = sc.getConf.get("spark.executor.cores").toInt
+                partition = executor_cores * num_executors * 4
+            }
         }
     }
 
@@ -160,7 +163,8 @@ object MainExperiments {
         else if (mm == MovieMetamodel.metamodel)
             input match {
                 case "size" => org.atlanmod.findcouples.model.ModelSamples.getReplicatedSimple(size).asInstanceOf[DynamicModel]
-                case "files" =>
+                case "files" => {
+                    println(files.mkString(";"))
                     (files.find(f => f.contains("movie")), files.find(f => f.contains("actor")), files.find(f => f.contains("link"))) match {
                         case (Some(movie_file), Some(actor_file), Some(link_file)) =>
                             MovieJSONLoader.load(actor_file, movie_file, link_file)
@@ -168,6 +172,7 @@ object MainExperiments {
                         case (_, None, _) =>throw new Exception("JSON file containing actors not declared")
                         case (_, _, None) =>throw new Exception("TXT file containing links not declared")
                     }
+                }
             }
         else if (mm == DblpMetamodel.metamodel)
             input match {
@@ -184,12 +189,12 @@ object MainExperiments {
         val input_metamodel: DynamicMetamodel[DynamicElement, DynamicLink]  = getMetamodel(tr_case)
         val input_model: DynamicModel = getModel(input_metamodel, input_type, files)
 
-        val res = TransformationEngineTwoPhaseByRule.execute_bystep(transformation, input_model, input_metamodel, partition, sc, nstep, storage)
+        val res = TransformationEngineTwoPhaseByRule.execute(transformation, input_model, input_metamodel, partition, sc)
         val line = List(
             tr_case, input_model.numberOfElements, input_model.numberOfLinks,
             num_executors, executor_cores, partition, storage_string,
             sleeping_guard, sleeping_instantiate, sleeping_apply,
-            res._1).mkString(",") + res._2.mkString(",") + "," + res._3._1 + "," + res._3._2
+            res._1).mkString(",") + "," + res._2.mkString(",") + "," + res._3._1 + "," + res._3._2
 
         if (header) println(csv_header)
         println(line)
