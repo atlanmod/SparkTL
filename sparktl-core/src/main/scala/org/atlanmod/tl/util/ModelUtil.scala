@@ -4,10 +4,10 @@ import org.atlanmod.tl.model.Model
 
 object ModelUtil {
 
-    def makeTupleModel[ME, ML](elements: List[ME],links: List[ML]): Model[ME, ML] = {
-        class tupleModel(elements: List[ME], links: List[ML]) extends Model[ME, ML] {
-            override def allModelElements: List[ME] = elements
-            override def allModelLinks: List[ML] = links
+    def makeTupleModel[ME, ML](elements: Iterable[ME], links: Iterable[ML]): Model[ME, ML] = {
+        class tupleModel(elements: Iterable[ME], links: Iterable[ML]) extends Model[ME, ML] {
+            override def allModelElements: List[ME] = elements.toList
+            override def allModelLinks: List[ML] = links.toList
         }
         new tupleModel(elements, links)
     }

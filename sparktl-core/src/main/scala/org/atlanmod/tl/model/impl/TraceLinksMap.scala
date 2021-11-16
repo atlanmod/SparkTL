@@ -3,13 +3,7 @@ package org.atlanmod.tl.model.impl
 import org.atlanmod.tl.model.{TraceLink, TraceLinks}
 import org.atlanmod.tl.util.ListUtils
 
-import scala.collection.mutable
-
-class TraceLinksMap[SME, TME](map: mutable.Map[List[SME], List[TraceLink[SME, TME]]]) extends TraceLinks[SME, TME] {
-
-    def this(){
-        this(new mutable.HashMap[List[SME], List[TraceLink[SME, TME]]]())
-    }
+class TraceLinksMap[SME, TME](map: scala.collection.immutable.Map[List[SME], List[TraceLink[SME, TME]]]) extends TraceLinks[SME, TME] {
 
     override def find(sp: List[SME])(p: TraceLink[SME, TME] => Boolean): Option[TraceLink[SME, TME]] =
         map.get(sp) match {
@@ -19,18 +13,18 @@ class TraceLinksMap[SME, TME](map: mutable.Map[List[SME], List[TraceLink[SME, TM
 
     override def filter(p: TraceLink[SME, TME] => Boolean): TraceLinks[SME, TME] =
         {
-            val new_map = new TraceLinksMap(new mutable.HashMap[List[SME], List[TraceLink[SME, TME]]]())
+            var tmp: List[(List[SME], List[TraceLink[SME, TME]])]  = List()
             for (key <- map.keys){
                 map.get(key) match {
                     case Some(tls) =>
-                       tls.filter(p) match{
-                           case h::t => new_map.put(key, h::t)
-                           case _ =>
-                       }
+                        tls.filter(p) match {
+                            case h :: t => tmp = (key, h::t) :: tmp
+                            case _ =>
+                        }
                     case _ =>
                 }
             }
-            new_map
+            new TraceLinksMap(tmp.toMap)
         }
 
     override def getTargetElements: List[TME] = map.flatMap(tl => tl._2.map(t => t.getTargetElement)).toList
@@ -46,22 +40,8 @@ class TraceLinksMap[SME, TME](map: mutable.Map[List[SME], List[TraceLink[SME, TM
     }
 
 
-    def getMap(): mutable.Map[List[SME], List[TraceLink[SME, TME]]] = {
+    def getMap(): scala.collection.immutable.Map[List[SME], List[TraceLink[SME, TME]]] = {
         map
-    }
-
-    def put(key: List[SME], value: TraceLink[SME, TME]): Unit = {
-        map.get(key) match {
-            case Some(tls) => map.put(key, value :: tls)
-            case None => map.put(key, List(value))
-        }
-    }
-
-    def put(key: List[SME], value: List[TraceLink[SME, TME]]): Unit = {
-        map.get(key) match {
-            case Some(tls) => map.put(key, value ++ tls)
-            case None => map.put(key, value)
-        }
     }
 
     def asList(): List[TraceLink[SME, TME]] = map.toList.flatMap(t => t._2)
@@ -74,4 +54,5 @@ class TraceLinksMap[SME, TME](map: mutable.Map[List[SME], List[TraceLink[SME, TM
                 false
         }
     }
+
 }
