@@ -11,7 +11,7 @@ import org.atlanmod.findcouples.model.movie.{MovieJSONLoader, MovieMetamodel}
 import org.atlanmod.findcouples.transformation.{FindCouples, Identity}
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
-import org.atlanmod.transformation.parallel.{TransformationEngineOneParallelPhaseByRule, TransformationEngineTwoPhaseByRule}
+import org.atlanmod.transformation.parallel.{TransformationEngineTwoPhaseByRule, TransformationEngineTwoPhaseByRuleVariant, TransformationEngineTwoPhaseByRuleWithFold, TransformationEngineTwoPhaseByRuleWithMap}
 
 import scala.annotation.tailrec
 
@@ -19,7 +19,7 @@ object MainExperiments {
 
     var sc: SparkContext = null
     val csv_header: String =
-        "case,element,link," +
+        "solution,case,element,link," +
           "executor,core,partition,storageLevel," +
           "sleeping_guard,sleeping_instantiate,sleeping_apply," +
           "total_time,time_tuples,time_instantiate,time_extract,time_broadcast,time_apply," +
@@ -56,8 +56,10 @@ object MainExperiments {
     var files: List[String] = List()
 
     // To process partial computation
-    final val DEFAULT_NSTEP: Int = 5
-    var nstep: Int = DEFAULT_NSTEP
+//    final val DEFAULT_NSTEP: Int = 5
+//    var nstep: Int = DEFAULT_NSTEP
+    final val DEFAULT_SOLUTION: String = "default"
+    var solution: String = DEFAULT_SOLUTION
 
     // Storage Level of RDDs
     final val DEFAULT_STORAGE: StorageLevel = StorageLevel.MEMORY_AND_DISK
@@ -71,8 +73,8 @@ object MainExperiments {
     @tailrec
     def parseArgs(args: List[String]): Unit = {
         args match {
-            case "-step" :: step :: args =>
-                nstep = step.toInt
+            case "-solution" :: sol :: args =>
+                solution = sol
                 parseArgs(args)
             case "-file" :: file :: args =>
                 files = file :: files
@@ -191,14 +193,16 @@ object MainExperiments {
 
         var res : (Double, List[Double], (Int, Int)) = null
 
-        nstep match {
-            case 2 => res = TransformationEngineTwoPhaseByRule.execute(transformation, input_model, input_metamodel, partition, sc)
-            case 1 => res = TransformationEngineOneParallelPhaseByRule.execute(transformation, input_model, input_metamodel, partition, sc)
-            case _ => throw new Exception("The number of parallel phases must be specified for this specific main Scala object.")
+        solution match {
+            case "default" => res = TransformationEngineTwoPhaseByRule.execute(transformation, input_model, input_metamodel, partition, sc)
+            case "variant" => res = TransformationEngineTwoPhaseByRuleVariant.execute(transformation, input_model, input_metamodel, partition, sc)
+            case "fold" => res = TransformationEngineTwoPhaseByRuleWithFold.execute(transformation, input_model, input_metamodel, partition, sc)
+            case "map" => res = TransformationEngineTwoPhaseByRuleWithMap.execute(transformation, input_model, input_metamodel, partition, sc)
+            case _ => throw new Exception("The parallel solution must be specified for this specific main Scala class.")
         }
 
         val line = List(
-            tr_case, input_model.numberOfElements, input_model.numberOfLinks,
+            solution,tr_case, input_model.numberOfElements, input_model.numberOfLinks,
             num_executors, executor_cores, partition, storage_string,
             sleeping_guard, sleeping_instantiate, sleeping_apply,
             res._1).mkString(",") + "," + res._2.mkString(",") + "," + res._3._1 + "," + res._3._2
