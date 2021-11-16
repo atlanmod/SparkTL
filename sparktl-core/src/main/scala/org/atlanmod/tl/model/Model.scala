@@ -6,7 +6,7 @@ trait Model[ME, ML]  extends Serializable {
     *  ME: ModelElements
     *  ML: ModelLinks
     */
-    def allModelElements: List[ME]
+    def allModelElements: Iterator[ME]
 
-    def allModelLinks: List[ML]
+    def allModelLinks: Iterator[ML]
 }

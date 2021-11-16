@@ -7,9 +7,9 @@ import org.atlanmod.tl.model.Model
 class DynamicModel(elements: List[DynamicElement] = List(), links: List[DynamicLink] = List())
   extends Model[DynamicElement, DynamicLink]{
 
-    override def allModelElements: List[DynamicElement] = elements
+    override def allModelElements: Iterator[DynamicElement] = elements.iterator
 
-    override def allModelLinks: List[DynamicLink] = links
+    override def allModelLinks: Iterator[DynamicLink] = links.iterator
 
     def numberOfElements : Int = elements.size
     def numberOfLinks : Int = links.map(l => l.getTarget.size).sum
