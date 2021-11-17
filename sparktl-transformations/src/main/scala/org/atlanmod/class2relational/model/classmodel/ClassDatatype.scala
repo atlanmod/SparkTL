@@ -9,21 +9,17 @@ class ClassDatatype extends ClassTypable(ClassMetamodel.DATATYPE) {
         this()
         val id: String = IdGenerator.id()
         super.eSetProperty("id", id)
-//        super.eSetProperty("isId", false)
     }
 
     def this(id:String, name: String) {
         this()
         super.eSetProperty("id", id)
         super.eSetProperty("name", name)
-//        super.eSetProperty("isId", false)
     }
 
     override def getId: String = super.eGetProperty("id").asInstanceOf[String]
     def getName: String = super.eGetProperty("name").asInstanceOf[String]
     def setName(name: String): Unit = super.eSetProperty("name", name)
-
-//    def isId: Boolean = super.eGetProperty("isId").asInstanceOf[Boolean]
 
     override def toString: String =
         getType + "([" + getId + "] " + getName + ")"
