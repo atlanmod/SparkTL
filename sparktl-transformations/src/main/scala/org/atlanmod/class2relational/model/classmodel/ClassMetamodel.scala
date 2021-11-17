@@ -2,12 +2,12 @@ package org.atlanmod.class2relational.model.classmodel
 
 object ClassMetamodel {
 //
-//    final val CLASS = "Class"
-//    final val ATTRIBUTE = "Attribute"
-//    final val DATATYPE = "Datatype"
-//    final val CLASS_ATTRIBUTES = "attributes"
-//    final val ATTRIBUTE_CLASS = "owner"
-//    final val ATTRIBUTE_TYPE = "type"
+    final val CLASS = "Class"
+    final val ATTRIBUTE = "Attribute"
+    final val DATATYPE = "Datatype"
+    final val CLASS_ATTRIBUTES = "attributes"
+    final val ATTRIBUTE_CLASS = "owner"
+    final val ATTRIBUTE_TYPE = "type"
 //
 //    def metamodel : DynamicMetamodel[DynamicElement, DynamicLink]
 //    = new DynamicMetamodel[DynamicElement, DynamicLink]("ClassMetamodel")
