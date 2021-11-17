@@ -11,7 +11,7 @@ import org.atlanmod.findcouples.model.movie.{MovieJSONLoader, MovieMetamodel}
 import org.atlanmod.findcouples.transformation.dynamic.{FindCouples, Identity}
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
-import org.atlanmod.transformation.parallel.{TransformationEngineTwoPhaseByRule, TransformationEngineTwoPhaseByRuleVariant, TransformationEngineTwoPhaseByRuleWithFold, TransformationEngineTwoPhaseByRuleWithMap}
+import org.atlanmod.transformation.parallel._
 
 import scala.annotation.tailrec
 
@@ -196,6 +196,7 @@ object MainExperiments {
             case "variant" => res = TransformationEngineTwoPhaseByRuleVariant.execute(transformation, input_model, input_metamodel, partition, sc)
             case "fold" => res = TransformationEngineTwoPhaseByRuleWithFold.execute(transformation, input_model, input_metamodel, partition, sc)
             case "map" => res = TransformationEngineTwoPhaseByRuleWithMap.execute(transformation, input_model, input_metamodel, partition, sc)
+            case "single" => res = TransformationEngineSinglePhaseByRule.execute(transformation, input_model, input_metamodel, partition, sc)
             case _ => throw new Exception("The parallel solution must be specified for this specific main Scala class.")
         }
 
