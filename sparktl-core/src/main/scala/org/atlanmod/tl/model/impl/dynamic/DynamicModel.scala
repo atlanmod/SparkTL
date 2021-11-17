@@ -5,7 +5,7 @@ import org.atlanmod.tl.model.Model
 //import org.eclipse.emf.ecore.resource.Resource
 
 class DynamicModel(elements: List[DynamicElement] = List(), links: List[DynamicLink] = List())
-  extends Model[DynamicElement, DynamicLink]{
+  extends Model[DynamicElement, DynamicLink, String]{
 
     override def allModelElements: Iterator[DynamicElement] = elements.iterator
 
@@ -23,5 +23,10 @@ class DynamicModel(elements: List[DynamicElement] = List(), links: List[DynamicL
         res += links.mkString("\n")
         res
     }
+
+    override def allElementsOfType(cl: String): Iterator[DynamicElement] = {
+        elements.iterator.filter(e => e.getType == cl)
+    }
+
 }
 

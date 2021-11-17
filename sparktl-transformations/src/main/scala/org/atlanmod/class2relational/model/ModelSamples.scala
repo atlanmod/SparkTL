@@ -108,7 +108,6 @@ object ModelSamples {
             emailAddresses__to__type_string)
 
         val model = new ClassModel(elements, links)
-        val tmp = ClassMetamodel.getAttributeOwner(family_members, model)
         model
     }
 
@@ -162,7 +161,6 @@ object ModelSamples {
             emailAddresses__to__type_string)
 
         val model = new ClassModel(elements, links)
-        val tmp = ClassMetamodel.getAttributeOwner(family_members, model)
         model
     }
 

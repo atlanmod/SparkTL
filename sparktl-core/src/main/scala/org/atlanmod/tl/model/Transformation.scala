@@ -10,8 +10,8 @@ trait Transformation[SME, SML, SMC, TME, TML] extends Serializable {
      */
 
     // Types
-    type SM = Model[SME, SML] // Source Model
-    type TM = Model[SME, SML] // Source Model
+//    type SM = Model[SME, SML, SMC] // Source Model
+//    type TM = Model[TME, TML, TMC] // Target Model
 
     // Accessors
     def getRules: List[Rule[SME, SML, SMC, TME, TML]]

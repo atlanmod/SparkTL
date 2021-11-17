@@ -8,9 +8,9 @@ import scala.reflect.ClassTag
 
 trait TransformationEngine {
 
-    def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
-    (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
+    def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag, TMC: ClassTag]
+    (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML, SMC], mm: Metamodel[SME, SML, SMC, SMR],
      npartition: Int, sc: SparkContext,
-     makeModel: (Iterable[TME], Iterable[TML]) => Model[TME, TML] = (a, b) => ModelUtil.makeTupleModel[TME, TML](a, b))
-    : Model[TME, TML]
+     makeModel: (Iterable[TME], Iterable[TML]) => Model[TME, TML, TMC] = (a, b) => ModelUtil.makeTupleModel[TME, TML, TMC](a, b))
+    : Model[TME, TML, TMC]
 }

@@ -9,15 +9,9 @@ import scala.reflect.ClassTag
 
 object Utils {
 
-
-    def allModelElementsOfType[SME, SML, SMC, SMR](t: SMC, sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
-    : List[SME] =
-        sm.allModelElements.filter(e => mm.hasType(t, e))
-
-
-    def allModelElementsOfTypes[SME, SML, SMC, SMR](lt: List[SMC], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
+    def allModelElementsOfTypes[SME, SML, SMC, SMR](lt: List[SMC], sm: Model[SME, SML, SMC], mm: Metamodel[SME, SML, SMC, SMR])
     : List[List[SME]] =
-        lt.map(t => allModelElementsOfType(t, sm, mm))
+        lt.map(t => mm.allModelElementsOfType(t, sm))
 
     private def fold_right[A, B] (f: (B, A) => A, a0: A, l: List[B]): A = {
         l match {
@@ -26,7 +20,7 @@ object Utils {
         }
     }
 
-    def allTuplesOfTypes[SME, SML, SMC, SMR](l: List[SMC], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
+    def allTuplesOfTypes[SME, SML, SMC, SMR](l: List[SMC], sm: Model[SME, SML, SMC], mm: Metamodel[SME, SML, SMC, SMR])
     : List[List[SME]] =
         fold_right(
             (a: List[SME], b: List[List[SME]]) => TupleUtils.prod_cons(a, b),
@@ -35,21 +29,21 @@ object Utils {
         )
 
     def allTuplesByRule[SME, SML, SMC, SMR, TME, TML, TMC](tr: Transformation[SME, SML, SMC, TME, TML],
-                                                           sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
+                                                           sm: Model[SME, SML, SMC], mm: Metamodel[SME, SML, SMC, SMR])
     : List[List[SME]] =
        tr.getRules.flatMap(r => allTuplesOfTypes(r.getInTypes, sm, mm))
 
     def maxArity[SME, SML, SMC, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML] ): Int =
         tr.getRules.map(r => r.getInTypes).map (l => l.length).max
 
-    def allModelElements[SME, SML] (sm: Model[SME, SML]): List[SME] =
-        sm.allModelElements
+    def allModelElements[SME, SML, SMC] (sm: Model[SME, SML, SMC]): List[SME] =
+        sm.allModelElements.toList
 
-    def allTuples[SME, SML, SMC, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML])
+    def allTuples[SME, SML, SMC, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML, SMC])
     : List[List[SME]] =
     TupleUtils.tuples_up_to_n_prime(allModelElements (sm), maxArity (tr) )
 
-    def allTuplesParallel[SME: ClassTag, SML, SMC, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
+    def allTuplesParallel[SME: ClassTag, SML, SMC, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML, SMC],
                                                              npartition:Int, sc: SparkContext)
     : RDD[List[SME]] =
         TupleUtils.tuples_up_to_n_parallel(allModelElements (sm), maxArity (tr), npartition, sc)

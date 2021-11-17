@@ -10,7 +10,7 @@ trait Rule[SME, SML, SMC, TME, TML]  extends Serializable {
      */
 
     // Type definitions
-    type SM = Model[SME, SML]
+    type SM = Model[SME, SML, SMC]
     type TL = TraceLink[SME, TME]
 
     // Accessors
@@ -22,8 +22,8 @@ trait Rule[SME, SML, SMC, TME, TML]  extends Serializable {
 
     def getIteratorExpr: (SM, List[SME]) => Option[Int]
 
-    def getOutputPatternElements: List[OutputPatternElement[SME, SML, TME, TML]]
+    def getOutputPatternElements: List[OutputPatternElement[SME, SML, SMC, TME, TML]]
 
-    def findOutputPatternElement(name: String): Option[OutputPatternElement[SME, SML, TME, TML]]
+    def findOutputPatternElement(name: String): Option[OutputPatternElement[SME, SML, SMC, TME, TML]]
 
 }

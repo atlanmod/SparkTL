@@ -13,6 +13,8 @@ trait Metamodel[ME, ML, MC, MR] extends Serializable {
     def toModelClass(sc: MC, se: ME): Option[ME]
     def toModelReference(sr: MR, sl: ML): Option[ML]
 
+    def allModelElementsOfType(t: MC, sm: Model[ME, ML, MC]): List[ME]
+
     def equals(that: Any): Boolean
     def name(): String
 

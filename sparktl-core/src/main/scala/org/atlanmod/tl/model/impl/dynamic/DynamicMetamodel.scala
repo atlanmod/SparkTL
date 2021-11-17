@@ -1,6 +1,6 @@
 package org.atlanmod.tl.model.impl.dynamic
 
-import org.atlanmod.tl.model.Metamodel
+import org.atlanmod.tl.model.{Metamodel, Model}
 
 class DynamicMetamodel[DE <: DynamicElement, DL <: DynamicLink](name: String) extends Metamodel[DE, DL, String, String] {
 
@@ -21,4 +21,8 @@ class DynamicMetamodel[DE <: DynamicElement, DL <: DynamicLink](name: String) ex
             case mm: DynamicMetamodel[DE, DL] => mm.name().equals(this.name())
             case _ => false
         }
+
+    override def allModelElementsOfType(t: String, sm: Model[DE, DL, String]): List[DE] = {
+        sm.allModelElements.filter(e => e.getType.equals(t)).toList
+    }
 }
