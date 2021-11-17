@@ -29,13 +29,13 @@ object RelationalMetamodel {
 //    def metamodel : DynamicMetamodel[DynamicElement, DynamicLink]
 //    = new DynamicMetamodel[DynamicElement, DynamicLink]("RelationalMetamodel")
 //
-//    final val TABLE = "Table"
-//    final val COLUMN = "Column"
-//    final val TYPE = "Type"
-//    final val TABLE_COLUMNS = "columns"
-//    final val TABLE_KEY = "key"
-//    final val COLUMN_TABLE = "table"
-//    final val COLUMN_TYPE = "type"
+    final val TABLE = "Table"
+    final val COLUMN = "Column"
+    final val TYPE = "Type"
+    final val TABLE_COLUMNS = "columns"
+    final val TABLE_KEY = "key"
+    final val COLUMN_TABLE = "table"
+    final val COLUMN_TYPE = "type"
 //
 //    @tailrec
 //    private def getColumnOwnerOnLinks(c: RelationalColumn, l: List[RelationalLink]): Option[RelationalTable] =
