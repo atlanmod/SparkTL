@@ -14,7 +14,7 @@ import scala.reflect.ClassTag
 object TransformationEngineTwoPhaseByRuleVariant extends ExperimentalTransformationEngine{
 
     private def applyTraces[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
-                                                                                        sm: Model[SME, SML, SMC], mm: Metamodel[SME, SML, SMC, SMR],
+                                                                                        sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                                         sps: RDD[List[SME]], tls: TraceLinks[SME, TME],
                                                                                         rdd_tls: RDD[TraceLink[SME, TME]])
     : (Iterable[TME], Iterable[TML]) = {
@@ -24,7 +24,7 @@ object TransformationEngineTwoPhaseByRuleVariant extends ExperimentalTransformat
     }
 
     override def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
-    (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML, SMC], mm: Metamodel[SME, SML, SMC, SMR],
+    (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
      npartition: Int, sc: SparkContext)
     : (Double, List[Double], (Int, Int)) = {
         var t1_start : Long = 0

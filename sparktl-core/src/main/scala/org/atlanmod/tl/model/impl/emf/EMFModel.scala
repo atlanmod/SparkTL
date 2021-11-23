@@ -1,18 +1,14 @@
 package org.atlanmod.tl.model.impl.emf
 
 import org.atlanmod.tl.model.Model
-import org.eclipse.emf.ecore.{EClass, EObject}
+import org.eclipse.emf.ecore.EObject
 
-class EMFModel(model: EObject) extends Model[EObject, ELink, EClass]{
+class EMFModel(model: EObject) extends Model[EObject, ELink]{
 
-    override def allModelElements: Iterator[EObject] =
-        collection.JavaConverters.asScalaIterator(model.eAllContents())
+    override def allModelElements: List[EObject] =
+        collection.JavaConverters.asScalaIterator(model.eAllContents()).toList
 
-    override def allModelLinks: Iterator[ELink] = {
+    override def allModelLinks: List[ELink] = {
         throw new Exception("Not implemented yet")
-    }
-
-    override def allElementsOfType(cl: EClass) : Iterator[EObject] = {
-        this.allModelElements.filter(obj => obj.eClass().equals(cl))
     }
 }

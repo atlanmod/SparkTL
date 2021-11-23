@@ -6,14 +6,14 @@ import org.atlanmod.tl.util.ListUtils
 class DblpModel (elements: List[DblpElement] = List(), links: List[DblpLink] = List())
   extends DynamicModel(elements, links){
 
-    override def allModelElements: Iterator[DblpElement] = elements.toIterator
-    override def allModelLinks: Iterator[DblpLink] = links.toIterator
+    override def allModelElements: List[DblpElement] = elements
+    override def allModelLinks: List[DblpLink] = links
 
     override def equals(obj: Any): Boolean =
         obj match {
             case model: DblpModel =>
-                ListUtils.eqList(this.allModelLinks.toList, model.allModelLinks.toList) &
-                  ListUtils.eqList(this.allModelElements.toList, model.allModelElements.toList)
+                ListUtils.eqList(this.allModelLinks, model.allModelLinks) &
+                  ListUtils.eqList(this.allModelElements, model.allModelElements)
             case _ => false
         }
 

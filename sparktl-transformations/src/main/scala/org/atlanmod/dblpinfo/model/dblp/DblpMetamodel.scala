@@ -42,7 +42,7 @@ object DblpMetamodel {
 
     def metamodel : DynamicMetamodel[DynamicElement, DynamicLink] = new DynamicMetamodel[DynamicElement, DynamicLink]("DBLPMetamodel")
 
-    private def getRecordsOfAuthorOnLinks(links: Iterator[DblpLink], author: DblpAuthor): Option[List[DblpRecord]] = {
+    private def getRecordsOfAuthorOnLinks(links: List[DblpLink], author: DblpAuthor): Option[List[DblpRecord]] = {
         links.find(l => l.isInstanceOf[AuthorToRecords] && l.getSource.equals(author)) match {
             case Some(l: AuthorToRecords) => Some(l.getTarget)
             case _ => None
@@ -52,7 +52,7 @@ object DblpMetamodel {
     def getRecordsOfAuthor(model: DblpModel, author: DblpAuthor): Option[List[DblpRecord]] =
         getRecordsOfAuthorOnLinks(model.allModelLinks, author)
 
-    private def getAuthorsOfRecordOnLinks(links: Iterator[DblpLink], record: DblpRecord): Option[List[DblpAuthor]] = {
+    private def getAuthorsOfRecordOnLinks(links: List[DblpLink], record: DblpRecord): Option[List[DblpAuthor]] = {
         links.find(l => l.isInstanceOf[RecordToAuthors] && l.getSource.equals(record)) match {
             case Some(l: RecordToAuthors) => Some(l.getTarget)
             case _ => None
@@ -62,7 +62,7 @@ object DblpMetamodel {
     def getAuthorsOfRecord(m: DblpModel, r: DblpRecord): Option[List[DblpAuthor]] =
         getAuthorsOfRecordOnLinks(m.allModelLinks, r)
 
-    private def getJournalOfArticleOnLinks(links: Iterator[DblpLink], a: DblpArticle): Option[DblpJournal] =
+    private def getJournalOfArticleOnLinks(links: List[DblpLink], a: DblpArticle): Option[DblpJournal] =
         links.find(l => l.isInstanceOf[JournalToArticles] && l.getTarget.contains(a)) match {
             case Some(l: JournalToArticles) => Some(l.getSource)
             case _ => None

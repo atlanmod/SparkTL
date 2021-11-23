@@ -6,15 +6,15 @@ import org.atlanmod.tl.util.ListUtils
 class AuthorInfoModel (elements: List[AuthorInfoElement] = List(), links: List[AuthorInfoLink] = List())
 extends DynamicModel(elements, links) {
 
-    override def allModelElements: Iterator[AuthorInfoElement] = elements.iterator
+    override def allModelElements: List[AuthorInfoElement] = elements
 
-    override def allModelLinks: Iterator[AuthorInfoLink] = links.iterator
+    override def allModelLinks: List[AuthorInfoLink] = links
 
     override def equals(obj: Any): Boolean =
         obj match {
             case model: AuthorInfoModel =>
-                ListUtils.eqList(this.allModelLinks.toList, model.allModelLinks.toList) &
-                  ListUtils.eqList(this.allModelElements.toList, model.allModelElements.toList)
+                ListUtils.eqList(this.allModelLinks, model.allModelLinks) &
+                  ListUtils.eqList(this.allModelElements, model.allModelElements)
             case _ => false
         }
 

@@ -1,16 +1,14 @@
 package org.atlanmod.tl.model
 
-trait Model[ME, ML, MC] extends Serializable {
+trait Model[ME, ML] extends Serializable {
 
     /*
     *  ME: ModelElements
     *  ML: ModelLinks
     *  MC: ModelClass
     */
-    def allModelElements: Iterator[ME]
+    def allModelElements: List[ME]
 
-    def allModelLinks: Iterator[ML]
-
-    def allElementsOfType(cl: MC): Iterator[ME]
+    def allModelLinks: List[ML]
 
 }

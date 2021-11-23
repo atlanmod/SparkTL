@@ -24,7 +24,7 @@ object ClassMetamodel {
     }
 
     def getAttributeType(attribute: ClassAttribute, model: ClassModel): Option[ClassTypable] = {
-        getAttributeTypeOnLinks(attribute, model.allModelLinks)
+        getAttributeTypeOnLinks(attribute, model.allModelLinks.toIterator)
     }
 
     private def getAttributeOwnerOnLinks(attr: ClassAttribute, l: Iterator[ClassLink]): Option[ClassClass] = {
@@ -37,7 +37,7 @@ object ClassMetamodel {
     }
 
     def getAttributeOwner(attribute: ClassAttribute, model: ClassModel): Option[ClassClass] = {
-        getAttributeOwnerOnLinks(attribute, model.allModelLinks)
+        getAttributeOwnerOnLinks(attribute, model.allModelLinks.toIterator)
     }
 
     def getClassAttributesOnLinks(cl: ClassClass, l: Iterator[ClassLink]): Option[List[ClassAttribute]] = {
@@ -50,7 +50,7 @@ object ClassMetamodel {
     }
 
     def getClassAttributes(cl: ClassClass, model: ClassModel): Option[List[ClassAttribute]] = {
-        getClassAttributesOnLinks(cl, model.allModelLinks)
+        getClassAttributesOnLinks(cl, model.allModelLinks.toIterator)
     }
 
 }

@@ -81,7 +81,7 @@ object Class2Relational {
         }
     }
 
-    def findPivotSrcTrg(tls: TraceLinks[DynamicElement, DynamicElement], model: Model[DynamicElement, DynamicLink, String],
+    def findPivotSrcTrg(tls: TraceLinks[DynamicElement, DynamicElement], model: Model[DynamicElement, DynamicLink],
                         attribute: ClassAttribute)
     : Option[(RelationalColumn, RelationalColumn)] = {
         val psrc = Resolve.resolve(tls, model, mm, PATTERN_PIVOT_SOURCE, RelationalMetamodel.COLUMN, List(attribute))
@@ -93,7 +93,7 @@ object Class2Relational {
     }
 
     def makeMVTableToColumns(tls: TraceLinks[DynamicElement, DynamicElement],
-                             model: Model[DynamicElement, DynamicLink, String], attribute: ClassAttribute,
+                             model: Model[DynamicElement, DynamicLink], attribute: ClassAttribute,
                              table: RelationalTable): Option[TableToColumns] = {
         findPivotSrcTrg(tls, model, attribute) match {
             case Some((src, trg)) => Some(new TableToColumns(table,
@@ -102,7 +102,7 @@ object Class2Relational {
         }
     }
 
-    def makeMVTableToKeys(tls: TraceLinks[DynamicElement, DynamicElement], model: Model[DynamicElement, DynamicLink, String],
+    def makeMVTableToKeys(tls: TraceLinks[DynamicElement, DynamicElement], model: Model[DynamicElement, DynamicLink],
                           attribute: ClassAttribute,
                              table: RelationalTable): Option[TableToKeys] = {
         findPivotSrcTrg(tls, model, attribute) match {

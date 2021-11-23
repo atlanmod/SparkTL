@@ -4,13 +4,8 @@ import org.atlanmod.tl.util.ListUtils
 
 import scala.collection.mutable
 
-abstract class DynamicElement(classname: String,
-                     properties : scala.collection.mutable.Map[String, Any] = mutable.HashMap())
+abstract class DynamicElement(classname: String, properties : scala.collection.mutable.Map[String, Any] = mutable.HashMap())
   extends Serializable with ListUtils.Weakable {
-
-//    def this(element: DynamicElement, properties: scala.collection.mutable.Map[String, Any] = null) {
-//        this(element.getType, if (properties == null) element.getProperties else properties)
-//    }
 
     def getType: String = { classname }
 

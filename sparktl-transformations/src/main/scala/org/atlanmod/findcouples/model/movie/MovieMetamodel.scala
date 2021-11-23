@@ -36,7 +36,7 @@ object MovieMetamodel {
         }
 
     def getPersonsOfMovie(model: MovieModel, movie: MovieMovie): Option[List[MoviePerson]] =
-        getActorsOfMovieOnLinks(model.allModelLinks, movie)
+        getActorsOfMovieOnLinks(model.allModelLinks.toIterator, movie)
 
     private def getMoviesOfPersonOnLinks(links: Iterator[MovieLink], person: MoviePerson): Option[List[MovieMovie]] =
         links.find(l => l.isInstanceOf[PersonToMovies] && l.getSource.equals(person)) match {
@@ -45,7 +45,7 @@ object MovieMetamodel {
         }
 
     def getMoviesOfPerson(model: MovieModel, person: MoviePerson): Option[List[MovieMovie]] =
-        getMoviesOfPersonOnLinks(model.allModelLinks, person)
+        getMoviesOfPersonOnLinks(model.allModelLinks.toIterator, person)
 
     private def getMoviesOfGroupOnLinks(links: Iterator[MovieLink], group: MovieGroup): Option[List[MovieMovie]] =
         links.find(l => l.isInstanceOf[GroupToMovies] && l.getSource.equals(group)) match {
@@ -54,7 +54,7 @@ object MovieMetamodel {
         }
 
     def getMoviesOfGroup(model: MovieModel, group: MovieGroup): Option[List[MovieMovie]] =
-        getMoviesOfGroupOnLinks(model.allModelLinks, group)
+        getMoviesOfGroupOnLinks(model.allModelLinks.toIterator, group)
 
     private def getPersonsOfCliqueOnLinks(links: Iterator[MovieLink], clique: MovieClique): Option[List[MoviePerson]] =
         links.find(l => l.isInstanceOf[CliqueToPersons] && l.getSource.equals(clique)) match {
@@ -63,7 +63,7 @@ object MovieMetamodel {
         }
 
     def getPersonsOfClique(model: MovieModel, clique: MovieClique): Option[List[MoviePerson]] =
-        getPersonsOfCliqueOnLinks(model.allModelLinks, clique)
+        getPersonsOfCliqueOnLinks(model.allModelLinks.toIterator, clique)
 
     def getPersonP1OfCoupleOnLinks(links: Iterator[MovieLink], couple: MovieCouple): Option[MoviePerson] =
         links.find(l => l.isInstanceOf[CoupleToPersonP1] && l.getSource.asInstanceOf[MovieCouple] == couple) match {
@@ -72,7 +72,7 @@ object MovieMetamodel {
         }
 
     def getPersonP1OfCouple(model: MovieModel, couple: MovieCouple): Option[MoviePerson] =
-        getPersonP1OfCoupleOnLinks(model.allModelLinks, couple)
+        getPersonP1OfCoupleOnLinks(model.allModelLinks.toIterator, couple)
 
     def getPersonP2OfCoupleOnLinks(links: Iterator[MovieLink], couple: MovieCouple): Option[MoviePerson] =
         links.find(l => l.isInstanceOf[CoupleToPersonP2] && l.getSource.asInstanceOf[MovieCouple] == couple) match {
@@ -81,7 +81,7 @@ object MovieMetamodel {
         }
 
     def getPersonP2OfCouple(model: MovieModel, couple: MovieCouple): Option[MoviePerson] =
-        getPersonP2OfCoupleOnLinks(model.allModelLinks, couple)
+        getPersonP2OfCoupleOnLinks(model.allModelLinks.toIterator, couple)
 
     def getAllCouple(model: MovieModel): List[MovieCouple] =
         model.allModelElements.filter(e => e.isInstanceOf[MovieCouple]).map(e => e.asInstanceOf[MovieCouple]).toList

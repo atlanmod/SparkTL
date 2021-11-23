@@ -22,7 +22,7 @@ class DynamicMetamodel[DE <: DynamicElement, DL <: DynamicLink](name: String) ex
             case _ => false
         }
 
-    override def allModelElementsOfType(t: String, sm: Model[DE, DL, String]): List[DE] = {
+    override def allModelElementsOfType(t: String, sm: Model[DE, DL]): List[DE] = {
         sm.allModelElements.filter(e => e.getType.equals(t)).toList
     }
 }

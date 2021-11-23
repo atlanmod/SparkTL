@@ -6,7 +6,6 @@ import scala.annotation.tailrec
 
 object RelationalMetamodel {
 
-
     def metamodel : DynamicMetamodel[DynamicElement, DynamicLink]
     = new DynamicMetamodel[DynamicElement, DynamicLink]("RelationalMetamodel")
 
@@ -38,7 +37,7 @@ object RelationalMetamodel {
 
     def getMVTablesOfTableOld(table: RelationalTable, model: RelationalModel): Option[List[List[RelationalTable]]] = {
         if (table.getName.indexOf("_") != -1) None
-        getMVTablesOfTableOnElementsOld(table, model.allModelElements) match {
+        getMVTablesOfTableOnElementsOld(table, model.allModelElements.toIterator) match {
             case l if l.nonEmpty => Some(l)
             case List() => None
         }
@@ -54,7 +53,7 @@ object RelationalMetamodel {
     }
 
     def getColumnOwner(c: RelationalColumn, model: RelationalModel): Option[RelationalTable] =
-        getColumnOwnerOnLinks(c, model.allModelLinks)
+        getColumnOwnerOnLinks(c, model.allModelLinks.toIterator)
 
     private def getTableColumnsOnLinks(t: RelationalTable, l: Iterator[RelationalLink]): Option[List[RelationalColumn]] = {
         while(l.hasNext){
@@ -68,7 +67,7 @@ object RelationalMetamodel {
     }
 
     def getTableColumns(table: RelationalTable, model: RelationalModel): Option[List[RelationalColumn]] =
-        getTableColumnsOnLinks(table, model.allModelLinks)
+        getTableColumnsOnLinks(table, model.allModelLinks.toIterator)
 
     private def getSVColumnsOfTableOnLinks(table: RelationalTable, l: Iterator[RelationalLink], model: RelationalModel)
     : Option[List[RelationalColumn]] = {
@@ -83,7 +82,7 @@ object RelationalMetamodel {
     }
 
     def getSVColumnsOfTable(table: RelationalTable, model: RelationalModel): Option[List[RelationalColumn]] =
-        getSVColumnsOfTableOnLinks(table, model.allModelLinks, model)
+        getSVColumnsOfTableOnLinks(table, model.allModelLinks.toIterator, model)
 
     private def getMVTablesOfTableOnElements(table: RelationalTable, elements: Iterator[RelationalElement],
                                      )
@@ -104,7 +103,7 @@ object RelationalMetamodel {
 
     def getMVTablesOfTable(table: RelationalTable, model: RelationalModel): Option[List[RelationalTable]] = {
         if (table.getName.indexOf("_") != -1) None
-        getMVTablesOfTableOnElements(table, model.allModelElements) match {
+        getMVTablesOfTableOnElements(table, model.allModelElements.toIterator) match {
             case l if l.nonEmpty => Some(l)
             case List() => None
         }
@@ -122,7 +121,7 @@ object RelationalMetamodel {
     }
 
     def isAKey(c: RelationalColumn, model: RelationalModel): Boolean  =
-        isAKeyOnLinks(c, model.allModelLinks)
+        isAKeyOnLinks(c, model.allModelLinks.toIterator)
 
     def isNotAKey(c: RelationalColumn, model: RelationalModel): Boolean  =
         !isAKey(c, model)
@@ -140,7 +139,7 @@ object RelationalMetamodel {
     }
 
     def isKeyOf(c: RelationalColumn, t: RelationalTable, model: RelationalModel): Boolean =
-        isKeyOfOnLinks(c, t, model.allModelLinks)
+        isKeyOfOnLinks(c, t, model.allModelLinks.toIterator)
 
     def isNotKeyOf(c: RelationalColumn, t: RelationalTable, model: RelationalModel): Boolean =
         !isKeyOf(c, t, model)
@@ -157,7 +156,7 @@ object RelationalMetamodel {
     }
 
     def getColumnType(column: RelationalColumn, model: RelationalModel): Option[RelationalTypable]  =
-        getColumnTypeOnLinks(column, model.allModelLinks)
+        getColumnTypeOnLinks(column, model.allModelLinks.toIterator)
 
     private def tryGetATypeOnLinks(h: RelationalColumn, links: Iterator[RelationalLink]): Option[RelationalTypable] =
         links.find(l => l.getSource.equals(h) && l.isInstanceOf[ColumnToType]) match {
@@ -166,7 +165,7 @@ object RelationalMetamodel {
         }
 
     private def tryGetAType(column: RelationalColumn, model: RelationalModel): Option[RelationalTypable] =
-        tryGetATypeOnLinks(column, model.allModelLinks)
+        tryGetATypeOnLinks(column, model.allModelLinks.toIterator)
 
     @tailrec
     private def getAType(columns: List[RelationalColumn], model: RelationalModel): Option[RelationalTypable] =
