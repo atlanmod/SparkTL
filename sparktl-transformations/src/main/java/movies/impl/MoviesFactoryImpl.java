@@ -28,12 +28,12 @@ public class MoviesFactoryImpl extends EFactoryImpl implements MoviesFactory {
 	 */
 	public static MoviesFactory init() {
 		try {
-			MoviesFactory theMoviesFactory = (MoviesFactory) EPackage.Registry.INSTANCE
-					.getEFactory(MoviesPackage.eNS_URI);
+			MoviesFactory theMoviesFactory = (MoviesFactory)EPackage.Registry.INSTANCE.getEFactory(MoviesPackage.eNS_URI);
 			if (theMoviesFactory != null) {
 				return theMoviesFactory;
 			}
-		} catch (Exception exception) {
+		}
+		catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new MoviesFactoryImpl();
@@ -57,22 +57,15 @@ public class MoviesFactoryImpl extends EFactoryImpl implements MoviesFactory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-		case MoviesPackage.ACTOR:
-			return createActor();
-		case MoviesPackage.ACTRESS:
-			return createActress();
-		case MoviesPackage.COUPLE:
-			return createCouple();
-		case MoviesPackage.MOVIE:
-			return createMovie();
-		case MoviesPackage.CLIQUE:
-			return createClique();
-		case MoviesPackage.ROOT:
-			return createRoot();
-		case MoviesPackage.CONTAINED_ELEMENT:
-			return createContainedElement();
-		default:
-			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+			case MoviesPackage.ACTOR: return createActor();
+			case MoviesPackage.ACTRESS: return createActress();
+			case MoviesPackage.COUPLE: return createCouple();
+			case MoviesPackage.MOVIE: return createMovie();
+			case MoviesPackage.CLIQUE: return createClique();
+			case MoviesPackage.ROOT: return createRoot();
+			case MoviesPackage.CONTAINED_ELEMENT: return createContainedElement();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -84,10 +77,10 @@ public class MoviesFactoryImpl extends EFactoryImpl implements MoviesFactory {
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
-		case MoviesPackage.MOVIE_TYPE:
-			return createMovieTypeFromString(eDataType, initialValue);
-		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+			case MoviesPackage.MOVIE_TYPE:
+				return createMovieTypeFromString(eDataType, initialValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -99,10 +92,10 @@ public class MoviesFactoryImpl extends EFactoryImpl implements MoviesFactory {
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
-		case MoviesPackage.MOVIE_TYPE:
-			return convertMovieTypeToString(eDataType, instanceValue);
-		default:
-			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+			case MoviesPackage.MOVIE_TYPE:
+				return convertMovieTypeToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -183,9 +176,7 @@ public class MoviesFactoryImpl extends EFactoryImpl implements MoviesFactory {
 	 */
 	public MovieType createMovieTypeFromString(EDataType eDataType, String initialValue) {
 		MovieType result = MovieType.get(initialValue);
-		if (result == null)
-			throw new IllegalArgumentException(
-					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
 
@@ -204,7 +195,7 @@ public class MoviesFactoryImpl extends EFactoryImpl implements MoviesFactory {
 	 * @generated
 	 */
 	public MoviesPackage getMoviesPackage() {
-		return (MoviesPackage) getEPackage();
+		return (MoviesPackage)getEPackage();
 	}
 
 	/**

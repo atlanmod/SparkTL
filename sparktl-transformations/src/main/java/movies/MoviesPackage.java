@@ -508,6 +508,7 @@ public interface MoviesPackage extends EPackage {
 	 */
 	int MOVIE_TYPE = 9;
 
+
 	/**
 	 * Returns the meta object for class '{@link movies.Person <em>Person</em>}'.
 	 * <!-- begin-user-doc -->
@@ -603,6 +604,17 @@ public interface MoviesPackage extends EPackage {
 	EClass getMovie();
 
 	/**
+	 * Returns the meta object for the reference list '{@link movies.Movie#getPersons <em>Persons</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Persons</em>'.
+	 * @see movies.Movie#getPersons()
+	 * @see #getMovie()
+	 * @generated
+	 */
+	EReference getMovie_Persons();
+
+	/**
 	 * Returns the meta object for the attribute '{@link movies.Movie#getTitle <em>Title</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -645,17 +657,6 @@ public interface MoviesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getMovie_Type();
-
-	/**
-	 * Returns the meta object for the reference list '{@link movies.Movie#getPersons <em>Persons</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Persons</em>'.
-	 * @see movies.Movie#getPersons()
-	 * @see #getMovie()
-	 * @generated
-	 */
-	EReference getMovie_Persons();
 
 	/**
 	 * Returns the meta object for class '{@link movies.Group <em>Group</em>}'.
@@ -857,6 +858,14 @@ public interface MoviesPackage extends EPackage {
 		EClass MOVIE = eINSTANCE.getMovie();
 
 		/**
+		 * The meta object literal for the '<em><b>Persons</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MOVIE__PERSONS = eINSTANCE.getMovie_Persons();
+
+		/**
 		 * The meta object literal for the '<em><b>Title</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -887,14 +896,6 @@ public interface MoviesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MOVIE__TYPE = eINSTANCE.getMovie_Type();
-
-		/**
-		 * The meta object literal for the '<em><b>Persons</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference MOVIE__PERSONS = eINSTANCE.getMovie_Persons();
 
 		/**
 		 * The meta object literal for the '{@link movies.impl.GroupImpl <em>Group</em>}' class.

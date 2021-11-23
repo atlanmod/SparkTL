@@ -77,8 +77,8 @@ public class CliqueImpl extends GroupImpl implements Clique {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case MoviesPackage.CLIQUE__PERSONS:
-			return getPersons();
+			case MoviesPackage.CLIQUE__PERSONS:
+				return getPersons();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -92,10 +92,10 @@ public class CliqueImpl extends GroupImpl implements Clique {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case MoviesPackage.CLIQUE__PERSONS:
-			getPersons().clear();
-			getPersons().addAll((Collection<? extends Person>) newValue);
-			return;
+			case MoviesPackage.CLIQUE__PERSONS:
+				getPersons().clear();
+				getPersons().addAll((Collection<? extends Person>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -108,9 +108,9 @@ public class CliqueImpl extends GroupImpl implements Clique {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case MoviesPackage.CLIQUE__PERSONS:
-			getPersons().clear();
-			return;
+			case MoviesPackage.CLIQUE__PERSONS:
+				getPersons().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -123,8 +123,8 @@ public class CliqueImpl extends GroupImpl implements Clique {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case MoviesPackage.CLIQUE__PERSONS:
-			return persons != null && !persons.isEmpty();
+			case MoviesPackage.CLIQUE__PERSONS:
+				return persons != null && !persons.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

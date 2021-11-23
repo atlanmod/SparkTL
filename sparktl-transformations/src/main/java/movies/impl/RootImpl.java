@@ -70,8 +70,7 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 	 */
 	public EList<ContainedElement> getChildren() {
 		if (children == null) {
-			children = new EObjectContainmentEList<ContainedElement>(ContainedElement.class, this,
-					MoviesPackage.ROOT__CHILDREN);
+			children = new EObjectContainmentEList<ContainedElement>(ContainedElement.class, this, MoviesPackage.ROOT__CHILDREN);
 		}
 		return children;
 	}
@@ -84,8 +83,8 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case MoviesPackage.ROOT__CHILDREN:
-			return ((InternalEList<?>) getChildren()).basicRemove(otherEnd, msgs);
+			case MoviesPackage.ROOT__CHILDREN:
+				return ((InternalEList<?>)getChildren()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -98,8 +97,8 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case MoviesPackage.ROOT__CHILDREN:
-			return getChildren();
+			case MoviesPackage.ROOT__CHILDREN:
+				return getChildren();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -113,10 +112,10 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case MoviesPackage.ROOT__CHILDREN:
-			getChildren().clear();
-			getChildren().addAll((Collection<? extends ContainedElement>) newValue);
-			return;
+			case MoviesPackage.ROOT__CHILDREN:
+				getChildren().clear();
+				getChildren().addAll((Collection<? extends ContainedElement>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -129,9 +128,9 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case MoviesPackage.ROOT__CHILDREN:
-			getChildren().clear();
-			return;
+			case MoviesPackage.ROOT__CHILDREN:
+				getChildren().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -144,8 +143,8 @@ public class RootImpl extends MinimalEObjectImpl.Container implements Root {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case MoviesPackage.ROOT__CHILDREN:
-			return children != null && !children.isEmpty();
+			case MoviesPackage.ROOT__CHILDREN:
+				return children != null && !children.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

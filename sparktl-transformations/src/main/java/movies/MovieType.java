@@ -108,7 +108,13 @@ public enum MovieType implements Enumerator {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private static final MovieType[] VALUES_ARRAY = new MovieType[] { MOVIE, VIDEO, TV, VIDEOGAME, };
+	private static final MovieType[] VALUES_ARRAY =
+		new MovieType[] {
+			MOVIE,
+			VIDEO,
+			TV,
+			VIDEOGAME,
+		};
 
 	/**
 	 * A public read-only list of all the '<em><b>Movie Type</b></em>' enumerators.
@@ -164,14 +170,10 @@ public enum MovieType implements Enumerator {
 	 */
 	public static MovieType get(int value) {
 		switch (value) {
-		case MOVIE_VALUE:
-			return MOVIE;
-		case VIDEO_VALUE:
-			return VIDEO;
-		case TV_VALUE:
-			return TV;
-		case VIDEOGAME_VALUE:
-			return VIDEOGAME;
+			case MOVIE_VALUE: return MOVIE;
+			case VIDEO_VALUE: return VIDEO;
+			case TV_VALUE: return TV;
+			case VIDEOGAME_VALUE: return VIDEOGAME;
 		}
 		return null;
 	}
@@ -215,7 +217,7 @@ public enum MovieType implements Enumerator {
 	 * @generated
 	 */
 	public int getValue() {
-		return value;
+	  return value;
 	}
 
 	/**
@@ -224,7 +226,7 @@ public enum MovieType implements Enumerator {
 	 * @generated
 	 */
 	public String getName() {
-		return name;
+	  return name;
 	}
 
 	/**
@@ -233,7 +235,7 @@ public enum MovieType implements Enumerator {
 	 * @generated
 	 */
 	public String getLiteral() {
-		return literal;
+	  return literal;
 	}
 
 	/**
@@ -246,5 +248,5 @@ public enum MovieType implements Enumerator {
 	public String toString() {
 		return literal;
 	}
-
+	
 } //MovieType

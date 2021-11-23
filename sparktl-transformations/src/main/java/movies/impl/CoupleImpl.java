@@ -74,8 +74,8 @@ public class CoupleImpl extends GroupImpl implements Couple {
 	 */
 	public Person getP1() {
 		if (p1 != null && p1.eIsProxy()) {
-			InternalEObject oldP1 = (InternalEObject) p1;
-			p1 = (Person) eResolveProxy(oldP1);
+			InternalEObject oldP1 = (InternalEObject)p1;
+			p1 = (Person)eResolveProxy(oldP1);
 			if (p1 != oldP1) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MoviesPackage.COUPLE__P1, oldP1, p1));
@@ -112,8 +112,8 @@ public class CoupleImpl extends GroupImpl implements Couple {
 	 */
 	public Person getP2() {
 		if (p2 != null && p2.eIsProxy()) {
-			InternalEObject oldP2 = (InternalEObject) p2;
-			p2 = (Person) eResolveProxy(oldP2);
+			InternalEObject oldP2 = (InternalEObject)p2;
+			p2 = (Person)eResolveProxy(oldP2);
 			if (p2 != oldP2) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MoviesPackage.COUPLE__P2, oldP2, p2));
@@ -151,14 +151,12 @@ public class CoupleImpl extends GroupImpl implements Couple {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case MoviesPackage.COUPLE__P1:
-			if (resolve)
-				return getP1();
-			return basicGetP1();
-		case MoviesPackage.COUPLE__P2:
-			if (resolve)
-				return getP2();
-			return basicGetP2();
+			case MoviesPackage.COUPLE__P1:
+				if (resolve) return getP1();
+				return basicGetP1();
+			case MoviesPackage.COUPLE__P2:
+				if (resolve) return getP2();
+				return basicGetP2();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -171,12 +169,12 @@ public class CoupleImpl extends GroupImpl implements Couple {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case MoviesPackage.COUPLE__P1:
-			setP1((Person) newValue);
-			return;
-		case MoviesPackage.COUPLE__P2:
-			setP2((Person) newValue);
-			return;
+			case MoviesPackage.COUPLE__P1:
+				setP1((Person)newValue);
+				return;
+			case MoviesPackage.COUPLE__P2:
+				setP2((Person)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -189,12 +187,12 @@ public class CoupleImpl extends GroupImpl implements Couple {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case MoviesPackage.COUPLE__P1:
-			setP1((Person) null);
-			return;
-		case MoviesPackage.COUPLE__P2:
-			setP2((Person) null);
-			return;
+			case MoviesPackage.COUPLE__P1:
+				setP1((Person)null);
+				return;
+			case MoviesPackage.COUPLE__P2:
+				setP2((Person)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -207,10 +205,10 @@ public class CoupleImpl extends GroupImpl implements Couple {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case MoviesPackage.COUPLE__P1:
-			return p1 != null;
-		case MoviesPackage.COUPLE__P2:
-			return p2 != null;
+			case MoviesPackage.COUPLE__P1:
+				return p1 != null;
+			case MoviesPackage.COUPLE__P2:
+				return p2 != null;
 		}
 		return super.eIsSet(featureID);
 	}

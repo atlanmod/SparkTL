@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -91,8 +92,7 @@ public abstract class PersonImpl extends ContainedElementImpl implements Person 
 	 */
 	public EList<Movie> getMovies() {
 		if (movies == null) {
-			movies = new EObjectWithInverseResolvingEList.ManyInverse<Movie>(Movie.class, this,
-					MoviesPackage.PERSON__MOVIES, MoviesPackage.MOVIE__PERSONS);
+			movies = new EObjectWithInverseResolvingEList.ManyInverse<Movie>(Movie.class, this, MoviesPackage.PERSON__MOVIES, MoviesPackage.MOVIE__PERSONS);
 		}
 		return movies;
 	}
@@ -127,8 +127,8 @@ public abstract class PersonImpl extends ContainedElementImpl implements Person 
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case MoviesPackage.PERSON__MOVIES:
-			return ((InternalEList<InternalEObject>) (InternalEList<?>) getMovies()).basicAdd(otherEnd, msgs);
+			case MoviesPackage.PERSON__MOVIES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getMovies()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -141,8 +141,8 @@ public abstract class PersonImpl extends ContainedElementImpl implements Person 
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case MoviesPackage.PERSON__MOVIES:
-			return ((InternalEList<?>) getMovies()).basicRemove(otherEnd, msgs);
+			case MoviesPackage.PERSON__MOVIES:
+				return ((InternalEList<?>)getMovies()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -155,10 +155,10 @@ public abstract class PersonImpl extends ContainedElementImpl implements Person 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case MoviesPackage.PERSON__MOVIES:
-			return getMovies();
-		case MoviesPackage.PERSON__NAME:
-			return getName();
+			case MoviesPackage.PERSON__MOVIES:
+				return getMovies();
+			case MoviesPackage.PERSON__NAME:
+				return getName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -172,13 +172,13 @@ public abstract class PersonImpl extends ContainedElementImpl implements Person 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case MoviesPackage.PERSON__MOVIES:
-			getMovies().clear();
-			getMovies().addAll((Collection<? extends Movie>) newValue);
-			return;
-		case MoviesPackage.PERSON__NAME:
-			setName((String) newValue);
-			return;
+			case MoviesPackage.PERSON__MOVIES:
+				getMovies().clear();
+				getMovies().addAll((Collection<? extends Movie>)newValue);
+				return;
+			case MoviesPackage.PERSON__NAME:
+				setName((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -191,12 +191,12 @@ public abstract class PersonImpl extends ContainedElementImpl implements Person 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case MoviesPackage.PERSON__MOVIES:
-			getMovies().clear();
-			return;
-		case MoviesPackage.PERSON__NAME:
-			setName(NAME_EDEFAULT);
-			return;
+			case MoviesPackage.PERSON__MOVIES:
+				getMovies().clear();
+				return;
+			case MoviesPackage.PERSON__NAME:
+				setName(NAME_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -209,10 +209,10 @@ public abstract class PersonImpl extends ContainedElementImpl implements Person 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case MoviesPackage.PERSON__MOVIES:
-			return movies != null && !movies.isEmpty();
-		case MoviesPackage.PERSON__NAME:
-			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case MoviesPackage.PERSON__MOVIES:
+				return movies != null && !movies.isEmpty();
+			case MoviesPackage.PERSON__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -224,8 +224,7 @@ public abstract class PersonImpl extends ContainedElementImpl implements Person 
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: ");

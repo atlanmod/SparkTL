@@ -13,8 +13,8 @@ import movies.MovieType;
 import movies.MoviesFactory;
 import movies.MoviesPackage;
 import movies.Person;
-
 import movies.Root;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
@@ -139,14 +139,11 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public static MoviesPackage init() {
-		if (isInited)
-			return (MoviesPackage) EPackage.Registry.INSTANCE.getEPackage(MoviesPackage.eNS_URI);
+		if (isInited) return (MoviesPackage)EPackage.Registry.INSTANCE.getEPackage(MoviesPackage.eNS_URI);
 
 		// Obtain or create and register package
 		Object registeredMoviesPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
-		MoviesPackageImpl theMoviesPackage = registeredMoviesPackage instanceof MoviesPackageImpl
-				? (MoviesPackageImpl) registeredMoviesPackage
-				: new MoviesPackageImpl();
+		MoviesPackageImpl theMoviesPackage = registeredMoviesPackage instanceof MoviesPackageImpl ? (MoviesPackageImpl)registeredMoviesPackage : new MoviesPackageImpl();
 
 		isInited = true;
 
@@ -179,7 +176,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public EReference getPerson_Movies() {
-		return (EReference) personEClass.getEStructuralFeatures().get(0);
+		return (EReference)personEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -188,7 +185,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public EAttribute getPerson_Name() {
-		return (EAttribute) personEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)personEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -224,7 +221,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public EReference getCouple_P1() {
-		return (EReference) coupleEClass.getEStructuralFeatures().get(0);
+		return (EReference)coupleEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -233,7 +230,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public EReference getCouple_P2() {
-		return (EReference) coupleEClass.getEStructuralFeatures().get(1);
+		return (EReference)coupleEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -250,8 +247,17 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getMovie_Persons() {
+		return (EReference)movieEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getMovie_Title() {
-		return (EAttribute) movieEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)movieEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -260,7 +266,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public EAttribute getMovie_Rating() {
-		return (EAttribute) movieEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)movieEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -269,7 +275,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public EAttribute getMovie_Year() {
-		return (EAttribute) movieEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)movieEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -278,16 +284,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public EAttribute getMovie_Type() {
-		return (EAttribute) movieEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getMovie_Persons() {
-		return (EReference) movieEClass.getEStructuralFeatures().get(0);
+		return (EAttribute)movieEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -305,7 +302,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public EReference getGroup_CommonMovies() {
-		return (EReference) groupEClass.getEStructuralFeatures().get(0);
+		return (EReference)groupEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -314,7 +311,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public EAttribute getGroup_AvgRating() {
-		return (EAttribute) groupEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)groupEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -332,7 +329,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public EReference getClique_Persons() {
-		return (EReference) cliqueEClass.getEStructuralFeatures().get(0);
+		return (EReference)cliqueEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -350,7 +347,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public EReference getRoot_Children() {
-		return (EReference) rootEClass.getEStructuralFeatures().get(0);
+		return (EReference)rootEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -377,7 +374,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public MoviesFactory getMoviesFactory() {
-		return (MoviesFactory) getEFactoryInstance();
+		return (MoviesFactory)getEFactoryInstance();
 	}
 
 	/**
@@ -395,8 +392,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public void createPackageContents() {
-		if (isCreated)
-			return;
+		if (isCreated) return;
 		isCreated = true;
 
 		// Create classes and their features
@@ -450,8 +446,7 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 	 * @generated
 	 */
 	public void initializePackageContents() {
-		if (isInitialized)
-			return;
+		if (isInitialized) return;
 		isInitialized = true;
 
 		// Initialize package
@@ -474,56 +469,35 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(personEClass, Person.class, "Person", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getPerson_Movies(), this.getMovie(), this.getMovie_Persons(), "movies", null, 0, -1,
-				Person.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPerson_Name(), ecorePackage.getEString(), "name", null, 0, 1, Person.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPerson_Movies(), this.getMovie(), this.getMovie_Persons(), "movies", null, 0, -1, Person.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPerson_Name(), ecorePackage.getEString(), "name", null, 0, 1, Person.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(actorEClass, Actor.class, "Actor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(actressEClass, Actress.class, "Actress", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(coupleEClass, Couple.class, "Couple", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getCouple_P1(), this.getPerson(), null, "p1", null, 0, 1, Couple.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEReference(getCouple_P2(), this.getPerson(), null, "p2", null, 0, 1, Couple.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
+		initEReference(getCouple_P1(), this.getPerson(), null, "p1", null, 0, 1, Couple.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCouple_P2(), this.getPerson(), null, "p2", null, 0, 1, Couple.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(movieEClass, Movie.class, "Movie", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMovie_Persons(), this.getPerson(), this.getPerson_Movies(), "persons", null, 0, -1,
-				Movie.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getMovie_Title(), ecorePackage.getEString(), "title", null, 0, 1, Movie.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getMovie_Rating(), ecorePackage.getEDouble(), "rating", null, 0, 1, Movie.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getMovie_Year(), ecorePackage.getEInt(), "year", null, 0, 1, Movie.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getMovie_Type(), ecorePackage.getEString(), "type", null, 0, 1, Movie.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMovie_Persons(), this.getPerson(), this.getPerson_Movies(), "persons", null, 0, -1, Movie.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMovie_Title(), ecorePackage.getEString(), "title", null, 0, 1, Movie.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMovie_Rating(), ecorePackage.getEDouble(), "rating", null, 0, 1, Movie.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMovie_Year(), ecorePackage.getEInt(), "year", null, 0, 1, Movie.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMovie_Type(), ecorePackage.getEString(), "type", null, 0, 1, Movie.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(groupEClass, Group.class, "Group", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getGroup_CommonMovies(), this.getMovie(), null, "commonMovies", null, 0, -1, Group.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getGroup_AvgRating(), ecorePackage.getEDouble(), "avgRating", null, 0, 1, Group.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getGroup_CommonMovies(), this.getMovie(), null, "commonMovies", null, 0, -1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getGroup_AvgRating(), ecorePackage.getEDouble(), "avgRating", null, 0, 1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(cliqueEClass, Clique.class, "Clique", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getClique_Persons(), this.getPerson(), null, "persons", null, 0, -1, Clique.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
+		initEReference(getClique_Persons(), this.getPerson(), null, "persons", null, 0, -1, Clique.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(rootEClass, Root.class, "Root", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getRoot_Children(), this.getContainedElement(), null, "children", null, 0, -1, Root.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRoot_Children(), this.getContainedElement(), null, "children", null, 0, -1, Root.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(containedElementEClass, ContainedElement.class, "ContainedElement", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
+		initEClass(containedElementEClass, ContainedElement.class, "ContainedElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Initialize enums and add enum literals
 		initEEnum(movieTypeEEnum, MovieType.class, "MovieType");

@@ -3,6 +3,7 @@
 package movies.impl;
 
 import java.util.Collection;
+
 import movies.Movie;
 import movies.MoviesPackage;
 import movies.Person;
@@ -11,10 +12,12 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -150,6 +153,18 @@ public class MovieImpl extends ContainedElementImpl implements Movie {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Person> getPersons() {
+		if (persons == null) {
+			persons = new EObjectWithInverseResolvingEList.ManyInverse<Person>(Person.class, this, MoviesPackage.MOVIE__PERSONS, MoviesPackage.PERSON__MOVIES);
+		}
+		return persons;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getTitle() {
 		return title;
 	}
@@ -234,25 +249,12 @@ public class MovieImpl extends ContainedElementImpl implements Movie {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Person> getPersons() {
-		if (persons == null) {
-			persons = new EObjectWithInverseResolvingEList.ManyInverse<Person>(Person.class, this,
-					MoviesPackage.MOVIE__PERSONS, MoviesPackage.PERSON__MOVIES);
-		}
-		return persons;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case MoviesPackage.MOVIE__PERSONS:
-			return ((InternalEList<InternalEObject>) (InternalEList<?>) getPersons()).basicAdd(otherEnd, msgs);
+			case MoviesPackage.MOVIE__PERSONS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getPersons()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -265,8 +267,8 @@ public class MovieImpl extends ContainedElementImpl implements Movie {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case MoviesPackage.MOVIE__PERSONS:
-			return ((InternalEList<?>) getPersons()).basicRemove(otherEnd, msgs);
+			case MoviesPackage.MOVIE__PERSONS:
+				return ((InternalEList<?>)getPersons()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -279,16 +281,16 @@ public class MovieImpl extends ContainedElementImpl implements Movie {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case MoviesPackage.MOVIE__PERSONS:
-			return getPersons();
-		case MoviesPackage.MOVIE__TITLE:
-			return getTitle();
-		case MoviesPackage.MOVIE__RATING:
-			return getRating();
-		case MoviesPackage.MOVIE__YEAR:
-			return getYear();
-		case MoviesPackage.MOVIE__TYPE:
-			return getType();
+			case MoviesPackage.MOVIE__PERSONS:
+				return getPersons();
+			case MoviesPackage.MOVIE__TITLE:
+				return getTitle();
+			case MoviesPackage.MOVIE__RATING:
+				return getRating();
+			case MoviesPackage.MOVIE__YEAR:
+				return getYear();
+			case MoviesPackage.MOVIE__TYPE:
+				return getType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -302,22 +304,22 @@ public class MovieImpl extends ContainedElementImpl implements Movie {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case MoviesPackage.MOVIE__PERSONS:
-			getPersons().clear();
-			getPersons().addAll((Collection<? extends Person>) newValue);
-			return;
-		case MoviesPackage.MOVIE__TITLE:
-			setTitle((String) newValue);
-			return;
-		case MoviesPackage.MOVIE__RATING:
-			setRating((Double) newValue);
-			return;
-		case MoviesPackage.MOVIE__YEAR:
-			setYear((Integer) newValue);
-			return;
-		case MoviesPackage.MOVIE__TYPE:
-			setType((String) newValue);
-			return;
+			case MoviesPackage.MOVIE__PERSONS:
+				getPersons().clear();
+				getPersons().addAll((Collection<? extends Person>)newValue);
+				return;
+			case MoviesPackage.MOVIE__TITLE:
+				setTitle((String)newValue);
+				return;
+			case MoviesPackage.MOVIE__RATING:
+				setRating((Double)newValue);
+				return;
+			case MoviesPackage.MOVIE__YEAR:
+				setYear((Integer)newValue);
+				return;
+			case MoviesPackage.MOVIE__TYPE:
+				setType((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -330,21 +332,21 @@ public class MovieImpl extends ContainedElementImpl implements Movie {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case MoviesPackage.MOVIE__PERSONS:
-			getPersons().clear();
-			return;
-		case MoviesPackage.MOVIE__TITLE:
-			setTitle(TITLE_EDEFAULT);
-			return;
-		case MoviesPackage.MOVIE__RATING:
-			setRating(RATING_EDEFAULT);
-			return;
-		case MoviesPackage.MOVIE__YEAR:
-			setYear(YEAR_EDEFAULT);
-			return;
-		case MoviesPackage.MOVIE__TYPE:
-			setType(TYPE_EDEFAULT);
-			return;
+			case MoviesPackage.MOVIE__PERSONS:
+				getPersons().clear();
+				return;
+			case MoviesPackage.MOVIE__TITLE:
+				setTitle(TITLE_EDEFAULT);
+				return;
+			case MoviesPackage.MOVIE__RATING:
+				setRating(RATING_EDEFAULT);
+				return;
+			case MoviesPackage.MOVIE__YEAR:
+				setYear(YEAR_EDEFAULT);
+				return;
+			case MoviesPackage.MOVIE__TYPE:
+				setType(TYPE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -357,16 +359,16 @@ public class MovieImpl extends ContainedElementImpl implements Movie {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case MoviesPackage.MOVIE__PERSONS:
-			return persons != null && !persons.isEmpty();
-		case MoviesPackage.MOVIE__TITLE:
-			return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
-		case MoviesPackage.MOVIE__RATING:
-			return rating != RATING_EDEFAULT;
-		case MoviesPackage.MOVIE__YEAR:
-			return year != YEAR_EDEFAULT;
-		case MoviesPackage.MOVIE__TYPE:
-			return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
+			case MoviesPackage.MOVIE__PERSONS:
+				return persons != null && !persons.isEmpty();
+			case MoviesPackage.MOVIE__TITLE:
+				return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
+			case MoviesPackage.MOVIE__RATING:
+				return rating != RATING_EDEFAULT;
+			case MoviesPackage.MOVIE__YEAR:
+				return year != YEAR_EDEFAULT;
+			case MoviesPackage.MOVIE__TYPE:
+				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -378,8 +380,7 @@ public class MovieImpl extends ContainedElementImpl implements Movie {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (title: ");

@@ -2,6 +2,7 @@
  */
 package movies;
 
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Couple</b></em>'.

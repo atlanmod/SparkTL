@@ -66,93 +66,72 @@ public class MoviesSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-		case MoviesPackage.PERSON: {
-			Person person = (Person) theEObject;
-			T result = casePerson(person);
-			if (result == null)
-				result = caseContainedElement(person);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case MoviesPackage.ACTOR: {
-			Actor actor = (Actor) theEObject;
-			T result = caseActor(actor);
-			if (result == null)
-				result = casePerson(actor);
-			if (result == null)
-				result = caseContainedElement(actor);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case MoviesPackage.ACTRESS: {
-			Actress actress = (Actress) theEObject;
-			T result = caseActress(actress);
-			if (result == null)
-				result = casePerson(actress);
-			if (result == null)
-				result = caseContainedElement(actress);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case MoviesPackage.COUPLE: {
-			Couple couple = (Couple) theEObject;
-			T result = caseCouple(couple);
-			if (result == null)
-				result = caseGroup(couple);
-			if (result == null)
-				result = caseContainedElement(couple);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case MoviesPackage.MOVIE: {
-			Movie movie = (Movie) theEObject;
-			T result = caseMovie(movie);
-			if (result == null)
-				result = caseContainedElement(movie);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case MoviesPackage.GROUP: {
-			Group group = (Group) theEObject;
-			T result = caseGroup(group);
-			if (result == null)
-				result = caseContainedElement(group);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case MoviesPackage.CLIQUE: {
-			Clique clique = (Clique) theEObject;
-			T result = caseClique(clique);
-			if (result == null)
-				result = caseGroup(clique);
-			if (result == null)
-				result = caseContainedElement(clique);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case MoviesPackage.ROOT: {
-			Root root = (Root) theEObject;
-			T result = caseRoot(root);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case MoviesPackage.CONTAINED_ELEMENT: {
-			ContainedElement containedElement = (ContainedElement) theEObject;
-			T result = caseContainedElement(containedElement);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		default:
-			return defaultCase(theEObject);
+			case MoviesPackage.PERSON: {
+				Person person = (Person)theEObject;
+				T result = casePerson(person);
+				if (result == null) result = caseContainedElement(person);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MoviesPackage.ACTOR: {
+				Actor actor = (Actor)theEObject;
+				T result = caseActor(actor);
+				if (result == null) result = casePerson(actor);
+				if (result == null) result = caseContainedElement(actor);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MoviesPackage.ACTRESS: {
+				Actress actress = (Actress)theEObject;
+				T result = caseActress(actress);
+				if (result == null) result = casePerson(actress);
+				if (result == null) result = caseContainedElement(actress);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MoviesPackage.COUPLE: {
+				Couple couple = (Couple)theEObject;
+				T result = caseCouple(couple);
+				if (result == null) result = caseGroup(couple);
+				if (result == null) result = caseContainedElement(couple);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MoviesPackage.MOVIE: {
+				Movie movie = (Movie)theEObject;
+				T result = caseMovie(movie);
+				if (result == null) result = caseContainedElement(movie);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MoviesPackage.GROUP: {
+				Group group = (Group)theEObject;
+				T result = caseGroup(group);
+				if (result == null) result = caseContainedElement(group);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MoviesPackage.CLIQUE: {
+				Clique clique = (Clique)theEObject;
+				T result = caseClique(clique);
+				if (result == null) result = caseGroup(clique);
+				if (result == null) result = caseContainedElement(clique);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MoviesPackage.ROOT: {
+				Root root = (Root)theEObject;
+				T result = caseRoot(root);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MoviesPackage.CONTAINED_ELEMENT: {
+				ContainedElement containedElement = (ContainedElement)theEObject;
+				T result = caseContainedElement(containedElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			default: return defaultCase(theEObject);
 		}
 	}
 

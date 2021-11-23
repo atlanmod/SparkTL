@@ -54,7 +54,7 @@ public class MoviesAdapterFactory extends AdapterFactoryImpl {
 			return true;
 		}
 		if (object instanceof EObject) {
-			return ((EObject) object).eClass().getEPackage() == modelPackage;
+			return ((EObject)object).eClass().getEPackage() == modelPackage;
 		}
 		return false;
 	}
@@ -65,57 +65,49 @@ public class MoviesAdapterFactory extends AdapterFactoryImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected MoviesSwitch<Adapter> modelSwitch = new MoviesSwitch<Adapter>() {
-		@Override
-		public Adapter casePerson(Person object) {
-			return createPersonAdapter();
-		}
-
-		@Override
-		public Adapter caseActor(Actor object) {
-			return createActorAdapter();
-		}
-
-		@Override
-		public Adapter caseActress(Actress object) {
-			return createActressAdapter();
-		}
-
-		@Override
-		public Adapter caseCouple(Couple object) {
-			return createCoupleAdapter();
-		}
-
-		@Override
-		public Adapter caseMovie(Movie object) {
-			return createMovieAdapter();
-		}
-
-		@Override
-		public Adapter caseGroup(Group object) {
-			return createGroupAdapter();
-		}
-
-		@Override
-		public Adapter caseClique(Clique object) {
-			return createCliqueAdapter();
-		}
-
-		@Override
-		public Adapter caseRoot(Root object) {
-			return createRootAdapter();
-		}
-
-		@Override
-		public Adapter caseContainedElement(ContainedElement object) {
-			return createContainedElementAdapter();
-		}
-
-		@Override
-		public Adapter defaultCase(EObject object) {
-			return createEObjectAdapter();
-		}
-	};
+	protected MoviesSwitch<Adapter> modelSwitch =
+		new MoviesSwitch<Adapter>() {
+			@Override
+			public Adapter casePerson(Person object) {
+				return createPersonAdapter();
+			}
+			@Override
+			public Adapter caseActor(Actor object) {
+				return createActorAdapter();
+			}
+			@Override
+			public Adapter caseActress(Actress object) {
+				return createActressAdapter();
+			}
+			@Override
+			public Adapter caseCouple(Couple object) {
+				return createCoupleAdapter();
+			}
+			@Override
+			public Adapter caseMovie(Movie object) {
+				return createMovieAdapter();
+			}
+			@Override
+			public Adapter caseGroup(Group object) {
+				return createGroupAdapter();
+			}
+			@Override
+			public Adapter caseClique(Clique object) {
+				return createCliqueAdapter();
+			}
+			@Override
+			public Adapter caseRoot(Root object) {
+				return createRootAdapter();
+			}
+			@Override
+			public Adapter caseContainedElement(ContainedElement object) {
+				return createContainedElementAdapter();
+			}
+			@Override
+			public Adapter defaultCase(EObject object) {
+				return createEObjectAdapter();
+			}
+		};
 
 	/**
 	 * Creates an adapter for the <code>target</code>.
@@ -127,8 +119,9 @@ public class MoviesAdapterFactory extends AdapterFactoryImpl {
 	 */
 	@Override
 	public Adapter createAdapter(Notifier target) {
-		return modelSwitch.doSwitch((EObject) target);
+		return modelSwitch.doSwitch((EObject)target);
 	}
+
 
 	/**
 	 * Creates a new adapter for an object of class '{@link movies.Person <em>Person</em>}'.

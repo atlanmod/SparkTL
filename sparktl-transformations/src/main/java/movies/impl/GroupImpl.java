@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
@@ -111,8 +112,7 @@ public abstract class GroupImpl extends ContainedElementImpl implements Group {
 		double oldAvgRating = avgRating;
 		avgRating = newAvgRating;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MoviesPackage.GROUP__AVG_RATING, oldAvgRating,
-					avgRating));
+			eNotify(new ENotificationImpl(this, Notification.SET, MoviesPackage.GROUP__AVG_RATING, oldAvgRating, avgRating));
 	}
 
 	/**
@@ -123,10 +123,10 @@ public abstract class GroupImpl extends ContainedElementImpl implements Group {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case MoviesPackage.GROUP__COMMON_MOVIES:
-			return getCommonMovies();
-		case MoviesPackage.GROUP__AVG_RATING:
-			return getAvgRating();
+			case MoviesPackage.GROUP__COMMON_MOVIES:
+				return getCommonMovies();
+			case MoviesPackage.GROUP__AVG_RATING:
+				return getAvgRating();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -140,13 +140,13 @@ public abstract class GroupImpl extends ContainedElementImpl implements Group {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case MoviesPackage.GROUP__COMMON_MOVIES:
-			getCommonMovies().clear();
-			getCommonMovies().addAll((Collection<? extends Movie>) newValue);
-			return;
-		case MoviesPackage.GROUP__AVG_RATING:
-			setAvgRating((Double) newValue);
-			return;
+			case MoviesPackage.GROUP__COMMON_MOVIES:
+				getCommonMovies().clear();
+				getCommonMovies().addAll((Collection<? extends Movie>)newValue);
+				return;
+			case MoviesPackage.GROUP__AVG_RATING:
+				setAvgRating((Double)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -159,12 +159,12 @@ public abstract class GroupImpl extends ContainedElementImpl implements Group {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case MoviesPackage.GROUP__COMMON_MOVIES:
-			getCommonMovies().clear();
-			return;
-		case MoviesPackage.GROUP__AVG_RATING:
-			setAvgRating(AVG_RATING_EDEFAULT);
-			return;
+			case MoviesPackage.GROUP__COMMON_MOVIES:
+				getCommonMovies().clear();
+				return;
+			case MoviesPackage.GROUP__AVG_RATING:
+				setAvgRating(AVG_RATING_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -177,10 +177,10 @@ public abstract class GroupImpl extends ContainedElementImpl implements Group {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case MoviesPackage.GROUP__COMMON_MOVIES:
-			return commonMovies != null && !commonMovies.isEmpty();
-		case MoviesPackage.GROUP__AVG_RATING:
-			return avgRating != AVG_RATING_EDEFAULT;
+			case MoviesPackage.GROUP__COMMON_MOVIES:
+				return commonMovies != null && !commonMovies.isEmpty();
+			case MoviesPackage.GROUP__AVG_RATING:
+				return avgRating != AVG_RATING_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -192,8 +192,7 @@ public abstract class GroupImpl extends ContainedElementImpl implements Group {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (avgRating: ");

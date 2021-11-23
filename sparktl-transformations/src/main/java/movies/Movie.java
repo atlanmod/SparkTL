@@ -26,6 +26,20 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface Movie extends ContainedElement {
 	/**
+	 * Returns the value of the '<em><b>Persons</b></em>' reference list.
+	 * The list contents are of type {@link movies.Person}.
+	 * It is bidirectional and its opposite is '{@link movies.Person#getMovies <em>Movies</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Persons</em>' reference list.
+	 * @see movies.MoviesPackage#getMovie_Persons()
+	 * @see movies.Person#getMovies
+	 * @model opposite="movies"
+	 * @generated
+	 */
+	EList<Person> getPersons();
+
+	/**
 	 * Returns the value of the '<em><b>Title</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -112,19 +126,5 @@ public interface Movie extends ContainedElement {
 	 * @generated
 	 */
 	void setType(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Persons</b></em>' reference list.
-	 * The list contents are of type {@link movies.Person}.
-	 * It is bidirectional and its opposite is '{@link movies.Person#getMovies <em>Movies</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Persons</em>' reference list.
-	 * @see movies.MoviesPackage#getMovie_Persons()
-	 * @see movies.Person#getMovies
-	 * @model opposite="movies"
-	 * @generated
-	 */
-	EList<Person> getPersons();
 
 } // Movie
