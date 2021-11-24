@@ -30,4 +30,9 @@ abstract class DynamicLink(type_ : String, source: DynamicElement, target: List[
             case _ => false
         }
     }
+
+    override def hashCode(): Int = {
+        source.hashCode() + target.hashCode() + type_.hashCode()
+    }
+
 }

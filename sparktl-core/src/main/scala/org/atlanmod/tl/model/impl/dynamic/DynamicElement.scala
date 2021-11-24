@@ -40,4 +40,8 @@ abstract class DynamicElement(classname: String, properties : scala.collection.m
         res
     }
 
+    override def hashCode(): Int = {
+        classname.hashCode + properties.hashCode()
+    }
+
 }
