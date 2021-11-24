@@ -1,4 +1,4 @@
-package org.atlanmod.findcouples.transformation.emf.serial
+package org.atlanmod.findcouples.model.transformation.emf
 
 import movies.MoviesPackage
 import org.atlanmod.tl.model.impl.emf.serializable.string.EMFStringConverter
@@ -49,6 +49,7 @@ object MovieEMFStringConverter extends EMFStringConverter with Serializable {
     }
 
     override def stringFromEClass(str: EClass): String = EClassToString(str)
+
     override def EClassFromString(str: String): EClass = stringToEClass(str)
 
     override def stringToEReference(str: String): EReference =
@@ -72,6 +73,7 @@ object MovieEMFStringConverter extends EMFStringConverter with Serializable {
     }
 
     override def stringFromEReference(str: EReference): String = EReferenceToString(str)
+
     override def EReferenceFromString(str: String): EReference = stringToEReference(str)
 
 }

@@ -1,4 +1,4 @@
-package org.atlanmod.findcouples.transformation.emf
+package org.atlanmod.findcouples.model.transformation.emf.serial
 
 import movies.{Movie, MoviesPackage}
 import org.atlanmod.tl.model.Transformation

@@ -1,4 +1,4 @@
-package org.atlanmod.findcouples.transformation.dynamic
+package org.atlanmod.findcouples.model.transformation.dynamic
 
 import org.atlanmod.Utils.my_sleep
 import org.atlanmod.findcouples.model.movie.element._
@@ -12,34 +12,16 @@ import org.atlanmod.tl.util.ListUtils
 
 import scala.util.Random
 
-object FindCouples {
+object Identity {
 
     final val PATTERN_MOVIE = "movie"
     final val PATTERN_ACTOR = "actor"
     final val PATTERN_ACTRESS = "actress"
-    final val PATTERN_COUPLE_ACTOR_ACTOR = "couple_actor_actor"
-    final val PATTERN_COUPLE_ACTRESS_ACTRESS = "couple_actress_actress"
-    final val PATTERN_COUPLE_ACTRESS_ACTOR = "couple_actress_actor"
+    final val PATTERN_CLIQUE = "clique"
+    final val PATTERN_COUPLE = "couple"
 
     val mm: DynamicMetamodel[DynamicElement, DynamicLink] = MovieMetamodel.metamodel
     val random: Random.type = scala.util.Random
-
-    def helper_coactor(model: MovieModel, p: MoviePerson): List[MoviePerson] =
-        MovieMetamodel.getMoviesOfPerson(model, p) match {
-            case Some(movies: List[MovieMovie]) =>
-                movies.flatMap(movie => MovieMetamodel.getPersonsOfMovieAsList(model, movie))
-            case _ => List()
-        }
-
-    def helper_areCouple(model: MovieModel, p1: MoviePerson, p2: MoviePerson): Boolean =
-        helper_commonMovies(model, p1, p2).size >= 3 & !p1.equals(p2) &
-          (if (p1.isInstanceOf[MovieActor] & p2.isInstanceOf[MovieActor]) p1.getName <= p2.getName else true)
-
-    def helper_commonMovies(model: MovieModel, p1: MoviePerson, p2: MoviePerson): List[MovieMovie] =
-        (MovieMetamodel.getMoviesOfPerson(model, p1), MovieMetamodel.getMoviesOfPerson(model, p2)) match {
-            case (Some(movies1), Some(movies2)) => movies1.intersect(movies2)
-            case _ => List()
-        }
 
     def makePersonMovies(tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel,
                          input_person: MoviePerson, output_person: MoviePerson): Option[MovieLink] =
@@ -89,7 +71,72 @@ object FindCouples {
         }
     }
 
-    def findcouples_imdb(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0)
+    def makeGroupMovies(tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel,
+                        input_group: MovieGroup, output_group: MovieGroup): Option[MovieLink] = {
+        MovieMetamodel.getMoviesOfGroup(model, input_group) match {
+            case Some(movies) =>
+                Resolve.resolveAll(tls, model, mm, PATTERN_MOVIE, MovieMetamodel.MOVIE, ListUtils.singleton(movies)) match {
+                    case Some(output_movies: List[MovieMovie]) => Some(new GroupToMovies(output_group, output_movies))
+                    case _ => None
+                }
+            case _ => None
+        }
+    }
+
+    def makeCliquePersons(tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel,
+                          input_clique: MovieClique, output_clique: MovieClique): Option[MovieLink] = {
+        MovieMetamodel.getPersonsOfClique(model, input_clique) match {
+            case Some(persons) =>
+                var actors: Option[List[MoviePerson]] = None
+                // First we get output actors
+                Resolve.resolveAll(tls, model, mm, PATTERN_ACTOR, MovieMetamodel.PERSON, ListUtils.singletons(persons)) match {
+                    case Some(l_act: List[MovieActor]) => actors = Some(l_act.asInstanceOf[List[MoviePerson]])
+                    case _ => None
+                }
+                // Then we get output actresses
+                var actress: Option[List[MoviePerson]] = None
+                Resolve.resolveAll(tls, model, mm, PATTERN_ACTRESS, MovieMetamodel.PERSON, ListUtils.singletons(persons)) match {
+                    case Some(l_act: List[MovieActor]) => actress = Some(l_act.asInstanceOf[List[MoviePerson]])
+                    case _ => None
+                }
+                // We make the sum actors + actresses
+                ListUtils.sum_list_option(actors, actress) match {
+                    case Some(people: List[MoviePerson]) => Some(new CliqueToPersons(output_clique, people))
+                    case None => None
+                }
+            case _ => None
+        }
+    }
+
+    def makeCoupleToPersonP1(tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel,
+                             input_couple: MovieCouple, output_couple: MovieCouple): Option[MovieLink] = {
+        MovieMetamodel.getPersonP1OfCouple(model, input_couple) match {
+            case Some(person) =>
+                var output_person = Resolve.resolve(tls, model, mm, PATTERN_ACTOR, MovieMetamodel.PERSON, List(person))
+                if (output_person.isEmpty)
+                    output_person = Resolve.resolve(tls, model, mm, PATTERN_ACTRESS, MovieMetamodel.PERSON, List(person))
+                output_person match {
+                    case Some(person: MoviePerson) => Some(new CoupleToPersonP1(output_couple, person))
+                    case _ => None
+                }
+        }
+    }
+
+    def makeCoupleToPersonP2(tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel,
+                             input_couple: MovieCouple, output_couple: MovieCouple): Option[MovieLink] = {
+        MovieMetamodel.getPersonP2OfCouple(model, input_couple) match {
+            case Some(person) =>
+                var output_person = Resolve.resolve(tls, model, mm, PATTERN_ACTOR, MovieMetamodel.PERSON, List(person))
+                if (output_person.isEmpty)
+                    output_person = Resolve.resolve(tls, model, mm, PATTERN_ACTRESS, MovieMetamodel.PERSON, List(person))
+                output_person match {
+                    case Some(person: MoviePerson) => Some(new CoupleToPersonP2(output_couple, person))
+                    case _ => None
+                }
+        }
+    }
+
+    def identity_imdb(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0)
     : Transformation[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink] =
         new TransformationImpl[DynamicElement, DynamicLink, String, DynamicElement, DynamicLink](
             List(
@@ -174,40 +221,33 @@ object FindCouples {
                     )
                 ),
                 new RuleImpl(
-                    name = "couple_actor_actor",
-                    types = List(MovieMetamodel.ACTOR, MovieMetamodel.ACTOR),
-                    from = (model, pattern) => {
+                    name = "clique",
+                    types = List(MovieMetamodel.CLIQUE),
+                    from = (m, l) => {
                         my_sleep(sleeping_guard, random.nextInt())
-                        val p1 = pattern.head.asInstanceOf[MovieActor]
-                        val p2 = pattern(1).asInstanceOf[MovieActor]
-                        Some(helper_areCouple(model.asInstanceOf[MovieModel], p1, p2))
+                        Some(true)
                     },
                     to = List(
-                        new OutputPatternElementImpl(name = PATTERN_COUPLE_ACTOR_ACTOR,
-                            elementExpr = (_, model, l) =>
-                                if (l.size < 2) None else {
+                        new OutputPatternElementImpl(name = PATTERN_CLIQUE,
+                            elementExpr = (_, _, l) =>
+                                if (l.isEmpty) None else {
                                     my_sleep(sleeping_instantiate, random.nextInt)
-                                    val p1 = l.head.asInstanceOf[MovieActor]
-                                    val p2 = l(1).asInstanceOf[MovieActor]
-                                    val movies = helper_commonMovies(model.asInstanceOf[MovieModel], p1, p2)
-                                    val avgRating = movies.map(m => m.getRating).sum / movies.size
-                                    Some(new MovieCouple(p1.getName + " & " + p2.getName, avgRating))
+                                    val clique = l.head.asInstanceOf[MovieClique]
+                                    Some(new MovieClique(clique.getId, clique.getAvgRating))
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, pattern, output) => {
                                         my_sleep(sleeping_apply, random.nextInt())
-                                        makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
-                                            pattern.head.asInstanceOf[MovieActor], output.asInstanceOf[MovieCouple],
-                                            PATTERN_ACTOR, 1)
+                                        makeGroupMovies(tls, sm.asInstanceOf[MovieModel],
+                                            pattern.head.asInstanceOf[MovieClique], output.asInstanceOf[MovieClique])
                                     }
                                 ),
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, pattern, output) => {
                                         my_sleep(sleeping_apply, random.nextInt())
-                                        makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
-                                            pattern(1).asInstanceOf[MovieActor], output.asInstanceOf[MovieCouple],
-                                            PATTERN_ACTOR, 2)
+                                        makeCliquePersons(tls, sm.asInstanceOf[MovieModel],
+                                            pattern.head.asInstanceOf[MovieClique], output.asInstanceOf[MovieClique])
                                     }
                                 )
                             )
@@ -215,81 +255,40 @@ object FindCouples {
                     )
                 ),
                 new RuleImpl(
-                    name = "couple_actress_actor",
-                    types = List(MovieMetamodel.ACTRESS, MovieMetamodel.ACTOR),
-                    from = (model, pattern) => {
+                    name = "couple",
+                    types = List(MovieMetamodel.COUPLE),
+                    from = (m, l) => {
                         my_sleep(sleeping_guard, random.nextInt())
-                        val p1 = pattern.head.asInstanceOf[MovieActress]
-                        val p2 = pattern(1).asInstanceOf[MovieActor]
-                        Some(helper_areCouple(model.asInstanceOf[MovieModel], p1, p2))
+                        Some(true)
                     },
                     to = List(
-                        new OutputPatternElementImpl(name = PATTERN_COUPLE_ACTRESS_ACTOR,
-                            elementExpr = (_, model, l) =>
-                                if (l.size < 2) None else {
+                        new OutputPatternElementImpl(name = PATTERN_COUPLE,
+                            elementExpr = (_, _, l) =>
+                                if (l.isEmpty) None else {
                                     my_sleep(sleeping_instantiate, random.nextInt)
-                                    val p1 = l.head.asInstanceOf[MovieActress]
-                                    val p2 = l(1).asInstanceOf[MovieActor]
-                                    val movies = helper_commonMovies(model.asInstanceOf[MovieModel], p1, p2)
-                                    val avgRating = movies.map(m => m.getRating).sum / movies.size
-                                    Some(new MovieCouple(p1.getName + " & " + p2.getName, avgRating))
+                                    val couple = l.head.asInstanceOf[MovieCouple]
+                                    Some(new MovieCouple(couple.getId, couple.getAvgRating))
                                 },
                             outputElemRefs = List(
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, pattern, output) => {
                                         my_sleep(sleeping_apply, random.nextInt())
-                                        makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
-                                            pattern.head.asInstanceOf[MovieActress], output.asInstanceOf[MovieCouple],
-                                            PATTERN_ACTRESS, 1)
+                                        makeGroupMovies(tls, sm.asInstanceOf[MovieModel],
+                                            pattern.head.asInstanceOf[MovieCouple], output.asInstanceOf[MovieCouple])
                                     }
                                 ),
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, pattern, output) => {
                                         my_sleep(sleeping_apply, random.nextInt())
-                                        makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
-                                            pattern(1).asInstanceOf[MovieActor], output.asInstanceOf[MovieCouple],
-                                            PATTERN_ACTOR, 2)
-                                    }
-                                )
-                            )
-                        )
-                    )
-                ),
-                new RuleImpl(
-                    name = "couple_actress_actress",
-                    types = List(MovieMetamodel.ACTRESS, MovieMetamodel.ACTRESS),
-                    from = (model, pattern) => {
-                        my_sleep(sleeping_guard, random.nextInt())
-                        val p1 = pattern.head.asInstanceOf[MovieActress]
-                        val p2 = pattern(1).asInstanceOf[MovieActress]
-                        Some(helper_areCouple(model.asInstanceOf[MovieModel], p1, p2))
-                    },
-                    to = List(
-                        new OutputPatternElementImpl(name = PATTERN_COUPLE_ACTRESS_ACTRESS,
-                            elementExpr = (_, model, l) =>
-                                if (l.size < 2) None else {
-                                    my_sleep(sleeping_instantiate, random.nextInt)
-                                    val p1 = l.head.asInstanceOf[MovieActress]
-                                    val p2 = l(1).asInstanceOf[MovieActress]
-                                    val movies = helper_commonMovies(model.asInstanceOf[MovieModel], p1, p2)
-                                    val avgRating = movies.map(m => m.getRating).sum / movies.size
-                                    Some(new MovieCouple(p1.getName + " & " + p2.getName, avgRating))
-                                },
-                            outputElemRefs = List(
-                                new OutputPatternElementReferenceImpl(
-                                    (tls, _, sm, pattern, output) => {
-                                        my_sleep(sleeping_apply, random.nextInt())
-                                        makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
-                                            pattern.head.asInstanceOf[MovieActress], output.asInstanceOf[MovieCouple],
-                                            PATTERN_ACTRESS, 1)
+                                        makeCoupleToPersonP1(tls, sm.asInstanceOf[MovieModel],
+                                            pattern.head.asInstanceOf[MovieCouple], output.asInstanceOf[MovieCouple])
                                     }
                                 ),
                                 new OutputPatternElementReferenceImpl(
                                     (tls, _, sm, pattern, output) => {
                                         my_sleep(sleeping_apply, random.nextInt())
-                                        makeCoupleToPerson(tls, sm.asInstanceOf[MovieModel],
-                                            pattern(1).asInstanceOf[MovieActress], output.asInstanceOf[MovieCouple],
-                                            PATTERN_ACTRESS, 2)
+                                        makeCoupleToPersonP2(tls, sm.asInstanceOf[MovieModel],
+                                            pattern.head.asInstanceOf[MovieCouple], output.asInstanceOf[MovieCouple])
                                     }
                                 )
                             )

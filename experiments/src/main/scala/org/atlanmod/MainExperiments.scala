@@ -8,7 +8,7 @@ import org.atlanmod.class2relational.transformation.{Class2Relational, Class2Rel
 import org.atlanmod.dblpinfo.model.dblp.DblpMetamodel
 import org.atlanmod.dblpinfo.tranformation.{ICMTActiveAuthors, ICMTAuthors, InactiveICMTButActiveAuthors, JournalISTActiveAuthors}
 import org.atlanmod.findcouples.model.movie.{MovieJSONLoader, MovieMetamodel}
-import org.atlanmod.findcouples.transformation.dynamic.{FindCouples, Identity}
+import org.atlanmod.findcouples.model.transformation.dynamic.{FindCouples, Identity}
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
 import org.atlanmod.transformation.parallel._

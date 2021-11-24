@@ -2,7 +2,7 @@ package org.atlanmod
 
 import movies.MoviesPackage
 import org.apache.spark.{SparkConf, SparkContext}
-import org.atlanmod.findcouples.transformation.emf.SimpleIdentity
+import org.atlanmod.findcouples.model.transformation.emf.serial.SimpleIdentity
 import org.atlanmod.tl.engine.TransformationSequential
 import org.atlanmod.tl.model.impl.emf.{EMFMetamodel, EMFModel}
 
