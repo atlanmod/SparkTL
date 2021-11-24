@@ -2,6 +2,8 @@ package org.atlanmod.findcouples.model.movie
 
 import net.liftweb.json.JsonAST.JString
 import net.liftweb.json.{JDouble, JInt, JsonAST}
+import org.atlanmod.findcouples.model.movie.element.MovieActor
+import org.atlanmod.findcouples.model.movie.link.MovieToPersons
 import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieMovie, MoviePerson}
 import org.atlanmod.findcouples.model.movie.link.{MovieToPersons, PersonToMovies}
 

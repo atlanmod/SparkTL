@@ -1,8 +1,8 @@
-package transformation.emf.serializable
+package org.atlanmod.findcouples.transformation.emf
 
 import movies.{Movie, MoviesPackage}
 import org.atlanmod.tl.model.Transformation
-import org.atlanmod.tl.model.impl.emf.serializable.naive.{SerializableEClass, SerializableELink, SerializableEObject}
+import org.atlanmod.tl.model.impl.emf.serializable.string.{SerializableELink, SerializableEObject}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, RuleImpl, TransformationImpl}
 
 object SimpleIdentity {
@@ -11,13 +11,15 @@ object SimpleIdentity {
     final val pack = MoviesPackage.eINSTANCE
     final val factory = pack.getMoviesFactory
 
+    val converter = MovieEMFStringConverter
+
 
     def identity_imdb(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0)
-    : Transformation[SerializableEObject, SerializableELink, SerializableEClass, SerializableEObject, SerializableELink] = {
-        new TransformationImpl[SerializableEObject, SerializableELink, SerializableEClass, SerializableEObject, SerializableELink](
+    : Transformation[SerializableEObject, SerializableELink, String, SerializableEObject, SerializableELink] = {
+        new TransformationImpl[SerializableEObject, SerializableELink, String, SerializableEObject, SerializableELink](
             List(
                 new RuleImpl(name = "movie2movie",
-                    types = List(new SerializableEClass(pack.getMovie)),
+                    types = List("Movie"),
                     to = List(
                         new OutputPatternElementImpl(name = PATTERN_MOVIE,
                             elementExpr = (_, _, l) =>

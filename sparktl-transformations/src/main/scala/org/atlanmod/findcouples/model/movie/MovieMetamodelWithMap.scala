@@ -1,6 +1,7 @@
 package org.atlanmod.findcouples.model.movie
 
 import org.atlanmod.findcouples.model.movie.element._
+import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieClique, MovieCouple, MovieGroup, MovieMovie, MoviePerson}
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 
 object MovieMetamodelWithMap {

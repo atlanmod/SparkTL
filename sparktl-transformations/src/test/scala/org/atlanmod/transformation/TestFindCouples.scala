@@ -1,12 +1,12 @@
 package org.atlanmod.transformation
 
-import org.atlanmod.findcouples.model.movie.{MovieElement, MovieLink, MovieMetamodel, MovieMetamodelWithMap, MovieModel}
-import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieActress, MovieCouple, MovieMovie, MoviePerson, MovieType}
+import org.atlanmod.findcouples.model.movie.element._
 import org.atlanmod.findcouples.model.movie.link.{MovieToPersons, PersonToMovies}
-import org.atlanmod.findcouples.model.transformation.dynamic.FindCouples
+import org.atlanmod.findcouples.model.movie._
+import org.atlanmod.findcouples.transformation.dynamic.FindCouples
+import org.atlanmod.findcouples.transformation.dynamic.FindCouples.{helper_areCouple, helper_commonMovies}
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.scalatest.funsuite.AnyFunSuite
-import FindCouples.{helper_areCouple, helper_commonMovies}
 
 class TestFindCouples  extends AnyFunSuite {
 

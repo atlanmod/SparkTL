@@ -1,4 +1,4 @@
-package org.atlanmod.findcouples.model.transformation.emf
+package org.atlanmod.findcouples.transformation.emf
 
 import movies.MoviesPackage
 import org.atlanmod.tl.model.impl.emf.serializable.string.EMFStringConverter

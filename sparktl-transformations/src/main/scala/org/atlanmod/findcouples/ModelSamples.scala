@@ -1,6 +1,9 @@
-package org.atlanmod.findcouples.model
+package org.atlanmod.findcouples
 
 import org.atlanmod.findcouples.model.movie.element._
+import org.atlanmod.findcouples.model.movie.link.MovieToPersons
+import org.atlanmod.findcouples.model.movie.MovieModel
+import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieActress, MovieMovie, MoviePerson, MovieType}
 import org.atlanmod.findcouples.model.movie.link.{MovieToPersons, PersonToMovies}
 import org.atlanmod.findcouples.model.movie.{MovieElement, MovieLink, MovieModel}
 

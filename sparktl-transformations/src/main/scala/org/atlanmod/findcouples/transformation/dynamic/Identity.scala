@@ -1,8 +1,11 @@
-package org.atlanmod.findcouples.model.transformation.dynamic
+package org.atlanmod.findcouples.transformation.dynamic
 
 import org.atlanmod.Utils.my_sleep
 import org.atlanmod.findcouples.model.movie.element._
 import org.atlanmod.findcouples.model.movie.link._
+import org.atlanmod.findcouples.model.movie.MovieModel
+import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieActress, MovieClique, MovieCouple, MovieGroup, MovieMovie, MoviePerson}
+import org.atlanmod.findcouples.model.movie.link.{CliqueToPersons, CoupleToPersonP1, CoupleToPersonP2, GroupToMovies, MovieToPersons, PersonToMovies}
 import org.atlanmod.findcouples.model.movie.{MovieLink, MovieMetamodel, MovieModel}
 import org.atlanmod.tl.engine.Resolve
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}

@@ -1,10 +1,9 @@
-package org.atlanmod.findcouples.model.transformation.emf.serial
+package org.atlanmod.findcouples.transformation.emf.serializable
 
 import movies.{Movie, MoviesPackage}
 import org.atlanmod.tl.model.Transformation
-import org.atlanmod.tl.model.impl.emf.ELink
+import org.atlanmod.tl.model.impl.emf.serializable.naive.{SerializableEClass, SerializableELink, SerializableEObject}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, RuleImpl, TransformationImpl}
-import org.eclipse.emf.ecore.{EClass, EObject}
 
 object SimpleIdentity {
 
@@ -14,11 +13,11 @@ object SimpleIdentity {
 
 
     def identity_imdb(sleeping_guard: Int = 0, sleeping_instantiate: Int = 0, sleeping_apply: Int = 0)
-    : Transformation[EObject, ELink, EClass, EObject, ELink] = {
-        new TransformationImpl[EObject, ELink, EClass, EObject, ELink](
+    : Transformation[SerializableEObject, SerializableELink, SerializableEClass, SerializableEObject, SerializableELink] = {
+        new TransformationImpl[SerializableEObject, SerializableELink, SerializableEClass, SerializableEObject, SerializableELink](
             List(
                 new RuleImpl(name = "movie2movie",
-                    types = List(pack.getMovie),
+                    types = List(new SerializableEClass(pack.getMovie)),
                     to = List(
                         new OutputPatternElementImpl(name = PATTERN_MOVIE,
                             elementExpr = (_, _, l) =>
@@ -29,7 +28,7 @@ object SimpleIdentity {
                                     new_movie.setType(movie.getType)
                                     new_movie.setYear(movie.getYear)
                                     new_movie.setRating(movie.getRating)
-                                    Some(new_movie)
+                                    Some(new SerializableEObject(new_movie))
                                 }
                         )
                     )
