@@ -2,11 +2,11 @@
  */
 package movies;
 
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
+import org.atlanmod.amf.EAttribute;
+import org.atlanmod.amf.EClass;
+import org.atlanmod.amf.EEnum;
+import org.atlanmod.amf.EPackage;
+import org.atlanmod.amf.EReference;
 
 /**
  * <!-- begin-user-doc -->

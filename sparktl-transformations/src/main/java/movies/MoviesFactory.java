@@ -2,7 +2,7 @@
  */
 package movies;
 
-import org.eclipse.emf.ecore.EFactory;
+import org.atlanmod.amf.EFactory;
 
 /**
  * <!-- begin-user-doc -->
