@@ -23,7 +23,7 @@ class EMFMetamodel (name: String) extends Metamodel[EObject, ELink, EClass, ERef
 
     override def name(): String = this.name
 
-    override def allModelElementsOfType(t: EClass, sm: Model[EObject, ELink]): List[EObject] = {
+    def allModelElementsOfType(t: EClass, sm: Model[EObject, ELink]): List[EObject] = {
         sm match {
             case model: EMFModel => model.allModelElements.filter(e => toModelClass(t, e).isDefined)
             case _ => throw new Exception("allModelElementsOfType from EMFMetamodel is only defined for EMFModel instances.")

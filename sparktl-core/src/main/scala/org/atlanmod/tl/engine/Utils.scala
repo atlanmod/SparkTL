@@ -9,9 +9,13 @@ import scala.reflect.ClassTag
 
 object Utils {
 
+    def allModelElementsOfType[SME, SML, SMC, SMR](t: SMC, sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
+    : List[SME] =
+        sm.allModelElements.filter(e => mm.hasType(t, e))
+
     def allModelElementsOfTypes[SME, SML, SMC, SMR](lt: List[SMC], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
     : List[List[SME]] =
-        lt.map(t => mm.allModelElementsOfType(t, sm))
+        lt.map(t => allModelElementsOfType(t, sm, mm))
 
     private def fold_right[A, B] (f: (B, A) => A, a0: A, l: List[B]): A = {
         l match {
