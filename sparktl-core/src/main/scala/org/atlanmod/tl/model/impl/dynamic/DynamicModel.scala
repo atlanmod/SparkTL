@@ -7,8 +7,13 @@ import org.atlanmod.tl.model.Model
 class DynamicModel(elements: List[DynamicElement] = List(), links: List[DynamicLink] = List())
   extends Model[DynamicElement, DynamicLink]{
 
+    private val map : scala.collection.immutable.Map[DynamicElement, List[DynamicLink]] =
+        links.groupBy(link => link.getSource)
+
     override def allModelElements: List[DynamicElement] = elements
     override def allModelLinks: List[DynamicLink] = links
+
+    def getLinks(e: DynamicElement): Option[List[DynamicLink]] = map.get(e)
 
     def numberOfElements : Int = elements.size
     def numberOfLinks : Int = links.map(l => l.getTarget.size).sum
