@@ -30,11 +30,9 @@ class DynamicMetamodel[DE <: DynamicElement, DL <: DynamicLink](name: String) ex
 
     def allLinksOfTypeOfElement(elem: DynamicElement, ref: String, sm: DynamicModel): Option[List[DynamicElement]] = {
         sm.getLinks(elem) match {
-            case Some(links) =>
-                links.find(link => ref.equals(link.getType)) match {
-                    case Some(link) => Some(link.getTarget)
-                    case _ => None
-                }
+            case Some(maplink) => maplink.get(ref) match {
+                case Some(links) => Some(links.head.getTarget)
+            }
             case _ => None
         }
     }

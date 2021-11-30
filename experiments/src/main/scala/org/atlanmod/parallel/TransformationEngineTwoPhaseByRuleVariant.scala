@@ -1,22 +1,27 @@
-package org.atlanmod.transformation.parallel
+package org.atlanmod.parallel
 
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
+import org.atlanmod.ExperimentalTransformationEngine
 import org.atlanmod.tl.engine.Apply
 import org.atlanmod.tl.engine.Trace.tracePattern
 import org.atlanmod.tl.engine.Utils.allTuplesByRule
+import org.atlanmod.tl.model._
 import org.atlanmod.tl.model.impl.TraceLinksArray
-import org.atlanmod.tl.model.{Metamodel, Model, TraceLink, TraceLinks, Transformation}
-import org.atlanmod.transformation.ExperimentalTransformationEngine
 
 import scala.reflect.ClassTag
 
-object TransformationEngineTwoPhaseByRule extends ExperimentalTransformationEngine{
+object TransformationEngineTwoPhaseByRuleVariant extends ExperimentalTransformationEngine{
 
     private def applyTraces[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                                         sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
-                                                                                        sps: RDD[List[SME]], tls: TraceLinks[SME, TME])
-    : RDD[TML] = sps.flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls))
+                                                                                        sps: RDD[List[SME]], tls: TraceLinks[SME, TME],
+                                                                                        rdd_tls: RDD[TraceLink[SME, TME]])
+    : (Iterable[TME], Iterable[TML]) = {
+        val res_rdd : RDD[(TME, List[TML])] = rdd_tls.map(tl => (tl.getTargetElement, Apply.applyPatternTraces(tr, sm, mm, tl.getSourcePattern, tls)))
+        val res: Iterable[(TME, List[TML])] = res_rdd.collect()
+        (res.map(r => r._1), res.flatMap(r => r._2))
+    }
 
     override def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
     (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
@@ -38,14 +43,16 @@ object TransformationEngineTwoPhaseByRule extends ExperimentalTransformationEngi
         val tuples : RDD[List[SME]] = sc.parallelize(allTuplesByRule(tr, sm, mm))
         val tracelinks : RDD[TraceLink[SME, TME]] = tuples.flatMap(tuple => tracePattern(tr, sm, mm, tuple))
         val tls : TraceLinks[SME, TME] = new TraceLinksArray(tracelinks.collect())
-        val elements: Iterable[TME] = tls.getTargetElements
         t1_end = System.nanoTime
 
         t2_start = System.nanoTime
         val sps: RDD[List[SME]] = tracelinks.map(trace => trace.getSourcePattern)
-        val links: Iterable[TML] = applyTraces(tr, sm, mm, sps, tls).collect()
+
+        val output: (Iterable[TME], Iterable[TML]) = applyTraces(tr, sm, mm, sps, tls, tracelinks)
         t2_end = System.nanoTime
 
+        val elements: Iterable[TME] = output._1
+        val links: Iterable[TML] = output._2
         val t1 = (t1_end - t1_start) * 1000 / 1e9d
         val t2 = (t2_end - t2_start) * 1000 / 1e9d
         val t3 = (t3_end - t3_start) * 1000 / 1e9d

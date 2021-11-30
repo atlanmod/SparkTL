@@ -1,4 +1,4 @@
-package org.atlanmod.transformation
+package org.atlanmod
 
 import org.apache.spark.SparkContext
 import org.atlanmod.tl.model.{Metamodel, Model, Transformation}
