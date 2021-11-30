@@ -4,7 +4,7 @@ package movies;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
+import org.atlanmod.amf.EObject;
 
 /**
  * <!-- begin-user-doc -->
