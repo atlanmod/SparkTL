@@ -2,16 +2,16 @@
 
 Spark Transformation Engine (SparkTE), previously denoted as SparkTL, is an engine for model transformation written using Apache Spark.
 
-SparkTE implementation is based on [CoqTL](https://anonymous.4open.science/r/CoqTL-SLE2021) specification. The two tools aims at evolving in symbiosis.
+SparkTE implementation is based on [CoqTL](https://github.com/atlanmod/CoqTL) specification. The two tools aims at evolving in symbiosis.
 
 ## Versions
 
 The SparkTE library has been designed using the following versions
 
-- Gradle:  6.4.1
+- Gradle: 6.8
 - Java: 1.8
 - Scala: 2.12
-- Hadoop Spark: 3.0.0
+- Hadoop Spark: 3.1.1
 
 ## How to build
 
