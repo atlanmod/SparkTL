@@ -15,11 +15,17 @@ import movies.MoviesPackage;
 import movies.Person;
 import movies.Root;
 
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
+//import org.eclipse.emf.ecore.EAttribute;
+//import org.eclipse.emf.ecore.EClass;
+//import org.eclipse.emf.ecore.EEnum;
+//import org.eclipse.emf.ecore.EPackage;
+//import org.eclipse.emf.ecore.EReference;
+
+import org.atlanmod.amf.EAttribute;
+import org.atlanmod.amf.EClass;
+import org.atlanmod.amf.EEnum;
+import org.atlanmod.amf.EPackage;
+import org.atlanmod.amf.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
@@ -396,39 +402,39 @@ public class MoviesPackageImpl extends EPackageImpl implements MoviesPackage {
 		isCreated = true;
 
 		// Create classes and their features
-		personEClass = createEClass(PERSON);
+		personEClass = (EClass) createEClass(PERSON);
 		createEReference(personEClass, PERSON__MOVIES);
 		createEAttribute(personEClass, PERSON__NAME);
 
-		actorEClass = createEClass(ACTOR);
+		actorEClass = (EClass) createEClass(ACTOR);
 
-		actressEClass = createEClass(ACTRESS);
+		actressEClass = (EClass) createEClass(ACTRESS);
 
-		coupleEClass = createEClass(COUPLE);
+		coupleEClass = (EClass) createEClass(COUPLE);
 		createEReference(coupleEClass, COUPLE__P1);
 		createEReference(coupleEClass, COUPLE__P2);
 
-		movieEClass = createEClass(MOVIE);
+		movieEClass = (EClass) createEClass(MOVIE);
 		createEReference(movieEClass, MOVIE__PERSONS);
 		createEAttribute(movieEClass, MOVIE__TITLE);
 		createEAttribute(movieEClass, MOVIE__RATING);
 		createEAttribute(movieEClass, MOVIE__YEAR);
 		createEAttribute(movieEClass, MOVIE__TYPE);
 
-		groupEClass = createEClass(GROUP);
+		groupEClass = (EClass) createEClass(GROUP);
 		createEReference(groupEClass, GROUP__COMMON_MOVIES);
 		createEAttribute(groupEClass, GROUP__AVG_RATING);
 
-		cliqueEClass = createEClass(CLIQUE);
+		cliqueEClass = (EClass) createEClass(CLIQUE);
 		createEReference(cliqueEClass, CLIQUE__PERSONS);
 
-		rootEClass = createEClass(ROOT);
+		rootEClass = (EClass) createEClass(ROOT);
 		createEReference(rootEClass, ROOT__CHILDREN);
 
-		containedElementEClass = createEClass(CONTAINED_ELEMENT);
+		containedElementEClass = (EClass) createEClass(CONTAINED_ELEMENT);
 
 		// Create enums
-		movieTypeEEnum = createEEnum(MOVIE_TYPE);
+		movieTypeEEnum = (EEnum) createEEnum(MOVIE_TYPE);
 	}
 
 	/**
