@@ -35,7 +35,7 @@ object MainExperiments {
     var partition = 4
 
     // Transformation
-    final val DEFAULT_TRANSFORMATION: String = "Class2Relational"
+    final val DEFAULT_TRANSFORMATION: String = "IMDBIdentity"
     var tr_case: String = DEFAULT_TRANSFORMATION
 
     val DEFAULT_HEADER: Boolean = false
@@ -59,9 +59,9 @@ object MainExperiments {
     // To process partial computation
     //    final val DEFAULT_NSTEP: Int = 5
     //    var nstep: Int = DEFAULT_NSTEP
-    final val DEFAULT_SOLUTION: String = "default"
-    var solution: String = DEFAULT_SOLUTION
-    final val DEFAULT_LINKS_SOLUTION: String = "default"
+    final val DEFAULT_TLS_SOLUTION: String = "map"
+    var tls_solution: String = DEFAULT_TLS_SOLUTION
+    final val DEFAULT_LINKS_SOLUTION: String = "map"
     var links_solution: String = DEFAULT_LINKS_SOLUTION
 
     // Storage Level of RDDs
@@ -77,7 +77,7 @@ object MainExperiments {
     def parseArgs(args: List[String]): Unit = {
         args match {
             case "-solution" :: sol :: args =>
-                solution = sol
+                tls_solution = sol
                 parseArgs(args)
             case "-links" :: links :: args =>
                 links_solution = links
@@ -198,8 +198,8 @@ object MainExperiments {
         val input_metamodel: DynamicMetamodel[DynamicElement, DynamicLink] = getMetamodel(tr_case)
         val input_model: DynamicModel = getModel(input_metamodel, input_type, files)
 
-        var res: (TimeResult, ModelResult[DynamicElement, DynamicLink]) = {
-            solution match {
+        val res: (TimeResult, ModelResult[DynamicElement, DynamicLink]) = {
+            tls_solution match {
                 case "default" => TransformationEngineTwoPhaseByRule.execute(transformation, input_model, input_metamodel, partition, sc)
                 case "variant" => TransformationEngineTwoPhaseByRuleVariant.execute(transformation, input_model, input_metamodel, partition, sc)
                 case "fold" => TransformationEngineTwoPhaseByRuleWithFold.execute(transformation, input_model, input_metamodel, partition, sc)
@@ -207,7 +207,7 @@ object MainExperiments {
                 case _ => throw new Exception("The parallel solution must be specified for this specific main Scala class.")
             }
         }
-        val execution_result = new ExecutionResult(solution, links_solution, tr_case, input_model, num_executors, executor_cores,
+        val execution_result = new ExecutionResult(tls_solution, links_solution, tr_case, input_model, num_executors, executor_cores,
             partition, storage_string, res._1, res._2)
 
         if (header) println(execution_result.csv_header)
