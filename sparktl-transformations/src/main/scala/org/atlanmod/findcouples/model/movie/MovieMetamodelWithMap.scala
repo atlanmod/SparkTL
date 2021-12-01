@@ -1,7 +1,6 @@
 package org.atlanmod.findcouples.model.movie
 
 import org.atlanmod.findcouples.model.movie.element._
-import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieClique, MovieCouple, MovieGroup, MovieMovie, MoviePerson}
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 
 object MovieMetamodelWithMap {
@@ -66,9 +65,6 @@ object MovieMetamodelWithMap {
             case _ => None
         }
 
-    def getAllCouple(model: MovieModel): List[MovieCouple] =
-        metamodel.allModelElementsOfType(COUPLE, model).asInstanceOf[List[MovieCouple]]
-
     def getAllCoupleTriplets(model: MovieModel): List[(MovieCouple, MoviePerson, MoviePerson)] =
         getAllCouple(model).flatMap(couple =>
             (getPersonP1OfCouple(model, couple),getPersonP2OfCouple(model, couple)) match {
@@ -80,6 +76,22 @@ object MovieMetamodelWithMap {
     def getAllActors(model: MovieModel): List[MovieActor] =
         metamodel.allModelElementsOfType(ACTOR, model).asInstanceOf[List[MovieActor]]
 
+    def getAllActresses(model: MovieModel): List[MovieActress] =
+        metamodel.allModelElementsOfType(ACTRESS, model).asInstanceOf[List[MovieActress]]
+
     def getAllMovies(model: MovieModel): List[MovieMovie] =
         metamodel.allModelElementsOfType(MOVIE, model).asInstanceOf[List[MovieMovie]]
+
+    def getAllCouple(model: MovieModel): List[MovieCouple] =
+        metamodel.allModelElementsOfType(COUPLE, model).asInstanceOf[List[MovieCouple]]
+
+    def getAllClique(model: MovieModel): List[MovieClique] =
+        metamodel.allModelElementsOfType(CLIQUE, model).asInstanceOf[List[MovieClique]]
+
+    def getAllGroup(model: MovieModel): List[MovieGroup] =
+        getAllClique(model) ++ getAllCouple(model)
+
+    def getAllPerson(model: MovieModel): List[MoviePerson] =
+        getAllActors(model) ++ getAllActresses(model)
+
 }

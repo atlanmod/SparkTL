@@ -20,7 +20,7 @@ object MainExperiments {
 
     var sc: SparkContext = _
     val csv_header: String =
-        "solution,case,element,link," +
+        "solution,links_type,case,element,link," +
           "executor,core,partition,storageLevel," +
           "sleeping_guard,sleeping_instantiate,sleeping_apply," +
           "total_time,time_tuples,time_instantiate,time_extract,time_broadcast,time_apply," +
@@ -61,6 +61,8 @@ object MainExperiments {
     //    var nstep: Int = DEFAULT_NSTEP
     final val DEFAULT_SOLUTION: String = "default"
     var solution: String = DEFAULT_SOLUTION
+    final val DEFAULT_LINKS_SOLUTION: String = "default"
+    var links_solution: String = DEFAULT_LINKS_SOLUTION
 
     // Storage Level of RDDs
     final val DEFAULT_STORAGE: StorageLevel = StorageLevel.MEMORY_AND_DISK
@@ -76,6 +78,9 @@ object MainExperiments {
         args match {
             case "-solution" :: sol :: args =>
                 solution = sol
+                parseArgs(args)
+            case "-links" :: links :: args =>
+                links_solution = links
                 parseArgs(args)
             case "-file" :: file :: args =>
                 files = file :: files
@@ -135,7 +140,7 @@ object MainExperiments {
             case ("DBLP2INFO_v2", "default") => ICMTActiveAuthors.find(sleeping_guard, sleeping_instantiate, sleeping_apply)
             case ("DBLP2INFO_v3", "default") => InactiveICMTButActiveAuthors.find(sleeping_guard, sleeping_instantiate, sleeping_apply)
             case ("DBLP2INFO_v4", "default") => JournalISTActiveAuthors.find(sleeping_guard, sleeping_instantiate, sleeping_apply)
-            case _ => throw new Exception("Unknown transformation: " + name)
+            case _ => throw new Exception("Unknown transformation: " + name + "with " + links_type + " for links")
         }
 
     def getMetamodel(name: String): DynamicMetamodel[DynamicElement, DynamicLink] =
@@ -168,7 +173,6 @@ object MainExperiments {
             input match {
                 case "size" => ModelSamples.getReplicatedSimple(size).asInstanceOf[DynamicModel]
                 case "files" =>
-                    println(files.mkString(";"))
                     (files.find(f => f.contains("movie")), files.find(f => f.contains("actor")), files.find(f => f.contains("link"))) match {
                         case (Some(movie_file), Some(actor_file), Some(link_file)) =>
                             MovieJSONLoader.load(actor_file, movie_file, link_file)
@@ -189,31 +193,25 @@ object MainExperiments {
 
     def main(args: Array[String]): Unit = {
         init(args)
-        //        val transformation = getTransformation(tr_case)
-        val transformation = Identity.identity_imdb(sleeping_guard, sleeping_instantiate, sleeping_apply)
-        //        val transformation = IdentityWithMap.identity_imdb(sleeping_guard, sleeping_instantiate, sleeping_apply)
+
+        val transformation = getTransformation(tr_case, links_solution)
         val input_metamodel: DynamicMetamodel[DynamicElement, DynamicLink] = getMetamodel(tr_case)
         val input_model: DynamicModel = getModel(input_metamodel, input_type, files)
 
-        var res: (Double, List[Double], (Int, Int)) = null
-
-        solution match {
-            case "default" => res = TransformationEngineTwoPhaseByRule.execute(transformation, input_model, input_metamodel, partition, sc)
-            case "variant" => res = TransformationEngineTwoPhaseByRuleVariant.execute(transformation, input_model, input_metamodel, partition, sc)
-            case "fold" => res = TransformationEngineTwoPhaseByRuleWithFold.execute(transformation, input_model, input_metamodel, partition, sc)
-            case "map" => res = TransformationEngineTwoPhaseByRuleWithMap.execute(transformation, input_model, input_metamodel, partition, sc)
-            case "single" => res = TransformationEngineSinglePhaseByRule.execute(transformation, input_model, input_metamodel, partition, sc)
-            case _ => throw new Exception("The parallel solution must be specified for this specific main Scala class.")
+        var res: (TimeResult, ModelResult[DynamicElement, DynamicLink]) = {
+            solution match {
+                case "default" => TransformationEngineTwoPhaseByRule.execute(transformation, input_model, input_metamodel, partition, sc)
+                case "variant" => TransformationEngineTwoPhaseByRuleVariant.execute(transformation, input_model, input_metamodel, partition, sc)
+                case "fold" => TransformationEngineTwoPhaseByRuleWithFold.execute(transformation, input_model, input_metamodel, partition, sc)
+                case "map" => TransformationEngineTwoPhaseByRuleWithMap.execute(transformation, input_model, input_metamodel, partition, sc)
+                case _ => throw new Exception("The parallel solution must be specified for this specific main Scala class.")
+            }
         }
+        val execution_result = new ExecutionResult(solution, links_solution, tr_case, input_model, num_executors, executor_cores,
+            partition, storage_string, res._1, res._2)
 
-        val line = List(
-            solution, tr_case, input_model.numberOfElements, input_model.numberOfLinks,
-            num_executors, executor_cores, partition, storage_string,
-            sleeping_guard, sleeping_instantiate, sleeping_apply,
-            res._1).mkString(",") + "," + res._2.mkString(",") + "," + res._3._1 + "," + res._3._2
-
-        if (header) println(csv_header)
-        println(line)
+        if (header) println(execution_result.csv_header)
+        println(execution_result.csv)
     }
 
 }

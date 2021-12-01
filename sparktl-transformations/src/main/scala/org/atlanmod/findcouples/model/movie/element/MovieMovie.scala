@@ -1,11 +1,10 @@
 package org.atlanmod.findcouples.model.movie.element
 
-import org.atlanmod.findcouples.model.movie.MovieMetamodel
 import org.atlanmod.findcouples.model.movie.{MovieElement, MovieMetamodel}
 
 class MovieMovie extends MovieElement (MovieMetamodel.MOVIE) {
 
-    def this(title: String, rating: Double, year: Int, movieType: MovieType.Value) = {
+    def this(title: String, rating : Double, year: Int, movieType: MovieType.Value) = {
         this()
         super.eSetProperty("title", title)
         super.eSetProperty("rating", rating)

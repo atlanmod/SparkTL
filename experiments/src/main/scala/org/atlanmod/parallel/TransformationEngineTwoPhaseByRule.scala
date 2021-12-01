@@ -2,7 +2,7 @@ package org.atlanmod.parallel
 
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.atlanmod.ExperimentalTransformationEngine
+import org.atlanmod.{ExperimentalTransformationEngine, ModelResult, TimeResult}
 import org.atlanmod.tl.engine.Apply
 import org.atlanmod.tl.engine.Trace.tracePattern
 import org.atlanmod.tl.engine.Utils.allTuplesByRule
@@ -21,38 +21,29 @@ object TransformationEngineTwoPhaseByRule extends ExperimentalTransformationEngi
     override def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]
     (tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
      npartition: Int, sc: SparkContext)
-    : (Double, List[Double], (Int, Int)) = {
-        var t1_start : Long = 0
-        var t2_start : Long  = 0
-        var t3_start : Long = 0
-        var t4_start : Long  = 0
-        var t5_start : Long  = 0
+    : (TimeResult, ModelResult[TME, TML]) = {
+        val time_result = new TimeResult()
 
-        var t1_end : Long = 0
-        var t2_end : Long  = 0
-        var t3_end : Long = 0
-        var t4_end : Long  = 0
-        var t5_end : Long  = 0
+        time_result.start_tuples()
+        val tuples = allTuplesByRule(tr, sm, mm)
+        time_result.end_tuples()
 
-        t1_start = System.nanoTime
-        val tuples : RDD[List[SME]] = sc.parallelize(allTuplesByRule(tr, sm, mm))
-        val tracelinks : RDD[TraceLink[SME, TME]] = tuples.flatMap(tuple => tracePattern(tr, sm, mm, tuple))
+        time_result.start_instantiate()
+        val rddtuples : RDD[List[SME]] = sc.parallelize(tuples)
+        val tracelinks : RDD[TraceLink[SME, TME]] = rddtuples.flatMap(tuple => tracePattern(tr, sm, mm, tuple))
         val tls : TraceLinks[SME, TME] = new TraceLinksArray(tracelinks.collect())
-        val elements: Iterable[TME] = tls.getTargetElements
-        t1_end = System.nanoTime
+        time_result.end_instantiate()
 
-        t2_start = System.nanoTime
+        time_result.start_extract()
+        val elements: Iterable[TME] = tls.getTargetElements
+        time_result.end_extract()
+
+        time_result.start_apply()
         val sps: RDD[List[SME]] = tracelinks.map(trace => trace.getSourcePattern)
         val links: Iterable[TML] = applyTraces(tr, sm, mm, sps, tls).collect()
-        t2_end = System.nanoTime
+        time_result.end_apply()
 
-        val t1 = (t1_end - t1_start) * 1000 / 1e9d
-        val t2 = (t2_end - t2_start) * 1000 / 1e9d
-        val t3 = (t3_end - t3_start) * 1000 / 1e9d
-        val t4 = (t4_end - t4_start) * 1000 / 1e9d
-        val t5 = (t5_end - t5_start) * 1000 / 1e9d
-        val time =  t1 + t2 + t3 + t4 + t5
-        (time, List(t1,t2,t3,t4,t5), (elements.size, links.size))
+        (time_result, new ModelResult(elements, links))
     }
 
 }
