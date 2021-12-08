@@ -204,6 +204,7 @@ object MainExperiments {
                 case "variant" => TransformationEngineTwoPhaseByRuleVariant.execute(transformation, input_model, input_metamodel, partition, sc)
                 case "fold" => TransformationEngineTwoPhaseByRuleWithFold.execute(transformation, input_model, input_metamodel, partition, sc)
                 case "map" => TransformationEngineTwoPhaseByRuleWithMap.execute(transformation, input_model, input_metamodel, partition, sc)
+                case "cartesian" => TransformationEngineTwoPhaseByRuleCartesianWithMap.execute(transformation, input_model, input_metamodel, partition, sc)
                 case _ => throw new Exception("The parallel solution must be specified for this specific main Scala class.")
             }
         }

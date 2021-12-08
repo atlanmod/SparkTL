@@ -8,15 +8,17 @@ trait Metamodel[ME, ML, MC, MR] extends Serializable {
     *  MR: ModelReference
     */
 
-//    def denoteClass(sc: MC): MC
+    //    def denoteClass(sc: MC): MC
 
     def toModelClass(sc: MC, se: ME): Option[ME]
     def toModelReference(sr: MR, sl: ML): Option[ML]
 
+    def allModelElementsOfType(t: MC, model: Model[ME, ML]): List[ME]
+
     def equals(that: Any): Boolean
     def name(): String
 
-    def hasType(t: MC, e: ME) : Boolean ={
+    def hasType(t: MC, e: ME): Boolean = {
         toModelClass(t, e) match {
             case Some(_) => true
             case _ => false
