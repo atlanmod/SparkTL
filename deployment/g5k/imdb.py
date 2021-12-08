@@ -10,26 +10,31 @@ import os
 import traceback
 
 SITE="nancy"
-CLUSTER="gros"
-JOB="IMDBSpark"
+CLUSTER="grisou"
+JOB="IMDBSpark_test_StorageLevel"
+MEMORY_EXECUTOR="1g"
 commit_number = "#fd3209d486d9ab9270b2dcb5a649115f1fcd4379" #TODO change with the current git commit signature
 path_log = "/tmp/"+JOB+".log"
 path_err = "/tmp/"+JOB+".err"
 
 #########################################################################
 
-RESERVATION="2021-09-14 23:10:00"
-TIME="00:10:00"
+RESERVATION="2021-10-18 19:00:00"
+TIME="02:00:00"
 
 logging.basicConfig(level=logging.DEBUG)
 
 ntest = 10
 
 #parameters = dict(nb_worker_cores=[(4,4)])
-parameters = dict(nb_worker_cores=[(1,1), (1,2), (2,2), (2,4), (4,4), (8,4)])
+#parameters = dict(nb_worker_cores=[(2,4)], storageLevel=["MEMORY_AND_DISK"])
+parameters = dict(nb_worker_cores=[(1,1), (1,2), (2,2), (2,4)], storageLevel=["DISK_ONLY","MEMORY_ONLY","MEMORY_AND_DISK"])
 json_actors = "/home/jphilippe/models/actors_sw.json"
 json_movies = "/home/jphilippe/models/movies_sw.json"
 txt_links = "/home/jphilippe/models/links_sw.txt"
+#json_actors = "/home/jphilippe/models/actors_imdb-0.1.json"
+#json_movies = "/home/jphilippe/models/movies_imdb-0.1.json"
+#txt_links = "/home/jphilippe/models/links_imdb-0.1.txt"
 
 node_workers = max(parameters ['nb_worker_cores'])[0]
 
@@ -63,15 +68,16 @@ master = roles["master"][0].address
 def bench(parameter, master, roles, username):
     nb_worker = parameter["nb_worker_cores"][0]
     nb_core = parameter["nb_worker_cores"][1]
+    storageLevel = parameter["storageLevel"]
     with play_on(pattern_hosts="master", roles=roles, run_as=username) as p:
         try:
             p.shell(
                 "/home/"+username+"/Software/spark-3.1.1-bin-hadoop2.7/bin/spark-submit \
                     --master spark://"+master+":7077 \
                     --num-executors "+str(nb_worker)+" --driver-memory 12g  \
-                    --executor-cores " +str(nb_core) + " --conf spark.driver.memory=18g \
-                    --class org.atlanmod.MainIMDB /home/jphilippe/jars/SparkIMDB-1.0-SNAPSHOT.jar -core "+str(nb_core)+" -executor " + str(nb_worker) + " \
-                    -actors "+ json_actors +" -movies "+json_movies+" -links " + txt_links + " \
+                    --executor-cores " +str(nb_core) + " --executor-memory "+MEMORY_EXECUTOR+" \
+                    --class org.atlanmod.MainIMDB /home/jphilippe/jars/SparkTE-1.0-SNAPSHOT.jar -core "+str(nb_core)+" -executor " + str(nb_worker) + " \
+                    -actors "+ json_actors +" -movies "+json_movies+" -links " + txt_links + " -persist " + storageLevel + "\
                     >> " + path_log + " 2>> " + path_err
             )
             p.fetch(src= path_log, dest="~")
