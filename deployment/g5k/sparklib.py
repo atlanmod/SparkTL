@@ -49,7 +49,7 @@ class SparkG5kConf:
                 myspark.start()
                 myspark.testWithLog()
                 jar_path = ... # Path to 'example.jar' file, usually contained in SPARK_HOME/examples/jars/
-                self.submitWithLog(jar_path, "org.apache.spark.examples.SparkPi", java_args={"": "10"})
+                myspark.submitWithLog(jar_path, "org.apache.spark.examples.SparkPi", java_args={"": "10"})
             except Exception as e:
                 print(e)
             finally:
