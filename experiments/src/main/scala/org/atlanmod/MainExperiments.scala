@@ -9,7 +9,7 @@ import org.atlanmod.dblpinfo.model.dblp.DblpMetamodel
 import org.atlanmod.dblpinfo.tranformation.{ICMTActiveAuthors, ICMTAuthors, InactiveICMTButActiveAuthors, JournalISTActiveAuthors}
 import org.atlanmod.findcouples.ModelSamples
 import org.atlanmod.findcouples.model.movie.{MovieJSONLoader, MovieMetamodel}
-import org.atlanmod.findcouples.transformation.dynamic.{FindCouples, Identity, IdentityWithMap}
+import org.atlanmod.findcouples.transformation.dynamic.{FindCouples, FindCouplesWithMap, Identity, IdentityWithMap}
 import org.atlanmod.parallel._
 import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel, DynamicModel}
@@ -134,6 +134,7 @@ object MainExperiments {
             case ("Class2RelationalSimple", "default") => Class2RelationalSimple.class2relational(sleeping_guard, sleeping_instantiate, sleeping_apply)
             case ("Relational2ClassStrong", "default") => Relational2ClassStrong.relational2class(sleeping_guard, sleeping_instantiate, sleeping_apply)
             case ("IMDBFindCouples", "default") => FindCouples.findcouples_imdb(sleeping_guard, sleeping_instantiate, sleeping_apply)
+            case ("IMDBFindCouples", "map") => FindCouplesWithMap.findcouples_imdb(sleeping_guard, sleeping_instantiate, sleeping_apply)
             case ("IMDBIdentity", "default") => Identity.identity_imdb(sleeping_guard, sleeping_instantiate, sleeping_apply)
             case ("IMDBIdentity", "map") => IdentityWithMap.identity_imdb(sleeping_guard, sleeping_instantiate, sleeping_apply)
             case ("DBLP2INFO_v1", "default") => ICMTAuthors.find(sleeping_guard, sleeping_instantiate, sleeping_apply)
