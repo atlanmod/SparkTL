@@ -2,11 +2,9 @@ package org.atlanmod.findcouples.transformation.dynamic
 
 import org.atlanmod.Utils.my_sleep
 import org.atlanmod.findcouples.model.movie.element._
-import org.atlanmod.findcouples.model.movie.link.MovieToPersons
-import org.atlanmod.findcouples.model.movie.MovieModel
-import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieActress, MovieCouple, MovieMovie, MoviePerson}
 import org.atlanmod.findcouples.model.movie.link.{CoupleToPersonP1, CoupleToPersonP2, MovieToPersons, PersonToMovies}
 import org.atlanmod.findcouples.model.movie.{MovieLink, MovieMetamodel, MovieModel}
+import org.atlanmod.findcouples.transformation.dynamic.MovieHelper.{helper_areCouple, helper_commonMovies}
 import org.atlanmod.tl.engine.Resolve
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
@@ -26,23 +24,6 @@ object FindCouples {
 
     val mm: DynamicMetamodel[DynamicElement, DynamicLink] = MovieMetamodel.metamodel
     val random: Random.type = scala.util.Random
-
-    def helper_coactor(model: MovieModel, p: MoviePerson): List[MoviePerson] =
-        MovieMetamodel.getMoviesOfPerson(model, p) match {
-            case Some(movies: List[MovieMovie]) =>
-                movies.flatMap(movie => MovieMetamodel.getPersonsOfMovieAsList(model, movie))
-            case _ => List()
-        }
-
-    def helper_areCouple(model: MovieModel, p1: MoviePerson, p2: MoviePerson): Boolean =
-        helper_commonMovies(model, p1, p2).size >= 3 & !p1.equals(p2) &
-          (if (p1.isInstanceOf[MovieActor] & p2.isInstanceOf[MovieActor]) p1.getName <= p2.getName else true)
-
-    def helper_commonMovies(model: MovieModel, p1: MoviePerson, p2: MoviePerson): List[MovieMovie] =
-        (MovieMetamodel.getMoviesOfPerson(model, p1), MovieMetamodel.getMoviesOfPerson(model, p2)) match {
-            case (Some(movies1), Some(movies2)) => movies1.intersect(movies2)
-            case _ => List()
-        }
 
     def makePersonMovies(tls: TraceLinks[DynamicElement, DynamicElement], model: MovieModel,
                          input_person: MoviePerson, output_person: MoviePerson): Option[MovieLink] =
