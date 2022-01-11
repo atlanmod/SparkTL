@@ -30,7 +30,7 @@ object TransformationParallel {
             )
 
         val elements : Iterable[TME] = tls.getTargetElements
-        val links: Iterable[TML] = applyTraces(tr, sm, mm, source_patterns, tls).collect
+        val links: Iterable[TML] = applyTraces(tr, sm, mm, source_patterns, tls).collect.distinct
         new DefaultModel(elements, links) // Output format
     }
 

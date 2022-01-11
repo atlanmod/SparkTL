@@ -40,7 +40,7 @@ object TransformationEngineTwoPhaseByRule extends ExperimentalTransformationEngi
 
         time_result.start_apply()
         val sps: RDD[List[SME]] = tracelinks.map(trace => trace.getSourcePattern)
-        val links: Iterable[TML] = applyTraces(tr, sm, mm, sps, tls).collect()
+        val links: Iterable[TML] = applyTraces(tr, sm, mm, sps, tls).collect().distinct
         time_result.end_apply()
 
         (time_result, new ModelResult(elements, links))

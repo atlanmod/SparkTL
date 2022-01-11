@@ -26,8 +26,11 @@ object Trace {
 
     private def traceRuleOnPattern[SME, SML, SMC, TME, TML](r:Rule[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
                                                             sp: List[SME])
-    : List[TraceLink[SME, TME]] =
-        indexes(evalIteratorExpr(r, sm, sp)).flatMap(i => traceIterationOnPattern(r, sm, sp, i))
+    : List[TraceLink[SME, TME]] = {
+        val idx = indexes(evalIteratorExpr(r, sm, sp))
+        val res = idx.flatMap(i => traceIterationOnPattern(r, sm, sp, i))
+        res
+    }
 
 
     def tracePattern[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],

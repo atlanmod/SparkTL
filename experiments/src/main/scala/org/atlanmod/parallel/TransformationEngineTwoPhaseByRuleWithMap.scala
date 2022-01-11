@@ -18,7 +18,7 @@ object TransformationEngineTwoPhaseByRuleWithMap extends ExperimentalTransformat
                                                                                         sps: RDD[List[SME]], tls: TraceLinks[SME, TME],
                                                                                         rdd_tls: RDD[TraceLink[SME, TME]])
     : Iterable[TML] = {
-        sps.flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls)).collect
+        sps.flatMap(sp => Apply.applyPatternTraces(tr, sm, mm, sp, tls)).collect.distinct
     }
 
     override def execute[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag]

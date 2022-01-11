@@ -13,8 +13,8 @@ object MovieHelper {
         }
 
     def helper_areCouple(model: MovieModel, p1: MoviePerson, p2: MoviePerson): Boolean =
-        helper_commonMovies(model, p1, p2).size >= 3 & !p1.equals(p2) &
-          (if (p1.getType.equals(p2.getType)) p1.getName < p2.getName else true)
+        helper_commonMovies(model, p1, p2).size >= 3 & !p1.equals(p2) & p1.getName < p2.getName
+//          (if (p1.getType.equals(p2.getType)) p1.getName < p2.getName else true)
 
     def helper_commonMovies(model: MovieModel, p1: MoviePerson, p2: MoviePerson): List[MovieMovie] =
         (MovieMetamodel.getMoviesOfPerson(model, p1), MovieMetamodel.getMoviesOfPerson(model, p2)) match {
@@ -22,10 +22,9 @@ object MovieHelper {
             case _ => List()
         }
 
-
     def helper_candidate(model: MovieModel, p: MoviePerson) : List[MoviePerson] = {
         val mvs = MovieMetamodel.getMoviesOfPerson(model, p).getOrElse(List())
-        mvs.flatMap(mv => MovieMetamodel.getPersonsOfMovie(model, mv).getOrElse(List()))
+        mvs.flatMap(mv => MovieMetamodel.getPersonsOfMovie(model, mv).getOrElse(List())).distinct.filter(per => per != p)
     }
 
 }

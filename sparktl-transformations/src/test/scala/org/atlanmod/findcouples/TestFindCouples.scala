@@ -1,10 +1,11 @@
 package org.atlanmod.findcouples
 
+import org.apache.spark.{SparkConf, SparkContext}
 import org.atlanmod.findcouples.model.movie._
 import org.atlanmod.findcouples.model.movie.element._
 import org.atlanmod.findcouples.model.movie.link.{MovieToPersons, PersonToMovies}
-import org.atlanmod.findcouples.transformation.dynamic.FindCouples
-import org.atlanmod.findcouples.transformation.dynamic.FindCouples.{helper_areCouple, helper_commonMovies}
+import org.atlanmod.findcouples.transformation.dynamic.{FindCouplesWithMapArity1 => FindCouples}
+import org.atlanmod.findcouples.transformation.dynamic.MovieHelper.{helper_areCouple, helper_commonMovies}
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -129,10 +130,16 @@ class TestFindCouples  extends AnyFunSuite {
 
         val metamodel = MovieMetamodel.metamodel
         val findcouples = FindCouples.findcouples_imdb()
-        val res =  org.atlanmod.tl.engine.TransformationSequential.execute(findcouples,
-            StarWarsModel, metamodel)
+//        val res =  org.atlanmod.tl.engine.TransformationSequential.execute(findcouples,
+//            StarWarsModel, metamodel)
+        val conf = new SparkConf()
+        conf.setMaster("local")
+        conf.setAppName("test")
+        val sc = new SparkContext(conf)
+        val res = org.atlanmod.tl.engine.TransformationParallel.execute(findcouples, StarWarsModel, metamodel, 1, sc)
         val res_model = new MovieModel(res.allModelElements.asInstanceOf[List[MovieElement]],res.allModelLinks.asInstanceOf[List[MovieLink]])
         val triplets: List[(MovieCouple, MoviePerson, MoviePerson)] = MovieMetamodel.getAllCoupleTriplets(res_model)
+        assert(triplets.length == 4)
         assert(triplets.exists(c => match_(c, ewan_mcgregor, nathalie_portman)))
         assert(triplets.exists(c => match_(c, mark_hamill, harrison_ford)))
         assert(triplets.exists(c => match_(c, mark_hamill, carrie_fisher)))

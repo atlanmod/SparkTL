@@ -31,7 +31,7 @@ object Utils {
     def allTuplesByRule[SME, SML, SMC, SMR, TME, TML, TMC](tr: Transformation[SME, SML, SMC, TME, TML],
                                                            sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR])
     : List[List[SME]] =
-       tr.getRules.flatMap(r => allTuplesOfTypes(r.getInTypes, sm, mm))
+       tr.getRules.flatMap(r => allTuplesOfTypes(r.getInTypes, sm, mm)).distinct
 
     def maxArity[SME, SML, SMC, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML] ): Int =
         tr.getRules.map(r => r.getInTypes).map (l => l.length).max
