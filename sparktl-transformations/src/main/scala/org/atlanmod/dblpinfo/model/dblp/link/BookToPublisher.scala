@@ -1,10 +1,11 @@
 package org.atlanmod.dblpinfo.model.dblp.link
 
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpBook, DblpPublisher}
-import org.atlanmod.dblpinfo.model.dblp.{DblpLink, DblpMetamodel}
+import org.atlanmod.dblpinfo.model.dblp.DblpLink
+import org.atlanmod.dblpinfo.model.dblp.metamodel.DblpMetamodelNaive
 
 class BookToPublisher(source: DblpBook, target: DblpPublisher)
-  extends DblpLink(DblpMetamodel.BOOK_PUBLISHER, source, List(target)) {
+  extends DblpLink(DblpMetamodelNaive.BOOK_PUBLISHER, source, List(target)) {
 
     override def getSource: DblpBook = source
     override def getTarget: List[DblpPublisher] = List(target)

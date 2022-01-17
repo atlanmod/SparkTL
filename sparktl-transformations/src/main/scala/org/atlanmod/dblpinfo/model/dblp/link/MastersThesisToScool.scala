@@ -1,10 +1,11 @@
 package org.atlanmod.dblpinfo.model.dblp.link
 
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpMastersThesis, DblpSchool}
-import org.atlanmod.dblpinfo.model.dblp.{DblpLink, DblpMetamodel}
+import org.atlanmod.dblpinfo.model.dblp.DblpLink
+import org.atlanmod.dblpinfo.model.dblp.metamodel.DblpMetamodelNaive
 
 class MastersThesisToScool(source: DblpMastersThesis, target: DblpSchool)
-  extends DblpLink(DblpMetamodel.MASTERSTHESIS_SCHOOL, source, List(target)) {
+  extends DblpLink(DblpMetamodelNaive.MASTERSTHESIS_SCHOOL, source, List(target)) {
 
     override def getSource: DblpMastersThesis = source
     override def getTarget: List[DblpSchool] = List(target)

@@ -1,10 +1,11 @@
 package org.atlanmod.dblpinfo.model.dblp.link
 
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpArticle, DblpJournal}
-import org.atlanmod.dblpinfo.model.dblp.{DblpLink, DblpMetamodel}
+import org.atlanmod.dblpinfo.model.dblp.DblpLink
+import org.atlanmod.dblpinfo.model.dblp.metamodel.DblpMetamodelNaive
 
 class ArticleToJournal(source: DblpArticle, target: DblpJournal)
-  extends DblpLink(DblpMetamodel.ARTICLE_JOURNAL, source, List(target)) {
+  extends DblpLink(DblpMetamodelNaive.ARTICLE_JOURNAL, source, List(target)) {
 
     override def getSource: DblpArticle = source
     override def getTarget: List[DblpJournal] = List(target)

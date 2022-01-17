@@ -1,10 +1,11 @@
 package org.atlanmod.dblpinfo.model.authorinfo.link
 
 import org.atlanmod.dblpinfo.model.authorinfo.element.{AuthorInfoAuthor, AuthorInfoJournal}
-import org.atlanmod.dblpinfo.model.authorinfo.{AuthorInfoLink, AuthorInfoMetamodel}
+import org.atlanmod.dblpinfo.model.authorinfo.AuthorInfoLink
+import org.atlanmod.dblpinfo.model.authorinfo.metamodel.AuthorInfoMetamodelNaive
 
 class AuthorToJournals(source: AuthorInfoAuthor, target: List[AuthorInfoJournal])
-  extends AuthorInfoLink(AuthorInfoMetamodel.PUBLISHESINJ, source, target) {
+  extends AuthorInfoLink(AuthorInfoMetamodelNaive.PUBLISHESINJ, source, target) {
 
     def this(source: AuthorInfoAuthor, target: AuthorInfoJournal) =
         this(source, List(target))

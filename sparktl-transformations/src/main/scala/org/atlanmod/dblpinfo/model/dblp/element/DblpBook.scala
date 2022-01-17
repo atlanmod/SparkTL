@@ -1,8 +1,8 @@
 package org.atlanmod.dblpinfo.model.dblp.element
 
-import org.atlanmod.dblpinfo.model.dblp.DblpMetamodel
+import org.atlanmod.dblpinfo.model.dblp.metamodel.DblpMetamodelNaive
 
-class DblpBook extends DblpRecord(DblpMetamodel.BOOK) {
+class DblpBook extends DblpRecord(DblpMetamodelNaive.BOOK) {
 
     def this(ee: String, url: String, key: String, mdate: String,
              title: String, month: String, volume: Int = 0, series: String, edition: Int = 0, isbn: String) {

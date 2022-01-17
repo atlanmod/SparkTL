@@ -1,7 +1,11 @@
 package org.atlanmod.class2relational.model
 
 import org.atlanmod.class2relational.model.classmodel._
+import org.atlanmod.class2relational.model.classmodel.element.{ClassAttribute, ClassClass, ClassDatatype}
+import org.atlanmod.class2relational.model.classmodel.link.{AttributeToClass, AttributeToType, ClassToAttributes}
 import org.atlanmod.class2relational.model.relationalmodel._
+import org.atlanmod.class2relational.model.relationalmodel.element.{RelationalColumn, RelationalTable, RelationalType}
+import org.atlanmod.class2relational.model.relationalmodel.link.{ColumnToTable, ColumnToType, TableToColumns, TableToKeys}
 
 object ModelSamples {
 

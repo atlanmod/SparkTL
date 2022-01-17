@@ -1,8 +1,8 @@
 package org.atlanmod.findcouples.model.movie.element
 
-import org.atlanmod.findcouples.model.movie.MovieMetamodel
+import org.atlanmod.findcouples.model.movie.metamodel.MovieMetamodelNaive
 
-class MovieActor extends MoviePerson (MovieMetamodel.ACTOR) {
+class MovieActor extends MoviePerson (MovieMetamodelNaive.ACTOR) {
 
     def this(name: String) = {
         this()

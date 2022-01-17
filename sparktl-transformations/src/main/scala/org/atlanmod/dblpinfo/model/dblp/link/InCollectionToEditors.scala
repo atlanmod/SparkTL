@@ -1,10 +1,11 @@
 package org.atlanmod.dblpinfo.model.dblp.link
 
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpEditor, DblpInCollection}
-import org.atlanmod.dblpinfo.model.dblp.{DblpLink, DblpMetamodel}
+import org.atlanmod.dblpinfo.model.dblp.DblpLink
+import org.atlanmod.dblpinfo.model.dblp.metamodel.DblpMetamodelNaive
 
 class InCollectionToEditors(source: DblpInCollection, target: List[DblpEditor])
-  extends DblpLink(DblpMetamodel.INCOLLECTION_EDITORS, source, target) {
+  extends DblpLink(DblpMetamodelNaive.INCOLLECTION_EDITORS, source, target) {
 
     def this(source: DblpInCollection, target: DblpEditor) =
         this(source, List(target))

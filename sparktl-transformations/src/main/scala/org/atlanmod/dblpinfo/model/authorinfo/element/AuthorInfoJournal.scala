@@ -1,8 +1,9 @@
 package org.atlanmod.dblpinfo.model.authorinfo.element
 
-import org.atlanmod.dblpinfo.model.authorinfo.{AuthorInfoElement, AuthorInfoMetamodel}
+import org.atlanmod.dblpinfo.model.authorinfo.AuthorInfoElement
+import org.atlanmod.dblpinfo.model.authorinfo.metamodel.AuthorInfoMetamodelNaive
 
-class AuthorInfoJournal extends AuthorInfoElement(AuthorInfoMetamodel.JOURNAL){
+class AuthorInfoJournal extends AuthorInfoElement(AuthorInfoMetamodelNaive.JOURNAL){
 
     def this(name: String) = {
         this()

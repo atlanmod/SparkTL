@@ -6,6 +6,7 @@ import org.atlanmod.findcouples.model.movie.element.MovieActor
 import org.atlanmod.findcouples.model.movie.link.MovieToPersons
 import org.atlanmod.findcouples.model.movie.element.{MovieActor, MovieMovie, MoviePerson}
 import org.atlanmod.findcouples.model.movie.link.{MovieToPersons, PersonToMovies}
+import org.atlanmod.findcouples.model.movie.metamodel.MovieMetamodelNaive
 
 import scala.collection.mutable
 import scala.collection.mutable.HashMap
@@ -52,9 +53,9 @@ object MovieJSONLoader{
             val link = line.split("\t")
             val target_list: List[MovieElement] = link(1).substring(1, link(1).size - 1).split(",").flatMap(t => map.get(t.toLong)).toList
             (map.get(link(0).toLong), link(2)) match {
-                case (Some(source: MoviePerson), label) if label == MovieMetamodel.PERSON_MOVIES =>
+                case (Some(source: MoviePerson), label) if label == MovieMetamodelNaive.PERSON_MOVIES =>
                     links = new PersonToMovies(source, target_list.asInstanceOf[List[MovieMovie]]) :: links
-                case (Some(source: MovieMovie), label) if label == MovieMetamodel.MOVIE_PERSONS =>
+                case (Some(source: MovieMovie), label) if label == MovieMetamodelNaive.MOVIE_PERSONS =>
                     links = new MovieToPersons(source, target_list.asInstanceOf[List[MoviePerson]]) :: links
                 case _ =>
             }

@@ -44,7 +44,7 @@ object TransformationEngineTwoPhaseByRuleWithMap extends ExperimentalTransformat
         time_result.end_extract()
 
         time_result.start_apply()
-        val source_patterns: RDD[List[SME]] = instantiated_tracelinks.map(trace => trace.getSourcePattern)
+        val source_patterns: RDD[List[SME]] = instantiated_tracelinks.map(trace => trace.getSourcePattern).distinct()
         val links: Iterable[TML] = applyTraces(tr, sm, mm, source_patterns, tls, instantiated_tracelinks)
         time_result.end_apply()
 

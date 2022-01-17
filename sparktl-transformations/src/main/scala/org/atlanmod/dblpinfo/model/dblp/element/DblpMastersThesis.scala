@@ -1,8 +1,8 @@
 package org.atlanmod.dblpinfo.model.dblp.element
 
-import org.atlanmod.dblpinfo.model.dblp.DblpMetamodel
+import org.atlanmod.dblpinfo.model.dblp.metamodel.DblpMetamodelNaive
 
-class DblpMastersThesis extends DblpRecord(DblpMetamodel.MASTERSTHESIS) {
+class DblpMastersThesis extends DblpRecord(DblpMetamodelNaive.MASTERSTHESIS) {
 
     def this(ee:String, url:String, key: String, mdate: String,
              name: String, year: Int, month: String){

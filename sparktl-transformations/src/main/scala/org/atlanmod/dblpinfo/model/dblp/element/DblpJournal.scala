@@ -1,8 +1,9 @@
 package org.atlanmod.dblpinfo.model.dblp.element
 
-import org.atlanmod.dblpinfo.model.dblp.{DblpElement, DblpMetamodel}
+import org.atlanmod.dblpinfo.model.dblp.DblpElement
+import org.atlanmod.dblpinfo.model.dblp.metamodel.DblpMetamodelNaive
 
-class DblpJournal extends DblpElement(DblpMetamodel.JOURNAL) {
+class DblpJournal extends DblpElement(DblpMetamodelNaive.JOURNAL) {
 
     def this(name: String){
         this()

@@ -8,9 +8,11 @@ object ListUtils {
 
     def weak_eqList[A <: Weakable, B <: Weakable](lA: List[A], lB: List[B]): Boolean = {
         for(a <- lA)
-            if (!(lB.count(v => v.weak_equals(a)) == lA.count(v => v.weak_equals(a)))) return false
+            if (!(lB.count(v => v.weak_equals(a)) == lA.count(v => v.weak_equals(a))))
+                return false
         for(b <- lB)
-            if (!(lB.count(v => v.weak_equals(b)) == lA.count(v => v.weak_equals(b)))) return false
+            if (!(lB.count(v => v.weak_equals(b)) == lA.count(v => v.weak_equals(b))))
+                return false
         true
     }
 

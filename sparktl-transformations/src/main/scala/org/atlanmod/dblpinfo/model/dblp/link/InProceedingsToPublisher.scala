@@ -1,10 +1,11 @@
 package org.atlanmod.dblpinfo.model.dblp.link
 
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpInProceedings, DblpPublisher}
-import org.atlanmod.dblpinfo.model.dblp.{DblpLink, DblpMetamodel}
+import org.atlanmod.dblpinfo.model.dblp.DblpLink
+import org.atlanmod.dblpinfo.model.dblp.metamodel.DblpMetamodelNaive
 
 class InProceedingsToPublisher(source: DblpInProceedings, target: DblpPublisher)
-  extends DblpLink(DblpMetamodel.INPROCEEDINGS_PUBLISHER, source, List(target)) {
+  extends DblpLink(DblpMetamodelNaive.INPROCEEDINGS_PUBLISHER, source, List(target)) {
 
     override def getSource: DblpInProceedings = source
     override def getTarget: List[DblpPublisher] = List(target)

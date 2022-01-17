@@ -4,7 +4,8 @@ import org.apache.spark.{SparkConf, SparkContext}
 import org.atlanmod.findcouples.model.movie._
 import org.atlanmod.findcouples.model.movie.element._
 import org.atlanmod.findcouples.model.movie.link.{MovieToPersons, PersonToMovies}
-import org.atlanmod.findcouples.transformation.dynamic.{FindCouplesWithMapArity1 => FindCouples}
+import org.atlanmod.findcouples.model.movie.metamodel.{MovieMetamodelNaive, MovieMetamodelWithMap}
+import org.atlanmod.findcouples.transformation.dynamic.{FindCouples => FindCouples}
 import org.atlanmod.findcouples.transformation.dynamic.MovieHelper.{helper_areCouple, helper_commonMovies}
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.scalatest.funsuite.AnyFunSuite
@@ -62,7 +63,7 @@ class TestFindCouples  extends AnyFunSuite {
     => new MovieModel(e.asInstanceOf[List[MovieElement]], l.asInstanceOf[List[MovieLink]])
 
     test("getPersonsOfMovie"){
-        MovieMetamodel.getPersonsOfMovie(StarWarsModel, return_of_the_jedi) match {
+        MovieMetamodelNaive.getPersonsOfMovie(StarWarsModel, return_of_the_jedi) match {
             case Some(actors) =>
                 assert(actors.size == 4)
                 assert(actors.contains(mark_hamill))
@@ -84,7 +85,7 @@ class TestFindCouples  extends AnyFunSuite {
     }
 
     test("getMoviesOfPerson"){
-        MovieMetamodel.getMoviesOfPerson(StarWarsModel, mark_hamill) match {
+        MovieMetamodelNaive.getMoviesOfPerson(StarWarsModel, mark_hamill) match {
             case Some(movies) =>
                 assert(movies.size == 3)
                 assert(movies.contains(a_new_hope))
@@ -107,7 +108,7 @@ class TestFindCouples  extends AnyFunSuite {
 
 
     test("commonMovies") {
-        val movies = helper_commonMovies(StarWarsModel, mark_hamill, carrie_fisher)
+        val movies = helper_commonMovies(StarWarsModel, MovieMetamodelWithMap, mark_hamill, carrie_fisher)
         assert(movies.size == 3)
         assert(movies.contains(a_new_hope))
         assert(movies.contains(the_empire_strikes_back))
@@ -116,11 +117,11 @@ class TestFindCouples  extends AnyFunSuite {
     }
 
     test("areCouple") {
-        assert(helper_areCouple(StarWarsModel, mark_hamill, carrie_fisher))
+        assert(helper_areCouple(StarWarsModel, MovieMetamodelWithMap, mark_hamill, carrie_fisher))
     }
 
     test("areNotCouple") {
-        assert(!helper_areCouple(StarWarsModel, mark_hamill, billy_dee_williams))
+        assert(!helper_areCouple(StarWarsModel, MovieMetamodelWithMap, mark_hamill, billy_dee_williams))
     }
 
     test("find couples sw") {
@@ -128,8 +129,8 @@ class TestFindCouples  extends AnyFunSuite {
             (entry._2.equals(p1) && entry._3.equals(p2)) || (entry._3.equals(p1) && entry._2.equals(p2))
         }
 
-        val metamodel = MovieMetamodel.metamodel
-        val findcouples = FindCouples.findcouples_imdb()
+        val metamodel = MovieMetamodelNaive.metamodel
+        val findcouples = FindCouples.findcouples_imdb(MovieMetamodelWithMap)
 //        val res =  org.atlanmod.tl.engine.TransformationSequential.execute(findcouples,
 //            StarWarsModel, metamodel)
         val conf = new SparkConf()
@@ -138,7 +139,7 @@ class TestFindCouples  extends AnyFunSuite {
         val sc = new SparkContext(conf)
         val res = org.atlanmod.tl.engine.TransformationParallel.execute(findcouples, StarWarsModel, metamodel, 1, sc)
         val res_model = new MovieModel(res.allModelElements.asInstanceOf[List[MovieElement]],res.allModelLinks.asInstanceOf[List[MovieLink]])
-        val triplets: List[(MovieCouple, MoviePerson, MoviePerson)] = MovieMetamodel.getAllCoupleTriplets(res_model)
+        val triplets: List[(MovieCouple, MoviePerson, MoviePerson)] = MovieMetamodelNaive.getAllCoupleTriplets(res_model)
         assert(triplets.length == 4)
         assert(triplets.exists(c => match_(c, ewan_mcgregor, nathalie_portman)))
         assert(triplets.exists(c => match_(c, mark_hamill, harrison_ford)))

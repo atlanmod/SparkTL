@@ -1,10 +1,11 @@
 package org.atlanmod.dblpinfo.model.dblp.link
 
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpOrganization, DblpProceedings}
-import org.atlanmod.dblpinfo.model.dblp.{DblpLink, DblpMetamodel}
+import org.atlanmod.dblpinfo.model.dblp.DblpLink
+import org.atlanmod.dblpinfo.model.dblp.metamodel.DblpMetamodelNaive
 
 class ProceedingsToOrganization(source: DblpProceedings, target: DblpOrganization)
-  extends DblpLink(DblpMetamodel.PROCEEDINGS_ORGANIZATION, source, List(target)) {
+  extends DblpLink(DblpMetamodelNaive.PROCEEDINGS_ORGANIZATION, source, List(target)) {
 
     override def getSource: DblpProceedings = source
 
