@@ -2,7 +2,7 @@ package org.atlanmod.dblpinfo.model.authorinfo.metamodel
 
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 
-trait AuthorInfoMetamodel {
+trait AuthorInfoMetamodel extends Serializable {
     final val AUTHOR = "Author"
     final val JOURNAL = "Journal"
     final val CONFERENCE = "Conference"

@@ -4,7 +4,7 @@ import org.atlanmod.findcouples.model.movie.MovieModel
 import org.atlanmod.findcouples.model.movie.element._
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 
-trait MovieMetamodel {
+trait MovieMetamodel extends Serializable {
 
     final val MOVIE = "Movie"
     final val GROUP = "Group"

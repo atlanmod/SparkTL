@@ -4,7 +4,7 @@ import org.atlanmod.class2relational.model.relationalmodel.RelationalModel
 import org.atlanmod.class2relational.model.relationalmodel.element.{RelationalColumn, RelationalTable, RelationalClassifier, RelationalType}
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 
-trait RelationalMetamodel {
+trait RelationalMetamodel extends Serializable {
 
     final val TABLE = "Table"
     final val COLUMN = "Column"

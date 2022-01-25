@@ -4,7 +4,7 @@ import org.atlanmod.dblpinfo.model.dblp.DblpModel
 import org.atlanmod.dblpinfo.model.dblp.element.{DblpArticle, DblpAuthor, DblpJournal, DblpRecord}
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 
-abstract class DblpMetamodel {
+trait DblpMetamodel extends Serializable {
 
     final val AUTHOR: String = "Author"
     final val RECORD: String = "Record"

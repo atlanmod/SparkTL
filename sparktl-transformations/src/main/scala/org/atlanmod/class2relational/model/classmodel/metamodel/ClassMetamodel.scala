@@ -4,7 +4,7 @@ import org.atlanmod.class2relational.model.classmodel.ClassModel
 import org.atlanmod.class2relational.model.classmodel.element.{ClassAttribute, ClassClass, ClassClassifier}
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
 
-trait ClassMetamodel {
+trait ClassMetamodel extends Serializable {
 
     final val CLASS = "Class"
     final val ATTRIBUTE = "Attribute"
