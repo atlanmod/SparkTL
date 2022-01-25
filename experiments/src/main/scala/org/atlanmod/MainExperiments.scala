@@ -7,6 +7,8 @@ import org.atlanmod.class2relational.model.relationalmodel.metamodel.{Relational
 import org.atlanmod.class2relational.transformation.{Class2Relational, Relational2Class}
 import org.atlanmod.dblpinfo.model.dblp.metamodel.{DblpMetamodel, DblpMetamodelNaive, DblpMetamodelWithMap}
 import org.atlanmod.dblpinfo.tranformation.{ICMTActiveAuthors, ICMTAuthors, InactiveICMTButActiveAuthors, JournalISTActiveAuthors}
+import org.atlanmod.families2persons.model.families.metamodel.{FamiliesMetamodel, FamiliesMetamodelNaive, FamiliesMetamodelWithMap}
+import org.atlanmod.families2persons.transformation.Families2Persons
 import org.atlanmod.findcouples.ModelSamples
 import org.atlanmod.findcouples.model.movie.MovieJSONLoader
 import org.atlanmod.findcouples.model.movie.metamodel.{MovieMetamodel, MovieMetamodelNaive, MovieMetamodelWithMap}
@@ -206,6 +208,14 @@ object MainExperiments {
                         case _ => throw new Exception("Impossible to get the metamodel with the following arguments: " + name + "; " + links_type)
                     }
                 JournalISTActiveAuthors.find(metamodel, sleeping_guard, sleeping_instantiate, sleeping_apply)
+            case "Families2Persons" =>
+                val metamodel : FamiliesMetamodel =
+                    links_type match {
+                        case "default" => FamiliesMetamodelNaive
+                        case "map" => FamiliesMetamodelWithMap
+                        case _ => throw new Exception("Impossible to get the metamodel with the following arguments: " + name + "; " + links_type)
+                    }
+                Families2Persons.families2persons(metamodel, sleeping_guard, sleeping_instantiate, sleeping_apply)
             case _ => throw new Exception("Impossible to get the metamodel with the following arguments: " + name + "; " + links_type)
 
         }
@@ -223,6 +233,7 @@ object MainExperiments {
             case "DBLP2INFO_v2" => DblpMetamodelNaive.metamodel
             case "DBLP2INFO_v3" => DblpMetamodelNaive.metamodel
             case "DBLP2INFO_v4" => DblpMetamodelNaive.metamodel
+            case "Families2Persons" => FamiliesMetamodelNaive.metamodel
             case _ => throw new Exception("Impossible to get the metamodel. Unknown transformation: " + name)
         }
 
@@ -235,6 +246,11 @@ object MainExperiments {
         else if (mm == RelationalMetamodelNaive.metamodel)
             input match {
                 case "size" => org.atlanmod.class2relational.model.ModelSamples.getReplicatedRelationalSimple(size).asInstanceOf[DynamicModel]
+                case "files" => throw new Exception("Generating a Relational model from files is not supported yet")
+            }
+        else if (mm == FamiliesMetamodelNaive.metamodel)
+            input match {
+                case "size" => org.atlanmod.families2persons.model.ModelSamples.getFamiliesModel(size).asInstanceOf[DynamicModel]
                 case "files" => throw new Exception("Generating a Relational model from files is not supported yet")
             }
         else if (mm == MovieMetamodelNaive.metamodel)
