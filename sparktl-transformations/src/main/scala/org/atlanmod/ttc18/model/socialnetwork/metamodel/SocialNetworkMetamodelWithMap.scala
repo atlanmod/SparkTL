@@ -40,9 +40,9 @@ object SocialNetworkMetamodelWithMap extends SocialNetworkMetamodel {
             case _ => None
         }
 
-    override def getCommentsOfSubmission(model: SocialNetworkModel, sub: SocialNetworkSubmission): Option[List[SocialNetworkSubmission]] =
+    override def getCommentsOfSubmission(model: SocialNetworkModel, sub: SocialNetworkSubmission): Option[List[SocialNetworkComment]] =
         metamodel.allLinksOfTypeOfElement(sub, SUBMISSION_COMMENTS, model) match {
-            case Some(e: List[SocialNetworkSubmission]) => Some(e)
+            case Some(e: List[SocialNetworkComment]) => Some(e)
             case _ => None
         }
 

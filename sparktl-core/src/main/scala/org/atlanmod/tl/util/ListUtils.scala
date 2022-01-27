@@ -107,4 +107,7 @@ object ListUtils {
         }
     }
 
+    def exclude[A](e: A, list: List[A]): List[A] = list diff List(e)
+    def exclude[A](e: A, list: Seq[A]): Seq[A] = list diff Seq(e)
+
 }

@@ -28,6 +28,6 @@ trait SocialNetworkMetamodel extends Serializable {
     def getSubmitterOfSubmission(model: SocialNetworkModel, sub: SocialNetworkSubmission): Option[SocialNetworkUser]
     def getLikedByOfComment(model:SocialNetworkModel, comment: SocialNetworkComment): Option[List[SocialNetworkUser]]
     def getPostOfComment(model:SocialNetworkModel, comment: SocialNetworkComment): Option[SocialNetworkPost]
-    def getCommentsOfSubmission(model: SocialNetworkModel, sub: SocialNetworkSubmission): Option[List[SocialNetworkSubmission]]
+    def getCommentsOfSubmission(model: SocialNetworkModel, sub: SocialNetworkSubmission): Option[List[SocialNetworkComment]]
     def getSubmissionOfComment(model:SocialNetworkModel, comment: SocialNetworkComment): Option[SocialNetworkSubmission]
 }

@@ -77,7 +77,7 @@ object SocialNetworkMetamodelNaive extends SocialNetworkMetamodel {
         None
     }
 
-    def getCommentsOfSubmissionOnLinks(iterator: Iterator[SocialNetworkLink], sub: SocialNetworkSubmission): Option[List[SocialNetworkSubmission]] = {
+    def getCommentsOfSubmissionOnLinks(iterator: Iterator[SocialNetworkLink], sub: SocialNetworkSubmission): Option[List[SocialNetworkComment]] = {
         while(iterator.hasNext){
             val value = iterator.next()
             value match {
@@ -119,7 +119,7 @@ object SocialNetworkMetamodelNaive extends SocialNetworkMetamodel {
     override def getPostOfComment(model: SocialNetworkModel, comment: SocialNetworkComment): Option[SocialNetworkPost] =
         getPostOfCommentOnLinks(model.allModelLinks.toIterator, comment)
 
-    override def getCommentsOfSubmission(model: SocialNetworkModel, sub: SocialNetworkSubmission): Option[List[SocialNetworkSubmission]] =
+    override def getCommentsOfSubmission(model: SocialNetworkModel, sub: SocialNetworkSubmission): Option[List[SocialNetworkComment]] =
         getCommentsOfSubmissionOnLinks(model.allModelLinks.toIterator, sub)
 
     override def getSubmissionOfComment(model: SocialNetworkModel, comment: SocialNetworkComment): Option[SocialNetworkSubmission] =
