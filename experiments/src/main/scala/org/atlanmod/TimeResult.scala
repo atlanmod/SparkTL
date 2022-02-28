@@ -39,31 +39,31 @@ class TimeResult() {
     def start_tuples(): Unit = tuples_start = System.nanoTime()
     def end_tuples(): Unit = {
         tuples_end = System.nanoTime()
-        this.tuples = (tuples_end - tuples_start) * 1000 / 1e9d
+        this.tuples = this.tuples + ((tuples_end - tuples_start) / 1e6d)
     }
 
     def start_instantiate(): Unit = instantiate_start = System.nanoTime()
     def end_instantiate(): Unit = {
         instantiate_end = System.nanoTime()
-        this.instantiate = (instantiate_end - instantiate_start) * 1000 / 1e9d
+        this.instantiate = this.instantiate + ((instantiate_end - instantiate_start) / 1e6d)
     }
 
     def start_extract(): Unit = extract_start = System.nanoTime()
     def end_extract(): Unit = {
         extract_end = System.nanoTime()
-        this.extract = (extract_end - extract_start) * 1000 / 1e9d
+        this.extract = this.extract + ((extract_end - extract_start) / 1e6d)
     }
 
     def start_broadcast(): Unit = broadcast_start = System.nanoTime()
     def end_broadcast(): Unit = {
         broadcast_end = System.nanoTime()
-        this.broadcast = (broadcast_end - broadcast_start) * 1000 / 1e9d
+        this.broadcast = this.broadcast + ((broadcast_end - broadcast_start) / 1e6d)
     }
 
     def start_apply(): Unit = apply_start = System.nanoTime()
     def end_apply(): Unit = {
         apply_end = System.nanoTime()
-        this.apply = (apply_end - apply_start) * 1000 / 1e9d
+        this.apply = this.apply + ((apply_end - apply_start) / 1e6d)
     }
 
 }

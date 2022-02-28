@@ -4,7 +4,8 @@ import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.atlanmod.tl.engine.Trace.tracePattern
 import org.atlanmod.tl.engine.Utils.allTuplesByRule
-import org.atlanmod.tl.model.impl.{DefaultModel, TraceLinksMap}
+import org.atlanmod.tl.model.impl.DefaultModel
+import org.atlanmod.tl.model.impl.tracelinks.TraceLinksMap
 import org.atlanmod.tl.model.{Metamodel, Model, TraceLink, TraceLinks, Transformation}
 
 import scala.reflect.ClassTag

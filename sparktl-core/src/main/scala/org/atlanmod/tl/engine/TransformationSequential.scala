@@ -3,7 +3,8 @@ package org.atlanmod.tl.engine
 import org.atlanmod.tl.engine.Trace.tracePattern
 import org.atlanmod.tl.engine.Utils.allTuplesByRule
 import org.atlanmod.tl.model._
-import org.atlanmod.tl.model.impl.{DefaultModel, TraceLinksMap}
+import org.atlanmod.tl.model.impl.DefaultModel
+import org.atlanmod.tl.model.impl.tracelinks.TraceLinksMap
 
 import scala.reflect.ClassTag
 

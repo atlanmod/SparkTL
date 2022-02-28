@@ -50,4 +50,32 @@ object Apply{
     : List[TML] =
         matchPattern(tr, sm, mm, sp).flatMap(r => applyRuleOnPatternTraces(r, tr, sm, sp, tls))
 
+
+//    ------
+
+    def findRule[SME,SML,SMC,TME,TML](tr: Transformation[SME, SML, SMC, TME, TML], rulename: String):
+    Option[Rule[SME,SML,SMC,TME,TML]] = tr.getRules.find(r => rulename.equals(r.getName))
+
+    def applyPatternTracesWithRulename[SME,SML,SMC,SMR,TME,TML](tr: Transformation[SME, SML, SMC, TME, TML],
+                                                                sm: Model[SME, SML], mm: Metamodel[SME,SML,SMC,SMR],
+                                                                sp: List[SME], rulename: String,
+                                                                tls: TraceLinks[SME, TME])
+    : List[TML] = {
+        findRule(tr, rulename) match {
+            case Some(rule) => applyRuleOnPatternTraces(rule, tr, sm, sp, tls)
+            case _ => applyPatternTraces(tr, sm, mm, sp, tls)
+        }
+    }
+
+    def applyPatternTracesWithRulename[SME,SML,SMC,SMR,TME,TML](tr: Transformation[SME, SML, SMC, TME, TML],
+                                                                sm: Model[SME, SML], mm: Metamodel[SME,SML,SMC,SMR],
+                                                                sp: (List[SME], String), tls: TraceLinks[SME, TME])
+    : List[TML] = {
+        findRule(tr, sp._2) match {
+            case Some(rule) => applyRuleOnPatternTraces(rule, tr, sm, sp._1, tls)
+            case _ => applyPatternTraces(tr, sm, mm, sp._1, tls)
+        }
+    }
+
+
 }

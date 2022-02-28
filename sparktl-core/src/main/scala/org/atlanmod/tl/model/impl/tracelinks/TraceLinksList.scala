@@ -1,17 +1,10 @@
-package org.atlanmod.tl.model.impl
+package org.atlanmod.tl.model.impl.tracelinks
 
+import org.atlanmod.tl.model.impl.TraceLinkWithRuleImpl
 import org.atlanmod.tl.model.{TraceLink, TraceLinks}
 import org.atlanmod.tl.util.ListUtils
 
-class TraceLinksList[SME, TME](tls: List[TraceLink[SME, TME]]) extends TraceLinks[SME, TME] {
-
-    def this(iterable: Iterable[TraceLink[SME, TME]]) {
-        this(iterable.toList)
-    }
-
-    def this() {
-        this(List())
-    }
+class TraceLinksList[SME, TME](tls: List[TraceLink[SME, TME]], contain_rule: Boolean = false) extends TraceLinks[SME, TME] {
 
     override def find(sp: List[SME])(p: TraceLink[SME, TME] => Boolean): Option[TraceLink[SME, TME]] =
         tls.find(tl => tl.getSourcePattern.equals(sp) && p(tl))
@@ -31,4 +24,14 @@ class TraceLinksList[SME, TME](tls: List[TraceLink[SME, TME]]) extends TraceLink
             case _ => false
         }
     }
+
+    override def getIterableSeq(): Seq[Any] = {
+        if (contain_rule)
+            return tls.map {
+                case t: TraceLinkWithRuleImpl[SME, TME] => (t.getSourcePattern, t.getRulename)
+                case _ => throw new Exception("Boolean for \"Containing rules\" in the tracelink is misconfigured")
+            }
+        tls.map(tl => tl.getSourcePattern) // equivalent to "getSourcePatterns"
+    }
+
 }

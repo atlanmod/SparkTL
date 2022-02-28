@@ -18,10 +18,15 @@ object Trace {
         }
 
 
+
+
     private def traceIterationOnPattern[SME, SML, SMC, TME, TML](r:Rule[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
                                                                  sp: List[SME], iter: Int)
     : List[TraceLink[SME, TME]] =
         r.getOutputPatternElements.flatMap(o => optionToList(traceElementOnPattern(o, sm, sp, iter)))
+
+
+
 
 
     private def traceRuleOnPattern[SME, SML, SMC, TME, TML](r:Rule[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
@@ -38,6 +43,35 @@ object Trace {
                                                            sp: List[SME])
     : List[TraceLink[SME, TME]] = {
         matchPattern(tr, sm, mm, sp).flatMap(r => traceRuleOnPattern(r, sm, sp))
+    }
+
+    // --------------------------
+
+    private def traceElementOnPatternWithRule[SME, SML, SMC, TME, TML](o: OutputPatternElement[SME, SML, TME, TML],
+                                                                       rule: String,
+                                                                       sm: Model[SME, SML], sp: List[SME], iter: Int)
+    : Option[TraceLink[SME, TME]] =
+        instantiateElementOnPattern(o, sm, sp, iter) match {
+            case Some(e) => Some(new TraceLinkWithRuleImpl((sp, iter, rule, o.getName), e))
+            case None => None
+        }
+
+    private def traceIterationOnPatternWithRule[SME, SML, SMC, TME, TML](r:Rule[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
+                                                                         sp: List[SME], iter: Int)
+    : List[TraceLink[SME, TME]] =
+        r.getOutputPatternElements.flatMap(o => optionToList(traceElementOnPatternWithRule(o, r.getName, sm, sp, iter)))
+
+    private def traceRuleOnPatternWithRule[SME, SML, SMC, TME, TML](r:Rule[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
+                                                                    sp: List[SME])
+    : List[TraceLink[SME, TME]] = {
+        indexes(evalIteratorExpr(r, sm, sp)).flatMap(i => traceIterationOnPatternWithRule(r, sm, sp, i))
+    }
+
+    def tracePatternWithRule[SME, SML, SMC, SMR, TME, TML](tr: Transformation[SME, SML, SMC, TME, TML],
+                                                   sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
+                                                   sp: List[SME])
+    : List[TraceLink[SME, TME]] = {
+        matchPattern(tr, sm, mm, sp).flatMap(r => traceRuleOnPatternWithRule(r, sm, sp))
     }
 
 }

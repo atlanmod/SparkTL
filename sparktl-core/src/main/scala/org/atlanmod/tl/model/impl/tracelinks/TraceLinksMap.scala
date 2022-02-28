@@ -1,9 +1,10 @@
-package org.atlanmod.tl.model.impl
+package org.atlanmod.tl.model.impl.tracelinks
 
+import org.atlanmod.tl.model.impl.TraceLinkWithRuleImpl
 import org.atlanmod.tl.model.{TraceLink, TraceLinks}
 import org.atlanmod.tl.util.ListUtils
 
-class TraceLinksMap[SME, TME](map: scala.collection.immutable.Map[List[SME], List[TraceLink[SME, TME]]]) extends TraceLinks[SME, TME] {
+class TraceLinksMap[SME, TME](map: scala.collection.immutable.Map[List[SME], List[TraceLink[SME, TME]]], contain_rule: Boolean = false) extends TraceLinks[SME, TME] {
 
     override def find(sp: List[SME])(p: TraceLink[SME, TME] => Boolean): Option[TraceLink[SME, TME]] =
         map.get(sp) match {
@@ -55,4 +56,14 @@ class TraceLinksMap[SME, TME](map: scala.collection.immutable.Map[List[SME], Lis
         }
     }
 
+    override def getIterableSeq(): Seq[Any] = {
+        if (contain_rule) {
+            map.flatMap(entry => {
+                entry._2.map {
+                    case t: TraceLinkWithRuleImpl[SME, TME] => (t.getSourcePattern, t.getRulename)
+                    case _ => throw new Exception("Boolean for \"Containing rules\" in the tracelinks is misconfigured")
+                }})
+        }
+        map.keys.toList // equivalent to "getSourcePatterns"
+    }
 }

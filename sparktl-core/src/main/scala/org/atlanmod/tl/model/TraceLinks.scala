@@ -13,4 +13,6 @@ trait TraceLinks[SME, TME] extends Serializable {
     def equals(o: Any): Boolean
 
     def asList(): List[TraceLink[SME, TME]]
+
+    def getIterableSeq(): Seq[Any]
 }

@@ -1,24 +1,38 @@
 package org.atlanmod
 
-import org.atlanmod.tl.model.impl.dynamic.DynamicModel
+import org.atlanmod.tl.engine.Parameters
+import org.atlanmod.tl.model.Model
+import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicModel}
 
-class ExecutionResult[ME, ML](tls_method: String, links_method: String, case_ : String, input: DynamicModel,
-                              n_executor: Int, n_core_executor: Int, n_partition: Int, storageLevel: String,
-                              timeResult: TimeResult, modelResult: ModelResult[ME, ML],
-                              sleeping_guard: Long = 0L, sleeping_instantiate: Long = 0L, sleeping_apply: Long = 0L) {
+class ExecutionResult[SME <: DynamicElement, SML <: DynamicLink, TME <: DynamicElement, TML <: DynamicLink]
+(case_ : String, input: DynamicModel, output: DynamicModel, time: TimeResult, config: Parameters.Config){
 
-    def csv_header: String =
-        "tls_solution,links_solution,case,input_elements,input_links,executor,core,partition,storageLevel," +
-        "sleeping_guard,sleeping_instantiate,sleeping_apply," +
-        "total_time,time_tuples,time_instantiate,time_extract,time_broadcast,time_apply," +
-        "output_element,output_link"
+    def this(case_ : String, input: Model[SME, SML], output: Model[TME, TML],
+             time: TimeResult, config: Parameters.Config) = {
+        this(case_, new DynamicModel(input.allModelElements, input.allModelLinks),
+            new DynamicModel(output.allModelElements, output.allModelLinks), time, config)
+    }
 
-    def csv: String =
-        List(tls_method, links_method, case_, input.numberOfElements, input.numberOfLinks, n_executor, n_core_executor,
-            n_partition, storageLevel, sleeping_guard, sleeping_instantiate, sleeping_apply,
-            timeResult.get_total_time(), timeResult.get_tuples_time(), timeResult.get_instantiate_time(),
-            timeResult.get_extract_time(), timeResult.get_broadcast_time(), timeResult.get_apply_time(),
-            modelResult.elements_size(), modelResult.links_size()
-        ).mkString(",")
+    private def YES_NO (b: Boolean): String = if (b) "YES" else "NO"
 
+    val params: List[(String, String)] = List (
+        ("case", case_ ), ("input_element", input.numberOfElements.toString), ("input_links", input.numberOfLinks.toString),
+        ("output_element", output.numberOfElements.toString), ("output_links", output.numberOfLinks.toString),
+        ("executors", config._nexecutors.toString), ("cores", config._ncores.toString), ("partitions", config._npartitions.toString), ("storage", config._storageLevel_string), // Spark parameters
+        ("links", config._link_type), ("tls", config._tls), // parameters for used structures
+        ("tuples", config._tuples), ("apply", config._distinctApply), // parameters for "distinct"
+        ("collect", config._collect), ("broadcast", config._bcast), // parameters for communication
+        ("memoization", YES_NO(config._memoization)), ("tracerules", YES_NO(config._tracerule)), // Boolean values
+        ("sleepGuard", config._sleepGuard + "ms"), ("sleepInstantiate", config._sleepInstantiate + "ms"), ("sleepApply", config._sleepApply + "ms"), // Model computation time parameters
+    )
+
+    val results: List[(String, String)] =
+        List(
+            ("total_time", time.get_total_time() + "ms"), ("instantiate_time", time.get_instantiate_time() + "ms"),
+            ("extract_time", time.get_extract_time() + "ms"), ("broadcast_time", time.get_broadcast_time() + "ms"),
+            ("apply_time", time.get_apply_time() + "ms")
+        )
+
+    val csv_header : String = (params ++ results).map(e => e._1).mkString(",")
+    val csv_line : String = (params ++ results).map(e => e._2).mkString(",")
 }
