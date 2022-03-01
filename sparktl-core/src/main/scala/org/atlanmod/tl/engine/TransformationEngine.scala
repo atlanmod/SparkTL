@@ -13,12 +13,10 @@ import scala.reflect.ClassTag
 
 object TransformationEngine {
 
-    private def collect_rdd[A: ClassTag](rdd: RDD[A], config: Parameters.ConfigEngine) : Array[A] =
+    private def collect_rdd[A: ClassTag](rdd: RDD[A], config: Parameters.ConfigEngine): Array[A] =
         config._collect match {
             case Parameters.COLLECT => rdd.collect()
-            case Parameters.FOLD =>
-                throw new Exception("Fold solution for collecting is not supported yet")
-//         TODO rdd.map(tl => Array(tl)).reduce((a1, a2) => a1 ++ a2)
+            case Parameters.FOLD => rdd.map(tl => Array(tl)).reduce((a1, a2) => a1 ++ a2)
         }
 
     private def applyTraces[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
@@ -30,7 +28,8 @@ object TransformationEngine {
     private def applyTracesWithRule[SME: ClassTag, SML, SMC, SMR, TME: ClassTag, TML: ClassTag](tr: Transformation[SME, SML, SMC, TME, TML],
                                                                                         sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR],
                                                                                         sps: RDD[(List[SME], String)], tls: TraceLinks[SME, TME])
-    : RDD[TML] = sps.flatMap(sp => Apply.applyPatternTracesWithRulename(tr, sm, mm, sp, tls))
+    : RDD[TML] =
+        sps.flatMap(sp => Apply.applyPatternTracesWithRulename(tr, sm, mm, sp, tls))
 
     def tuple_phase[SME: ClassTag, SML, SMC, SMR, TME : ClassTag, TML: ClassTag]
     (config: Parameters.ConfigEngine, tr: Transformation[SME, SML, SMC, TME, TML], sm: Model[SME, SML],
@@ -88,22 +87,18 @@ object TransformationEngine {
     (config: Parameters.ConfigEngine, tracelinks: TraceLinks[SME, TME], tr: Transformation[SME, SML, SMC, TME, TML],
      sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR], sps: Seq[Any], npartition: Int, sc: SparkContext)
     : Iterable[TML] = {
-        collect_rdd[TML]({
-            config._tracerule match {
-                case Parameters.WITH_RULE =>
-                    val rdd_sps = sc.parallelize(sps.asInstanceOf[Seq[(List[SME], String)]], npartition)
-                    config._distinctApply match {
-                        case Parameters.APPLY_DISTINCT => applyTracesWithRule(tr, sm, mm, rdd_sps.distinct(), tracelinks)
-                        case Parameters.APPLY_SIMPLE => applyTracesWithRule(tr, sm, mm, rdd_sps, tracelinks)
-                    }
-                case Parameters.WITHOUT_RULE =>
-                    val rdd_sps = sc.parallelize(sps.asInstanceOf[Seq[List[SME]]], npartition)
-                    config._distinctApply match {
-                        case Parameters.APPLY_DISTINCT => applyTraces(tr, sm, mm, rdd_sps.distinct(), tracelinks)
-                        case Parameters.APPLY_SIMPLE => applyTraces(tr, sm, mm, rdd_sps, tracelinks)
-                    }
-            }
-        }, config)
+        val rdd = config._tracerule match {
+            case Parameters.WITH_RULE =>
+                val rdd_sps = sc.parallelize(sps.asInstanceOf[Seq[(List[SME], String)]].toList, npartition)
+                applyTracesWithRule(tr, sm, mm, rdd_sps, tracelinks)
+            case Parameters.WITHOUT_RULE =>
+                val rdd_sps = sc.parallelize(sps.asInstanceOf[Seq[List[SME]]], npartition)
+                config._distinctApply match {
+                    case Parameters.APPLY_DISTINCT => applyTraces(tr, sm, mm, rdd_sps.distinct(), tracelinks)
+                    case Parameters.APPLY_SIMPLE => applyTraces(tr, sm, mm, rdd_sps, tracelinks)
+                }
+        }
+        collect_rdd[TML](rdd, config)
     }
 
     def bcast[A: ClassTag](a: A, config: Parameters.ConfigEngine, sc: SparkContext): A = {
@@ -131,8 +126,6 @@ object TransformationEngine {
         val tls = bcast(tracelinks, config, sc)
         // 5 - Apply phase
         val links : Iterable[TML] = apply_phase(config, tls, tr, sm, mm, sps, npartition, sc)
-//        config: Parameters.Config, tracelinks: TraceLinks[SME, TME], tr: Transformation[SME, SML, SMC, TME, TML],
-//        sm: Model[SME, SML], mm: Metamodel[SME, SML, SMC, SMR], sps: Seq[Any], npartition: Int, sc: SparkContext
         new DefaultModel[TME, TML](elements, links)
     }
 

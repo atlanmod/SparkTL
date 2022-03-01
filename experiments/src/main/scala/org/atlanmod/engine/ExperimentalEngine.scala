@@ -42,7 +42,9 @@ object ExperimentalEngine {
 
         // 3 - Output element + source for apply
         time_result.start_extract()
-        val (elements, sps): (Iterable[TME], Seq[Any]) = TransformationEngine.extract_phase(tracelinks)
+        val instantiated: (Iterable[TME], Seq[Any]) = TransformationEngine.extract_phase(tracelinks)
+        val elements = instantiated._1
+        val sps = instantiated._2
         time_result.end_extract()
 
         // 4 - Broadcast tracelinks

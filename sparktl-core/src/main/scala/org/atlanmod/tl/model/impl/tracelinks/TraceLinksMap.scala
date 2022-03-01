@@ -58,12 +58,18 @@ class TraceLinksMap[SME, TME](map: scala.collection.immutable.Map[List[SME], Lis
 
     override def getIterableSeq(): Seq[Any] = {
         if (contain_rule) {
-            map.flatMap(entry => {
+            map.map(entry => {
                 entry._2.map {
-                    case t: TraceLinkWithRuleImpl[SME, TME] => (t.getSourcePattern, t.getRulename)
+                    case t: TraceLinkWithRuleImpl[SME, TME] =>
+                    {
+                        val r = (t.getSourcePattern, t.getRulename)
+                        r
+                    }
                     case _ => throw new Exception("Boolean for \"Containing rules\" in the tracelinks is misconfigured")
-                }})
+                }}
+            ).flatten.toSeq
+        } else {
+            map.keys.toList // equivalent to "getSourcePatterns"
         }
-        map.keys.toList // equivalent to "getSourcePatterns"
     }
 }
