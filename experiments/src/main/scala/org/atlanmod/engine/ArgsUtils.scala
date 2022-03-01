@@ -1,5 +1,7 @@
 package org.atlanmod.engine
 
+import scala.annotation.tailrec
+
 object ArgsUtils {
 
     private def getAll(args: List[String], arg: String) : List[String] =
@@ -13,6 +15,7 @@ object ArgsUtils {
     def getAll(args: Array[String], str: String) : List[String] =
         getAll(args.toList, str)
 
+    @tailrec
     private def getOrElse[A](args: List[String], arg: String, default: A, convert: String => A): A =
         args match {
             case key :: value :: _ if key.equals(arg) => convert(value)
@@ -24,6 +27,7 @@ object ArgsUtils {
     def getOrElse[A](args: Array[String], arg: String, default: A, convert: String => A): A =
         getOrElse(args.toList, arg, default, convert)
 
+    @tailrec
     private def get[A](args: List[String], arg: String, convert: String => A): Option[A] =
         args match {
             case key :: value :: _ if key.equals(arg) => Some(convert(value))
@@ -35,6 +39,7 @@ object ArgsUtils {
     def get[A](args: Array[String], arg: String, convert: String => A): Option[A] =
         get(args.toList, arg, convert)
 
+    @tailrec
     def getOrElse[A](args: Array[String], arg: List[String], default: A, convert: String => A): A = {
         arg match {
             case h :: t =>
@@ -46,6 +51,7 @@ object ArgsUtils {
         }
     }
 
+    @tailrec
     private def has(args: List[String], arg: String): Boolean =
         args match {
             case key :: _ if key.equals(arg) => true
