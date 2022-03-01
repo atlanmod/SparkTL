@@ -26,7 +26,7 @@ object ScoreHelper {
         helper_allComments(post, model, metamodel).map(com => metamodel.getLikedByOfComment(model, com).getOrElse(List()).size).sum
     }
 
-    def helper_score(post: SocialNetworkPost, model: SocialNetworkModel, metamodel: SocialNetworkMetamodel) : Int = {
+    def helper_scorePost(post: SocialNetworkPost, model: SocialNetworkModel, metamodel: SocialNetworkMetamodel) : Int = {
         /*
         helper context SN!Post def : score : Integer =
             10*self.allComments->size() + self.countLikes;
@@ -95,7 +95,7 @@ object ScoreHelper {
         res._1
     }
 
-    def helper_score(post: SocialNetworkComment, model: SocialNetworkModel, metamodel: SocialNetworkMetamodel) : Int = {
+    def helper_scoreComment(post: SocialNetworkComment, model: SocialNetworkModel, metamodel: SocialNetworkMetamodel) : Int = {
         /*
         helper context SN!Comment def : score : Integer =
             self.allComponents->collect(c | c.size()*c.size())->sum();

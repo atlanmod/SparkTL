@@ -61,7 +61,7 @@ class TestHelper extends AnyFunSuite{
 
     test("test score comment"){
         val metamodel = SocialNetworkMetamodelNaive
-        val score = ScoreHelper.helper_score(post1, model, metamodel)
+        val score = ScoreHelper.helper_scorePost(post1, model, metamodel)
         assert(score == 34)
     }
 
