@@ -1,9 +1,9 @@
 package org.atlanmod.ttc18.transformation
 
 import org.atlanmod.tl.util.ListUtils
-import org.atlanmod.ttc18.model.socialnetwork.SocialNetworkModel
 import org.atlanmod.ttc18.model.socialnetwork.element.{SocialNetworkComment, SocialNetworkPost, SocialNetworkSubmission, SocialNetworkUser}
 import org.atlanmod.ttc18.model.socialnetwork.metamodel.SocialNetworkMetamodel
+import org.atlanmod.ttc18.model.socialnetwork.model.SocialNetworkModel
 
 object ScoreHelper {
 

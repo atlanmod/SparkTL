@@ -6,10 +6,10 @@ import org.atlanmod.tl.model.Transformation
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink}
 import org.atlanmod.tl.model.impl.{OutputPatternElementImpl, OutputPatternElementReferenceImpl, RuleImpl, TransformationImpl}
 import org.atlanmod.tl.util.ListUtils
-import org.atlanmod.ttc18.model.socialnetwork.SocialNetworkModel
 import org.atlanmod.ttc18.model.socialnetwork.element.{SocialNetworkComment, SocialNetworkPost, SocialNetworkSubmission, SocialNetworkUser}
 import org.atlanmod.ttc18.model.socialnetwork.link.{CommentLikedBy, CommentPost, CommentSubmission, SubmissionComments, SubmissionSubmitter, UserFriends, UserLikes, UserSubmissions}
 import org.atlanmod.ttc18.model.socialnetwork.metamodel.SocialNetworkMetamodel
+import org.atlanmod.ttc18.model.socialnetwork.model.SocialNetworkModel
 
 import scala.util.Random
 

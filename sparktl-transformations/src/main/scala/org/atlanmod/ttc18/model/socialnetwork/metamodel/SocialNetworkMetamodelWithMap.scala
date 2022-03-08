@@ -1,6 +1,6 @@
 package org.atlanmod.ttc18.model.socialnetwork.metamodel
-import org.atlanmod.ttc18.model.socialnetwork.SocialNetworkModel
 import org.atlanmod.ttc18.model.socialnetwork.element.{SocialNetworkComment, SocialNetworkPost, SocialNetworkSubmission, SocialNetworkUser}
+import org.atlanmod.ttc18.model.socialnetwork.model.SocialNetworkModel
 
 object SocialNetworkMetamodelWithMap extends SocialNetworkMetamodel {
 

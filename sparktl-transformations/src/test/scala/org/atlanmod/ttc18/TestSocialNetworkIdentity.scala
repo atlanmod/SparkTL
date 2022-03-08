@@ -7,7 +7,8 @@ import org.atlanmod.tl.util.ListUtils
 import org.atlanmod.ttc18.model.socialnetwork.element.{SocialNetworkComment, SocialNetworkPost, SocialNetworkUser}
 import org.atlanmod.ttc18.model.socialnetwork.link._
 import org.atlanmod.ttc18.model.socialnetwork.metamodel.{SocialNetworkMetamodelNaive, SocialNetworkMetamodelWithMap}
-import org.atlanmod.ttc18.model.socialnetwork.{SocialNetworkElement, SocialNetworkLink, SocialNetworkModel}
+import org.atlanmod.ttc18.model.socialnetwork.model.SocialNetworkModel
+import org.atlanmod.ttc18.model.socialnetwork.{SocialNetworkElement, SocialNetworkLink}
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestSocialNetworkIdentity extends AnyFunSuite{

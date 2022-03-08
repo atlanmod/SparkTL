@@ -1,10 +1,11 @@
-package org.atlanmod.ttc18.model.socialnetwork
+package org.atlanmod.ttc18.model.socialnetwork.model
 
 import org.atlanmod.tl.model.impl.dynamic.DynamicModel
 import org.atlanmod.tl.util.ListUtils
+import org.atlanmod.ttc18.model.socialnetwork.{SocialNetworkElement, SocialNetworkLink}
 
 class SocialNetworkModel (elements: List[SocialNetworkElement] = List(), links: List[SocialNetworkLink] = List())
-  extends DynamicModel(elements, links){
+  extends DynamicModel(elements, links) with ISocialNetworkModel{
 
     override def allModelElements: List[SocialNetworkElement] = elements
     override def allModelLinks: List[SocialNetworkLink] = links

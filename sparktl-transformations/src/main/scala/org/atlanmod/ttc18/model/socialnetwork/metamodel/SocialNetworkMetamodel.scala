@@ -1,10 +1,12 @@
 package org.atlanmod.ttc18.model.socialnetwork.metamodel
 
 import org.atlanmod.tl.model.impl.dynamic.{DynamicElement, DynamicLink, DynamicMetamodel}
-import org.atlanmod.ttc18.model.socialnetwork.SocialNetworkModel
 import org.atlanmod.ttc18.model.socialnetwork.element.{SocialNetworkComment, SocialNetworkPost, SocialNetworkSubmission, SocialNetworkUser}
+import org.atlanmod.ttc18.model.socialnetwork.model.SocialNetworkModel
 
 trait SocialNetworkMetamodel extends Serializable {
+
+    type type_link = String
 
     final val USER = "User"
     final val SUBMISSION = "Submission"
@@ -26,8 +28,8 @@ trait SocialNetworkMetamodel extends Serializable {
     def getSubmissionsOfUser(model: SocialNetworkModel, user: SocialNetworkUser): Option[List[SocialNetworkSubmission]]
     def getLikesOfUser(model: SocialNetworkModel, user: SocialNetworkUser): Option[List[SocialNetworkComment]]
     def getSubmitterOfSubmission(model: SocialNetworkModel, sub: SocialNetworkSubmission): Option[SocialNetworkUser]
-    def getLikedByOfComment(model:SocialNetworkModel, comment: SocialNetworkComment): Option[List[SocialNetworkUser]]
-    def getPostOfComment(model:SocialNetworkModel, comment: SocialNetworkComment): Option[SocialNetworkPost]
+    def getLikedByOfComment(model: SocialNetworkModel, comment: SocialNetworkComment): Option[List[SocialNetworkUser]]
+    def getPostOfComment(model: SocialNetworkModel, comment: SocialNetworkComment): Option[SocialNetworkPost]
     def getCommentsOfSubmission(model: SocialNetworkModel, sub: SocialNetworkSubmission): Option[List[SocialNetworkComment]]
-    def getSubmissionOfComment(model:SocialNetworkModel, comment: SocialNetworkComment): Option[SocialNetworkSubmission]
+    def getSubmissionOfComment(model: SocialNetworkModel, comment: SocialNetworkComment): Option[SocialNetworkSubmission]
 }

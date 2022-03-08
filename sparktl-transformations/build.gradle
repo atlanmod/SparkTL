@@ -8,5 +8,7 @@ version '1.0-SNAPSHOT'
 dependencies {
     implementation project(":sparktl-core")
     implementation group: 'net.liftweb', name: 'lift-json_2.12', version: '3.4.3'
+    implementation group: 'org.apache.spark', name: 'spark-core_2.12', version: '3.0.1'
+    implementation group: 'org.apache.spark', name: 'spark-sql_2.12', version: '3.0.1'
     implementation group: 'org.apache.spark', name: 'spark-graphx_2.12', version: '3.0.1'
 }

@@ -1,7 +1,8 @@
 package org.atlanmod.ttc18.model.socialnetwork.metamodel
-import org.atlanmod.ttc18.model.socialnetwork.{SocialNetworkLink, SocialNetworkModel}
+import org.atlanmod.ttc18.model.socialnetwork.SocialNetworkLink
 import org.atlanmod.ttc18.model.socialnetwork.element.{SocialNetworkComment, SocialNetworkPost, SocialNetworkSubmission, SocialNetworkUser}
-import org.atlanmod.ttc18.model.socialnetwork.link.{CommentLikedBy, CommentPost, CommentSubmission, SubmissionComments, SubmissionSubmitter, UserFriends, UserLikes, UserSubmissions}
+import org.atlanmod.ttc18.model.socialnetwork.link._
+import org.atlanmod.ttc18.model.socialnetwork.model.SocialNetworkModel
 
 object SocialNetworkMetamodelNaive extends SocialNetworkMetamodel {
 
@@ -124,4 +125,5 @@ object SocialNetworkMetamodelNaive extends SocialNetworkMetamodel {
 
     override def getSubmissionOfComment(model: SocialNetworkModel, comment: SocialNetworkComment): Option[SocialNetworkSubmission] =
         getSubmissionOfCommentOnLinks(model.allModelLinks.toIterator, comment)
+
 }

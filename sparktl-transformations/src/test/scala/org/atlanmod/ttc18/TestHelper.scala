@@ -3,9 +3,10 @@ package org.atlanmod.ttc18
 import java.util.Date
 
 import org.atlanmod.ttc18.model.socialnetwork.element.{SocialNetworkComment, SocialNetworkPost, SocialNetworkUser}
-import org.atlanmod.ttc18.model.socialnetwork.{SocialNetworkElement, SocialNetworkLink, SocialNetworkModel}
+import org.atlanmod.ttc18.model.socialnetwork.{SocialNetworkElement, SocialNetworkLink}
 import org.atlanmod.ttc18.model.socialnetwork.link.{CommentLikedBy, CommentPost, CommentSubmission, SubmissionComments, SubmissionSubmitter, UserFriends, UserLikes, UserSubmissions}
 import org.atlanmod.ttc18.model.socialnetwork.metamodel.SocialNetworkMetamodelNaive
+import org.atlanmod.ttc18.model.socialnetwork.model.SocialNetworkModel
 import org.atlanmod.ttc18.transformation.ScoreHelper
 import org.scalatest.funsuite.AnyFunSuite
 
