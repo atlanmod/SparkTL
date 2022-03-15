@@ -56,7 +56,7 @@ object InactiveICMTButActiveAuthors {
                                 my_sleep(sleeping_instantiate, random.nextInt)
                                 val author = pattern.head.asInstanceOf[DblpAuthor]
                                 val active = helper_active_ICMT(model.asInstanceOf[DblpModel], author, meta)
-                                Some(new AuthorInfoAuthor(author.getName, active = active))
+                                Some(new AuthorInfoAuthor(author.getName, 0, active = active))
                             }
                         },
                         outputElemRefs = List(

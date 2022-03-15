@@ -9,6 +9,8 @@ abstract class DynamicElement(classname: String, properties : scala.collection.m
 
     def getType: String = { classname }
 
+    def getId: Long
+
     def getProperties: scala.collection.mutable.Map[String, Any] = { this.properties }
 
     def eGetProperty(name: String): Any = {

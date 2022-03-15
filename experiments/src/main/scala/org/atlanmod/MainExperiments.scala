@@ -24,7 +24,7 @@ object MainExperiments {
         val config: Parameters.Config = ParamUtils.getConfig(args)
         val case_ : String = ArgsUtils.getOrElse(args, "-case", DEFAULT_TRANSFORMATION, a => a)
         val transformation = CaseUtils.getTransformation(case_, config)
-        val metamodel: DynamicMetamodel[DynamicElement, DynamicLink] = getMetamodelFromArgs(args)
+        val metamodel = getMetamodelFromArgs(args)
         val configModel: (String, Int, List[String]) = ConfigModel(args)
         val model: DynamicModel = CaseUtils.getModel(metamodel, configModel._1, configModel._2, configModel._3)
         val res = ExperimentalEngine.executeWithConfig(transformation, model, metamodel, config)

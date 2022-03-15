@@ -77,12 +77,18 @@ object Parameters {
     final val LINKS_LIST = "list"
     final val LINKS_MAP = "map"
 
+    // Model type
+    final val DYNAMIC_MODEL = "dynamic"
+    final val GRAPHX_MODEL = "graphx"
+
     class ConfigModel {
 
         var linkType: String = ""
+        var modelType: String = ""
 
-        def this(linkType: String = LINKS_MAP){
+        def this(modelType: String = DYNAMIC_MODEL , linkType: String = LINKS_MAP){
             this()
+            this.modelType = modelType
             this.linkType = linkType
         }
 

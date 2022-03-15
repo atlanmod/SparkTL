@@ -1,6 +1,6 @@
 package org.atlanmod.class2relational.model.classmodel.element
 
-import org.atlanmod.class2relational.model.IdGenerator
+import org.atlanmod.IdGenerator
 import org.atlanmod.class2relational.model.classmodel.ClassElement
 import org.atlanmod.class2relational.model.classmodel.metamodel.ClassMetamodelNaive
 
@@ -9,7 +9,7 @@ class ClassAttribute extends ClassElement(ClassMetamodelNaive.ATTRIBUTE) {
     @deprecated("Having a random ID can turn inconsistent the output of a transformation", "1.0.1")
     def this(name: String){
         this()
-        val id: String = IdGenerator.id()
+        val id: Long = IdGenerator.id()
         super.eSetProperty("id", id)
         super.eSetProperty("name", name)
         super.eSetProperty("multivalued", false)
@@ -18,27 +18,27 @@ class ClassAttribute extends ClassElement(ClassMetamodelNaive.ATTRIBUTE) {
     @deprecated("Having a random ID can turn inconsistent the output of a transformation", "1.0.1")
     def this(name: String, multi: Boolean){
         this()
-        val id: String = IdGenerator.id()
+        val id: Long = IdGenerator.id()
         super.eSetProperty("id", id)
         super.eSetProperty("name", name)
         super.eSetProperty("multivalued", multi)
     }
 
-    def this(id: String, name: String, multi: Boolean){
+    def this(id: Long, name: String, multi: Boolean){
         this()
         super.eSetProperty("id", id)
         super.eSetProperty("name", name)
         super.eSetProperty("multivalued", multi)
     }
 
-    def this(id: String, name: String){
+    def this(id: Long, name: String){
         this()
         super.eSetProperty("id", id)
         super.eSetProperty("name", name)
         super.eSetProperty("multivalued", false)
     }
 
-    override def getId: String = super.eGetProperty("id").asInstanceOf[String]
+    override def getId: Long = super.eGetProperty("id").asInstanceOf[Long]
     def getName: String = super.eGetProperty("name").asInstanceOf[String]
     def setName(name: String): Unit = super.eSetProperty("name", name)
     def isMultivalued: Boolean = super.eGetProperty("multivalued").asInstanceOf[Boolean]

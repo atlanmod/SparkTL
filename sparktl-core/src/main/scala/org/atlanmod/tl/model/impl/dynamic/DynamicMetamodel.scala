@@ -39,4 +39,7 @@ class DynamicMetamodel[DE <: DynamicElement, DL <: DynamicLink](name: String) ex
 
     override def allModelElementsOfType(t: String, model: Model[DE, DL]): List[DE] =
         model.allModelElements.filter(e => t.equals(e.getType))
+
+    override def elementId(sc: DE): Long = sc.getId
+
 }

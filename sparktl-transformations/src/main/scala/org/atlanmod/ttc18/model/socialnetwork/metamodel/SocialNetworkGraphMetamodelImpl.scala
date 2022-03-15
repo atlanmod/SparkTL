@@ -2,6 +2,8 @@ package org.atlanmod.ttc18.model.socialnetwork.metamodel
 import org.apache.spark.SparkContext
 import org.apache.spark.graphx.Edge
 import org.atlanmod.Utils
+import org.atlanmod.tl.model.impl.GraphModel
+import org.atlanmod.tl.model.impl.dynamic.DynamicElement
 import org.atlanmod.ttc18.model.socialnetwork.element.{SocialNetworkComment, SocialNetworkPost, SocialNetworkSubmission, SocialNetworkUser}
 import org.atlanmod.ttc18.model.socialnetwork.link._
 import org.atlanmod.ttc18.model.socialnetwork.model.{SocialNetworkGraphModel, SocialNetworkModel}
@@ -81,7 +83,7 @@ object SocialNetworkGraphMetamodelImpl extends SocialNetworkGraphMetamodel {
         }
     }
 
-    private def buildLink(tuple: (SocialNetworkElement, type_edges, List[SocialNetworkElement])): SocialNetworkLink = {
+    private def toLink(tuple: (DynamicElement, type_edges, List[DynamicElement])): SocialNetworkLink = {
         tuple._2 match {
             case SUBMISSION_SUBMITTER =>
                 new SubmissionSubmitter(
@@ -124,14 +126,8 @@ object SocialNetworkGraphMetamodelImpl extends SocialNetworkGraphMetamodel {
                 )
     }}
 
-    override def buildDynamicModel(model: SocialNetworkGraphModel): SocialNetworkModel = {
-        val elements = model.allModelElements
-        val links = Utils.makeTripletsFromEdgeTriplets(model.allModelLinks).map(t => buildLink(t))
-        new SocialNetworkModel(elements, links)
-    }
-
-    private def buildEdges(link: SocialNetworkLink): List[Edge[type_edges]] = {
-        val type_link: type_edges = link.getType match {
+    private def toEdgeLabel(label: String): type_edges = {
+        label match {
             case SocialNetworkMetamodelNaive.SUBMISSION_SUBMITTER => SUBMISSION_SUBMITTER
             case SocialNetworkMetamodelNaive.USER_SUBMISSIONS => USER_SUBMISSIONS
             case SocialNetworkMetamodelNaive.USER_FRIENDS => USER_FRIENDS
@@ -141,17 +137,13 @@ object SocialNetworkGraphMetamodelImpl extends SocialNetworkGraphMetamodel {
             case SocialNetworkMetamodelNaive.SUBMISSION_COMMENTS => SUBMISSION_COMMENTS
             case SocialNetworkMetamodelNaive.COMMENT_SUBMISSION => COMMENT_SUBMISSION
         }
-        link.getTarget.map(target => new Edge(
-            link.getSource.asInstanceOf[SocialNetworkElement].getId.toLong,
-            target.asInstanceOf[SocialNetworkElement].getId.toLong,
-            type_link
-        ))
     }
 
-    override def fromDynamicModel(model: SocialNetworkModel, sc: SparkContext): SocialNetworkGraphModel = {
-        val elements = sc.parallelize(model.allModelElements.map(element => (element.getId.toLong, element)))
-        val links = sc.parallelize(model.allModelLinks.flatMap(link => buildEdges(link)))
-        new SocialNetworkGraphModel(elements, links)
+    def buildDynamicModel(model: SocialNetworkGraphModel): SocialNetworkModel = {
+        val r = Utils.buildDynamicModel(model.asInstanceOf[GraphModel[DynamicElement, Int]], toLink)
+        r.asInstanceOf[SocialNetworkModel]
     }
 
+    def fromDynamicModel(model: SocialNetworkModel, sc: SparkContext): SocialNetworkGraphModel =
+        Utils.buildGraphModel(model, sc, toEdgeLabel).asInstanceOf[SocialNetworkGraphModel]
 }

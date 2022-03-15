@@ -19,6 +19,7 @@ object ParamUtils {
     }
 
     def getModelConfig(args: Array[String]): Parameters.ConfigModel = {
+        val modelType: String = getOrElse(args, "-modelType", Parameters.DYNAMIC_MODEL, a => a)
         val linkType: String = getOrElse(args, "-linkType", Parameters.LINKS_MAP, a => a)
         new Parameters.ConfigModel(linkType)
     }

@@ -28,7 +28,7 @@ object SocialNetworkCSVLoader {
         val buffer = Source.fromFile(csv_file)
         val res = buffer.getLines().map(line => {
             val cols = line.split(",").map(_.trim)
-            new SocialNetworkUser(cols(0), cols(1))
+            new SocialNetworkUser(cols(0).toLong, cols(1))
         }).toList
         buffer.close()
         res
@@ -44,7 +44,7 @@ object SocialNetworkCSVLoader {
             val content = cols(2)
             val author_id = cols(3)
             val sub_id = cols(4)
-            val comment = new SocialNetworkComment(id, date, content)
+            val comment = new SocialNetworkComment(id.toLong, date, content)
             raw_links = (author_id, metamodel.USER_SUBMISSIONS, id) :: raw_links
             raw_links = (id, metamodel.SUBMISSION_SUBMITTER, author_id) :: raw_links
             raw_links = (id, metamodel.COMMENT_SUBMISSION, sub_id) :: raw_links
@@ -64,7 +64,7 @@ object SocialNetworkCSVLoader {
             val date = date_format.parse(cols(1))
             val content = cols(2)
             val author_id = cols(3)
-            val post = new SocialNetworkPost(id, date, content)
+            val post = new SocialNetworkPost(id.toLong, date, content)
             raw_links = (author_id, metamodel.USER_SUBMISSIONS, id) :: raw_links
             raw_links = (id, metamodel.SUBMISSION_SUBMITTER, author_id) :: raw_links
             post
@@ -115,9 +115,9 @@ object SocialNetworkCSVLoader {
         val mapId = elements.map(e => (e.getId, e)).toMap
         raw_links.groupBy(v => (src(v), label(v))).map(entry =>
         {
-            val src: Option[SocialNetworkElement] = mapId.get(entry._1._1)
+            val src: Option[SocialNetworkElement] = mapId.get(entry._1._1.toLong)
             val label: String = entry._1._2
-            val targets: List[Option[SocialNetworkElement]] = entry._2.map(e => mapId.get(trg(e)))
+            val targets: List[Option[SocialNetworkElement]] = entry._2.map(e => mapId.get(trg(e).toLong))
             buildLink(src.get, label, targets.map(o => o.get), metamodel)
         }).toList
     }
@@ -142,13 +142,13 @@ object SocialNetworkCSVLoader {
     RDD[(VertexId, SocialNetworkElement)] =
         spark.read.format("csv").option("header",header.toString).option("delimiter", delimiter).load(csv_file).rdd.map(row =>
             (row.get(0).asInstanceOf[String].toLong,
-              new SocialNetworkUser(row.get(0).asInstanceOf[String], row.get(1).asInstanceOf[String]))
+              new SocialNetworkUser(row.get(0).asInstanceOf[String].toLong, row.get(1).asInstanceOf[String]))
         )
 
     def load_posts_vertices(csv_file: String, metamodel: SocialNetworkGraphMetamodel, spark: SparkSession, header: Boolean = false, delimiter: String=";"):
     RDD[(VertexId, SocialNetworkElement)] = {
         spark.read.format("csv").option("header", header.toString).option("delimiter", delimiter).load(csv_file).rdd.map(row => {
-            val id = row(0).asInstanceOf[String]
+            val id = row(0).asInstanceOf[String].toLong
             val date = date_format.parse(row(1).asInstanceOf[String])
             val content = row(2).asInstanceOf[String]
             val post = new SocialNetworkPost(id, date, content)
@@ -161,7 +161,7 @@ object SocialNetworkCSVLoader {
     RDD[(VertexId, SocialNetworkElement)] = {
         spark.read.format("csv").option("header",header.toString).option("delimiter", delimiter).load(csv_file).rdd.map(row =>
             {
-                val id = row(0).asInstanceOf[String]
+                val id = row(0).asInstanceOf[String].toLong
                 val date = date_format.parse(row(1).asInstanceOf[String])
                 val content = row(2).asInstanceOf[String]
                 val author_id = row(3).asInstanceOf[String]

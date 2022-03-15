@@ -4,13 +4,13 @@ import org.atlanmod.findcouples.model.movie.metamodel.MovieMetamodelNaive
 
 class MovieClique extends MovieGroup (MovieMetamodelNaive.CLIQUE) {
 
-    def this(id: String, avgRating: Double) = {
+    def this(id: Long, avgRating: Double) = {
         this()
         super.eSetProperty("avgRating", avgRating)
         super.eSetProperty("id", id)
     }
 
-    override def getId: String = super.getProperties("id").asInstanceOf[String]
+    override def getId: Long = super.getProperties("id").asInstanceOf[Long]
     override def getAvgRating: Double = super.eGetProperty("avgRating").asInstanceOf[Double]
 
     override def toString: String = "Couple (" + getAvgRating + ")"

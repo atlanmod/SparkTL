@@ -1,12 +1,31 @@
 package org.atlanmod.ttc18.model.socialnetwork.element
 
-import java.util.Date
+import org.atlanmod.IdGenerator
 
+import java.util.Date
 import org.atlanmod.ttc18.model.socialnetwork.metamodel.SocialNetworkMetamodelNaive
 
 class SocialNetworkComment extends SocialNetworkSubmission(SocialNetworkMetamodelNaive.COMMENT){
 
-    def this(id: String, timestamp: Date, content: String) = {
+    def this(timestamp: Date, content: String) = {
+        this()
+        val id: Long = IdGenerator.id()
+        super.eSetProperty("id", id)
+        super.eSetProperty("timestamp", timestamp)
+        super.eSetProperty("content", content)
+        super.eSetProperty("score", 0)
+    }
+
+    def this(timestamp: Date, content: String, score: Int) = {
+        this()
+        val id: Long = IdGenerator.id()
+        super.eSetProperty("id", id)
+        super.eSetProperty("timestamp", timestamp)
+        super.eSetProperty("content", content)
+        super.eSetProperty("score", score)
+    }
+
+    def this(id: Long, timestamp: Date, content: String) = {
         this()
         super.eSetProperty("id", id)
         super.eSetProperty("timestamp", timestamp)
@@ -14,7 +33,7 @@ class SocialNetworkComment extends SocialNetworkSubmission(SocialNetworkMetamode
         super.eSetProperty("score", 0)
     }
 
-    def this(id: String, timestamp: Date, content: String, score: Int) = {
+    def this(id: Long, timestamp: Date, content: String, score: Int) = {
         this()
         super.eSetProperty("id", id)
         super.eSetProperty("timestamp", timestamp)
@@ -38,7 +57,7 @@ class SocialNetworkComment extends SocialNetworkSubmission(SocialNetworkMetamode
         super.eSetProperty("score", score)
     }
 
-    override def getId: String = super.eGetProperty("id").asInstanceOf[String]
+    override def getId: Long = super.eGetProperty("id").asInstanceOf[Long]
     override def getScore: Int = super.eGetProperty("score").asInstanceOf[Int]
     override def getContent: String = super.eGetProperty("content").asInstanceOf[String]
     override def getTimestamp: Date = super.eGetProperty("timestamp").asInstanceOf[Date]

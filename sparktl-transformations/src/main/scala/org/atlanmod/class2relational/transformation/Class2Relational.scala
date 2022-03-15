@@ -1,5 +1,6 @@
 package org.atlanmod.class2relational.transformation
 
+import org.atlanmod.IdGenerator
 import org.atlanmod.Utils.my_sleep
 import org.atlanmod.class2relational.model.classmodel.ClassModel
 import org.atlanmod.class2relational.model.classmodel.element.{ClassAttribute, ClassClass, ClassDatatype}
@@ -39,7 +40,7 @@ object Class2Relational {
                         elementExpr = (_, _, pattern) => {
                             my_sleep(sleeping_instantiate, random.nextInt())
                             val datatype = pattern.head.asInstanceOf[ClassDatatype]
-                            Some(new RelationalType(datatype.getId, datatype.getName))
+                            Some(new RelationalType(IdGenerator.id(), datatype.getName))
                         })
                 )),
             new RuleImpl(name = "Class2Table",
@@ -50,7 +51,7 @@ object Class2Relational {
                         elementExpr = (_, _, pattern) => {
                             my_sleep(sleeping_instantiate, random.nextInt())
                             val class_ = pattern.head.asInstanceOf[ClassClass]
-                            Some(new RelationalTable(class_.getId, class_.getName))
+                            Some(new RelationalTable(IdGenerator.id(), class_.getName))
                         },
                         outputElemRefs = List(
                             new OutputPatternElementReferenceImpl(
@@ -88,7 +89,7 @@ object Class2Relational {
                         elementExpr = (_, _, pattern) => {
                             if (pattern.isEmpty) None else { my_sleep(sleeping_instantiate, random.nextInt())
                                 val class_ = pattern.head.asInstanceOf[ClassClass]
-                                Some(new RelationalColumn(class_.getId + "Id", "Id"))
+                                Some(new RelationalColumn(IdGenerator.id(), "Id"))
                             }}
                     )
                 )
@@ -100,7 +101,7 @@ object Class2Relational {
                     new OutputPatternElementImpl(name = PATTERN_SVCOLUMNS,
                         elementExpr = (_, _, pattern) => { my_sleep(sleeping_instantiate, random.nextInt())
                             val attribute = pattern.head.asInstanceOf[ClassAttribute]
-                            Some(new RelationalColumn(attribute.getId, attribute.getName))
+                            Some(new RelationalColumn(IdGenerator.id(), attribute.getName))
                         },
                         outputElemRefs = List(
                             new OutputPatternElementReferenceImpl((tls, _, sm, pattern, output) => { my_sleep(sleeping_apply, random.nextInt())
@@ -135,7 +136,7 @@ object Class2Relational {
                             val model = sm.asInstanceOf[ClassModel]
                             class_metamodel.getAttributeOwner(attribute, model) match {
                                 case Some(owner) =>
-                                    Some(new RelationalTable(attribute.getId, owner.getName + "_" + attribute.getName))
+                                    Some(new RelationalTable(IdGenerator.id(), owner.getName + "_" + attribute.getName))
                                 case _ => None
                             }
                         },
@@ -167,14 +168,14 @@ object Class2Relational {
                         )),
                     new OutputPatternElementImpl(name = PATTERN_PIVOT_SOURCE,
                         elementExpr = (_, _, pattern) => { my_sleep(sleeping_instantiate, random.nextInt())
-                            Some(new RelationalColumn(pattern.head.asInstanceOf[ClassAttribute].getId + "psrc", "Id"))
+                            Some(new RelationalColumn(IdGenerator.id(), "Id"))
                         }),
                     new OutputPatternElementImpl(name = PATTERN_PIVOT_TARGET,
                         elementExpr = (_, sm, pattern) => { my_sleep(sleeping_instantiate, random.nextInt())
                             val attribute = pattern.head.asInstanceOf[ClassAttribute]
                             class_metamodel.getAttributeType(attribute, sm.asInstanceOf[ClassModel]) match {
                                 case Some(type_) =>
-                                    Some(new RelationalColumn(attribute.getId + "ptrg", type_.getName))
+                                    Some(new RelationalColumn(IdGenerator.id(), type_.getName))
                                 case _ => None
                             }
                         },

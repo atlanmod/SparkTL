@@ -8,8 +8,6 @@ abstract class SocialNetworkElement(classname: String) extends DynamicElement(cl
 
     override def getType: String = classname
 
-    def getId: String
-
     override def equals(o: Any): Boolean = {
         o match {
             case obj: SocialNetworkElement =>

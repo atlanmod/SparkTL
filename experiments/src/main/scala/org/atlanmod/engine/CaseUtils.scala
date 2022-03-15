@@ -172,7 +172,7 @@ object CaseUtils {
         }
 
 
-    def getModel(mm: DynamicMetamodel[DynamicElement, DynamicLink], input: String, size: Int, files: List[String]): DynamicModel = {
+    def getModel(mm: Any, input: String, size: Int, files: List[String]): DynamicModel = {
         if (mm == ClassMetamodelNaive.metamodel)
             input match {
                 case "size" => org.atlanmod.class2relational.model.ModelSamples.getReplicatedClassSimple(size).asInstanceOf[DynamicModel]

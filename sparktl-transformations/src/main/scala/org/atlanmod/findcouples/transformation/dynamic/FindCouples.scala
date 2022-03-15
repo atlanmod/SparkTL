@@ -1,5 +1,6 @@
 package org.atlanmod.findcouples.transformation.dynamic
 
+import org.atlanmod.IdGenerator
 import org.atlanmod.Utils.my_sleep
 import org.atlanmod.findcouples.model.movie.element._
 import org.atlanmod.findcouples.model.movie.link.{CoupleToPersonP1, CoupleToPersonP2, MovieToPersons, PersonToMovies}
@@ -173,7 +174,7 @@ object FindCouples {
                                     if(helper_areCouple(model, metamodel, p0, p1)){
                                         val common = helper_commonMovies(model.asInstanceOf[MovieModel], metamodel, p0, p1)
                                         val avgRating = common.map(m => m.getRating).sum / common.size
-                                        Some(new MovieCouple(p0.getName + " & " + p1.getName, avgRating))
+                                        Some(new MovieCouple(avgRating))
                                     } else None
                                 },
                             outputElemRefs = List(
@@ -219,7 +220,7 @@ object FindCouples {
                                     if(helper_areCouple(model, metamodel, p0, p1)){
                                         val common = helper_commonMovies(model.asInstanceOf[MovieModel], metamodel, p0, p1)
                                         val avgRating = common.map(m => m.getRating).sum / common.size
-                                        Some(new MovieCouple(p0.getName + " & " + p1.getName, avgRating))
+                                        Some(new MovieCouple(avgRating))
                                     } else None
                                 },
                             outputElemRefs = List(

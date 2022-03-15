@@ -1,12 +1,14 @@
 package org.atlanmod.dblpinfo.model.dblp.element
 
+import org.atlanmod.IdGenerator
 import org.atlanmod.dblpinfo.model.dblp.metamodel.DblpMetamodelNaive
 
 class DblpBook extends DblpRecord(DblpMetamodelNaive.BOOK) {
 
-    def this(ee: String, url: String, key: String, mdate: String,
-             title: String, month: String, volume: Int = 0, series: String, edition: Int = 0, isbn: String) {
+    def this(id: Long, ee: String, url: String, key: String, mdate: String,
+             title: String, month: String, volume: Int, series: String, edition: Int, isbn: String) {
         this()
+        super.eSetProperty("id", id)
         super.eSetProperty("ee", ee)
         super.eSetProperty("url", url)
         super.eSetProperty("key", key)
@@ -19,6 +21,25 @@ class DblpBook extends DblpRecord(DblpMetamodelNaive.BOOK) {
         super.eSetProperty("isbn", isbn)
     }
 
+
+    def this(ee: String, url: String, key: String, mdate: String,
+             title: String, month: String, volume: Int, series: String, edition: Int, isbn: String) {
+        this()
+        val id: Long = IdGenerator.id()
+        super.eSetProperty("id", id)
+        super.eSetProperty("ee", ee)
+        super.eSetProperty("url", url)
+        super.eSetProperty("key", key)
+        super.eSetProperty("mdate", mdate)
+        super.eSetProperty("title", title)
+        super.eSetProperty("volume", volume)
+        super.eSetProperty("month", month)
+        super.eSetProperty("series", series)
+        super.eSetProperty("edition", edition)
+        super.eSetProperty("isbn", isbn)
+    }
+
+    override def getId: Long = super.eGetProperty("id").asInstanceOf[Long]
     def getTitle: String = super.eGetProperty("title").asInstanceOf[String] //
     def getMonth: String = super.eGetProperty("month").asInstanceOf[String]
 

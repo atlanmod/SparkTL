@@ -33,7 +33,4 @@ trait SocialNetworkGraphMetamodel extends Serializable {
     def getPostOfComment(model: SocialNetworkGraphModel, comment: SocialNetworkComment): Option[SocialNetworkPost]
     def getCommentsOfSubmission(model: SocialNetworkGraphModel, sub: SocialNetworkSubmission): Option[List[SocialNetworkComment]]
     def getSubmissionOfComment(model: SocialNetworkGraphModel, comment: SocialNetworkComment): Option[SocialNetworkSubmission]
-
-    def buildDynamicModel(model: SocialNetworkGraphModel): SocialNetworkModel
-    def fromDynamicModel(model: SocialNetworkModel, sc: SparkContext): SocialNetworkGraphModel
 }

@@ -5,7 +5,6 @@ import java.util.Date
 import org.atlanmod.ttc18.model.socialnetwork.SocialNetworkElement
 
 abstract class SocialNetworkSubmission(classname: String) extends SocialNetworkElement (classname: String){
-    def getId: String
     def getScore: Int
     def getContent: String
     def getTimestamp: Date

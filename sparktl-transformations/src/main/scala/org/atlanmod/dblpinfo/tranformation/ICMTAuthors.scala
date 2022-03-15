@@ -35,7 +35,7 @@ object ICMTAuthors {
                                 my_sleep(sleeping_instantiate, random.nextInt)
                                 val author = pattern.head.asInstanceOf[DblpAuthor]
                                 val numOfPapers = helper_numOfPapers(model.asInstanceOf[DblpModel], author, meta)
-                                Some(new AuthorInfoAuthor(author.getName, numOfPapers = numOfPapers))
+                                Some(new AuthorInfoAuthor(author.getName, numOfPapers = numOfPapers, true))
                             }
                         }
                     )

@@ -17,7 +17,6 @@ trait FamiliesMetamodel extends Serializable {
     final val SON_TO_FAMILY = "familySon"
     final val DAUGHTER_TO_FAMILY = "familyDaughter"
 
-
     def metamodel: DynamicMetamodel[DynamicElement, DynamicLink] = new DynamicMetamodel[DynamicElement, DynamicLink]("FamiliesMetamodel")
 
     def familyMother(member: FamiliesMember, model: FamiliesModel) : Option[FamiliesFamily]

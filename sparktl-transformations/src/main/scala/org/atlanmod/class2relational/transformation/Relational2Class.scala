@@ -139,7 +139,7 @@ object Relational2Class {
                                 val attribute = output.asInstanceOf[ClassAttribute]
                                 relational_metamodel.getTableKeys(table, model) match {
                                     case Some(keys: List[RelationalColumn]) =>
-                                        keys.find(p => p.getId.contains("ptrg")) match {
+                                        keys.headOption match {
                                             case Some(key: RelationalColumn) =>
                                                 relational_metamodel.getColumnType(key, model) match {
                                                     case Some(type_ : RelationalType) =>

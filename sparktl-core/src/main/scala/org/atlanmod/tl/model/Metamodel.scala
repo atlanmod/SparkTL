@@ -10,6 +10,8 @@ trait Metamodel[ME, ML, MC, MR] extends Serializable {
 
     //    def denoteClass(sc: MC): MC
 
+    def elementId(sc:ME): Long
+
     def toModelClass(sc: MC, se: ME): Option[ME]
     def toModelReference(sr: MR, sl: ML): Option[ML]
 

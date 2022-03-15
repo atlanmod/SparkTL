@@ -6,7 +6,7 @@ import scala.collection.mutable
 
 abstract class ClassElement(classname: String) extends DynamicElement(classname, mutable.HashMap()) {
 
-    def getId: String
+    override def getId: Long
 
     override def getType: String = classname
 
