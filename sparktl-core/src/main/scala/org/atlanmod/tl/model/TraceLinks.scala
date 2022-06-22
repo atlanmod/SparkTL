@@ -1,18 +1,18 @@
 package org.atlanmod.tl.model
 
-trait TraceLinks[SME, TME] extends ITraceLinks {
+trait TraceLinks[STL, TTL]{
 
-    def getSourcePatterns: Iterable[List[SME]]
+    def getSourcePatterns: Iterable[List[STL]]
 
-    def getTargetElements: Iterable[TME]
+    def getTargetElements: Iterable[TTL]
 
-    def find(sp: List[SME])(p: TraceLink[SME, TME] => Boolean): Option[TraceLink[SME, TME]]
+    def find(sp: List[STL])(p: TraceLink[STL, TTL] => Boolean): Option[TraceLink[STL, TTL]]
 
-    def filter(p: TraceLink[SME, TME] => Boolean): TraceLinks[SME, TME]
+    def filter(p: TraceLink[STL, TTL] => Boolean): TraceLinks[STL, TTL]
 
     def equals(o: Any): Boolean
 
-    def asList(): List[TraceLink[SME, TME]]
+    def asList(): List[TraceLink[STL, TTL]]
 
-    def getIterableSeq(): Seq[Any]
+    def getIterableSeq():Either[Seq[(List[STL], String)], Seq[List[STL]]]
 }

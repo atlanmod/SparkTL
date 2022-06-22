@@ -25,13 +25,15 @@ class TraceLinksList[SME, TME](tls: List[TraceLink[SME, TME]], contain_rule: Boo
         }
     }
 
-    override def getIterableSeq(): Seq[Any] = {
+    override def getIterableSeq(): Either[Seq[(List[SME], String)], Seq[List[SME]]] =
         if (contain_rule)
-            return tls.map {
-                case t: TraceLinkWithRuleImpl[SME, TME] => (t.getSourcePattern, t.getRulename)
-                case _ => throw new Exception("Boolean for \"Containing rules\" in the tracelink is misconfigured")
-            }
-        tls.map(tl => tl.getSourcePattern) // equivalent to "getSourcePatterns"
-    }
+            Left(
+                tls.map {
+                    case t: TraceLinkWithRuleImpl[SME, TME] => (t.getSourcePattern, t.getRulename)
+                    case _ => throw new Exception("Boolean for \"Containing rules\" in the tracelink is misconfigured")
+                }
+            )
+        else
+            Right(tls.map(tl => tl.getSourcePattern)) // equivalent to "getSourcePatterns"
 
 }

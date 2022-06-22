@@ -32,18 +32,11 @@ class TraceLinksMap[SME, TME](map: scala.collection.immutable.Map[List[SME], Lis
 
     override def getSourcePatterns: List[List[SME]] = map.keys.toList
 
-    def keys() : Iterable[List[SME]] = {
-        map.keys
-    }
+    def keys() : Iterable[List[SME]] = map.keys
 
-    def get(key: List[SME]) : Option[List[TraceLink[SME, TME]]] = {
-        map.get(key)
-    }
+    def get(key: List[SME]) : Option[List[TraceLink[SME, TME]]] = map.get(key)
 
-
-    def getMap(): scala.collection.immutable.Map[List[SME], List[TraceLink[SME, TME]]] = {
-        map
-    }
+    def getMap(): scala.collection.immutable.Map[List[SME], List[TraceLink[SME, TME]]] = map
 
     def asList(): List[TraceLink[SME, TME]] = map.toList.flatMap(t => t._2)
 
@@ -56,9 +49,9 @@ class TraceLinksMap[SME, TME](map: scala.collection.immutable.Map[List[SME], Lis
         }
     }
 
-    override def getIterableSeq(): Seq[Any] = {
+    override def getIterableSeq(): Either[Seq[(List[SME], String)], Seq[List[SME]]] =
         if (contain_rule) {
-            map.map(entry => {
+            Left( map.map(entry => {
                 entry._2.map {
                     case t: TraceLinkWithRuleImpl[SME, TME] =>
                     {
@@ -67,9 +60,9 @@ class TraceLinksMap[SME, TME](map: scala.collection.immutable.Map[List[SME], Lis
                     }
                     case _ => throw new Exception("Boolean for \"Containing rules\" in the tracelinks is misconfigured")
                 }}
-            ).flatten.toSeq
+            ).flatten.toSeq)
         } else {
-            map.keys.toList // equivalent to "getSourcePatterns"
+            Right(map.keys.toList)
         }
-    }
+
 }
