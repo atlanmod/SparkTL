@@ -1,9 +1,9 @@
 package org.atlanmod.tl.model.impl
 
-import org.atlanmod.tl.model.{ITraceLinks, Model, OutputPatternElementReference, TraceLinks}
+import org.atlanmod.tl.model.{Model, OutputPatternElementReference, TraceLinks}
 
 class OutputPatternElementReferenceImpl[SME, SML, TME, TML, STL, TTL]
-    (linkExpr: (ITraceLinks, Int, Model[SME, SML], List[SME], TME) => Option[TML])
+    (linkExpr: (TraceLinks[STL, TTL], Int, Model[SME, SML], List[SME], TME) => Option[TML])
   extends OutputPatternElementReference[SME, SML, TME, TML, STL, TTL] {
     /*
      *  SME : SourceModelElement
