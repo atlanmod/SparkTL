@@ -1,6 +1,6 @@
 package org.atlanmod.tl.model
 
-trait OutputPatternElementReference[SME, SML, TME, TML]  extends Serializable  {
+trait OutputPatternElementReference[SME, SML, TME, TML, STL, TTL]  extends Serializable  {
     /*
      *  SME : SourceModelElement
      *  TME : TargetModelElement
@@ -11,5 +11,5 @@ trait OutputPatternElementReference[SME, SML, TME, TML]  extends Serializable  {
     type SM = Model[SME, SML]
 
     // Accessors
-    def getLinkExpr: (TraceLinks[SME, TME], Int, SM, List[SME], TME) => Option[TML]
+    def getLinkExpr: (TraceLinks[STL, TTL], Int, SM, List[SME], TME) => Option[TML]
 }

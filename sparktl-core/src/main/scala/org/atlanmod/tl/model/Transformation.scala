@@ -1,12 +1,14 @@
 package org.atlanmod.tl.model
 
-trait Transformation[SME, SML, SMC, TME, TML] extends Serializable {
+trait Transformation[SME, SML, SMC, TME, TML, STL, TTL] extends Serializable {
     /*
      *  SME : SourceModelElement
      *  SML : SourceModelLink
      *  SMC : SourceModelClass
      *  TME : TargetModelElement
      *  TML : TargetModelLink
+     *  STL : SourceTraceLink
+     *  TTL : TargetTraceLink
      */
 
     // Types
@@ -14,5 +16,5 @@ trait Transformation[SME, SML, SMC, TME, TML] extends Serializable {
 //    type TM = Model[TME, TML, TMC] // Target Model
 
     // Accessors
-    def getRules: List[Rule[SME, SML, SMC, TME, TML]]
+    def getRules: List[Rule[SME, SML, SMC, TME, TML, STL, TTL]]
 }

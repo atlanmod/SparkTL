@@ -2,8 +2,8 @@ package org.atlanmod.tl.model.impl
 
 import org.atlanmod.tl.model.{Rule, Transformation}
 
-class TransformationImpl[SME, SML, SMC, TME, TML](rules: List[Rule[SME, SML, SMC, TME, TML]])
-  extends Transformation[SME, SML, SMC, TME, TML] {
+class TransformationImpl[SME, SML, SMC, TME, TML, STL, TTL](rules: List[Rule[SME, SML, SMC, TME, TML, STL, TTL]])
+  extends Transformation[SME, SML, SMC, TME, TML, STL, TTL] {
     /*
      *  SMC : SourceModelClass
      *  SME : SourceModelElement
@@ -13,5 +13,5 @@ class TransformationImpl[SME, SML, SMC, TME, TML](rules: List[Rule[SME, SML, SMC
      */
 
     // Accessor
-    def getRules: List[Rule[SME, SML, SMC, TME, TML]] = rules
+    def getRules: List[Rule[SME, SML, SMC, TME, TML, STL, TTL]] = rules
 }

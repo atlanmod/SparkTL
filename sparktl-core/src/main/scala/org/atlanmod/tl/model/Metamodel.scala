@@ -1,6 +1,6 @@
 package org.atlanmod.tl.model
 
-trait Metamodel[ME, ML, MC, MR] extends Serializable {
+trait Metamodel[ID, ME, ML, MC, MR] extends Serializable {
     /*
     *  ME: ModelElements
     *  ML: ModelLinks
@@ -10,7 +10,7 @@ trait Metamodel[ME, ML, MC, MR] extends Serializable {
 
     //    def denoteClass(sc: MC): MC
 
-    def elementId(sc:ME): Long
+    def elementId(sc:ME): ID
 
     def toModelClass(sc: MC, se: ME): Option[ME]
     def toModelReference(sr: MR, sl: ML): Option[ML]

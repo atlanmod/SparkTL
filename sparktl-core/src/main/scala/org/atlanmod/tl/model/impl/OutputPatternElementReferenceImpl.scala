@@ -1,10 +1,10 @@
 package org.atlanmod.tl.model.impl
 
-import org.atlanmod.tl.model.{Model, OutputPatternElementReference, TraceLinks}
+import org.atlanmod.tl.model.{ITraceLinks, Model, OutputPatternElementReference, TraceLinks}
 
-class OutputPatternElementReferenceImpl[SME, SML, TME, TML]
-    (linkExpr: (TraceLinks[SME, TME], Int, Model[SME, SML], List[SME], TME) => Option[TML])
-  extends OutputPatternElementReference[SME, SML, TME, TML] {
+class OutputPatternElementReferenceImpl[SME, SML, TME, TML, STL, TTL]
+    (linkExpr: (ITraceLinks, Int, Model[SME, SML], List[SME], TME) => Option[TML])
+  extends OutputPatternElementReference[SME, SML, TME, TML, STL, TTL] {
     /*
      *  SME : SourceModelElement
      *  SML : SourceModelLink
@@ -13,6 +13,6 @@ class OutputPatternElementReferenceImpl[SME, SML, TME, TML]
      */
 
     // Accessor
-    def getLinkExpr: (TraceLinks[SME, TME], Int, Model[SME, SML], List[SME], TME) => Option[TML] = linkExpr
+    def getLinkExpr: (TraceLinks[STL, TTL], Int, Model[SME, SML], List[SME], TME) => Option[TML] = linkExpr
 
 }
