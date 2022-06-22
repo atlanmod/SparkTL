@@ -45,9 +45,12 @@ object Parameters {
         var collect: String = ""
         var bcast: String = ""
         var distinctApply: String = ""
+        var withId: Boolean = false
+        var parallelExtract: Boolean = false
 
         def this(tuples: String = BYRULE_UNIQUE, tls: String = TLS_MAP, tracerule: Boolean = WITHOUT_RULE,
-                 collect: String = COLLECT, bcast: String = BROADCASTED_TLS, distinctApply: String = APPLY_DISTINCT){
+                 collect: String = COLLECT, bcast: String = BROADCASTED_TLS, distinctApply: String = APPLY_DISTINCT,
+                 withId: Boolean = false, parallelExtract: Boolean){
             this()
             this.tuples = tuples
             this.tls = tls
@@ -55,6 +58,8 @@ object Parameters {
             this.collect = collect
             this.bcast = bcast
             this.distinctApply = distinctApply
+            this.withId = withId
+            this.parallelExtract = parallelExtract
         }
 
         def _tuples: String = tuples
@@ -63,13 +68,17 @@ object Parameters {
         def _collect: String = collect
         def _bcast: String = bcast
         def _distinctApply: String = distinctApply
+        def _withId: Boolean = withId
+        def _parallelExtract: Boolean = parallelExtract
 
         def set_tuples(tuples: String): Unit = this.tuples = tuples
         def set_tls(tls: String): Unit = this.tls = tls
         def set_tracerule(tracerule: Boolean): Unit = this.tracerule = tracerule
+        def set_withId(withId: Boolean): Unit = this.withId = withId
         def set_collect(collect: String): Unit = this.collect = collect
         def set_bcast(bcast: String): Unit = this.bcast = bcast
         def set_distinctApply(distinctApply: String): Unit = this.distinctApply = distinctApply
+        def set_parallelExtract(parallelExtract: Boolean): Unit = this.parallelExtract = parallelExtract
 
     }
 
@@ -246,6 +255,8 @@ object Parameters {
         def _tracerule: Boolean = this.configEngine._tracerule
         def _collect: String = this.configEngine._collect
         def _bcast: String = this.configEngine._bcast
+        def _withId: Boolean = this.configEngine._withId
+        def _parallelExtract: Boolean = this.configEngine._parallelExtract
         def _distinctApply: String = this.configEngine._distinctApply
         def _link_type: String = this.configModel._link_type
         def _sleepGuard: Int = this.configTransformation._sleepGuard
@@ -281,6 +292,7 @@ object Parameters {
         def set_collect(collect: String): Unit = this.configEngine.set_collect(collect)
         def set_bcast(bcast: String): Unit = this.configEngine.set_bcast(bcast)
         def set_distinctApply(distinctApply: String): Unit = this.configEngine.set_distinctApply(distinctApply)
+        def set_parallelExtract(parallelExtract: Boolean): Unit = this.configEngine.set_parallelExtract(parallelExtract)
         def set_memoization(memoization: Boolean): Unit = this.configTransformation.set_memoization(memoization)
 
     }
